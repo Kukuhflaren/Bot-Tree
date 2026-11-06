@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sinyal &amp; Bot Grid Scalping (DEMO)</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--tx:#161a22;--mu:#6b7280;--bd:#dfe3ea;--up:#0f9d58;--dn:#d93025;--ac:#2563eb;--wr:#b45309;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1117;--card:#161b24;--tx:#e6e9ef;--mu:#8b94a5;--bd:#262d3a;--up:#2ecc71;--dn:#ff5b5b;--ac:#6ea8ff;--wr:#f0b45a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1117;--card:#161b24;--tx:#e6e9ef;--mu:#8b94a5;--bd:#262d3a;--up:#2ecc71;--dn:#ff5b5b;--ac:#6ea8ff;--wr:#f0b45a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:13px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--card)}
+h1{font-size:15px;margin:0}.badge{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--wr);color:#fff;font-weight:600}
+.warn{padding:6px 14px;font-size:12px;color:var(--wr);border-bottom:1px solid var(--bd)}
+main{display:grid;gap:10px;padding:10px;grid-template-columns:280px 1fr 1fr;grid-template-rows:minmax(380px,52vh) minmax(240px,auto)}
+.p{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;min-width:0;overflow:auto}
+.p h2{font-size:12px;margin:0;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;min-height:26px}
+#list{grid-row:1;grid-column:1}#chartp{grid-row:1;grid-column:2/4;display:flex;flex-direction:column;overflow:hidden}
+#hist{grid-row:2;grid-column:1}#exec{grid-row:2;grid-column:2/4}
+#cv{flex:1;width:100%;min-height:0}
+.up{color:var(--up)}.dn{color:var(--dn)}.mu{color:var(--mu)}
+.row{display:flex;justify-content:space-between;gap:6px;padding:4px 6px;border-radius:6px;cursor:pointer}
+.row:hover,.row.sel{background:var(--bd)}.row b{font-weight:600}.row span{font-size:12px}
+.sub{font-size:11px;color:var(--mu);margin:8px 0 2px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:3px 4px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-weight:500}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.kv span:nth-child(odd){color:var(--mu)}
+button,input{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:4px 8px}
+button{cursor:pointer}.pri{background:var(--ac);color:#fff;border-color:var(--ac)}input{width:64px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.tf{display:flex;gap:4px}.tf button{padding:2px 8px}.tf button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.mt{position:relative;height:8px;background:var(--bd);border-radius:4px;margin:8px 0}.mt i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.mt u{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--tx)}
+.big{font-size:28px;font-weight:700;line-height:1.1}
+@media (max-width:860px){main{grid-template-columns:1fr;grid-template-rows:none}
+#list,#chartp,#hist,#exec{grid-row:auto;grid-column:1}#list{max-height:420px}#chartp{height:400px}#hist,#exec{max-height:340px}}
+</style>
+</head>
+<body>
+<header><h1>Sinyal &amp; Bot Grid Scalping</h1><span><span class="badge">DEMO · PAPER</span> <button id="theme">Tema</button></span></header>
+<div class="warn">Harga di halaman ini hasil simulasi acak, bukan harga pasar. Untuk data live dan order sungguhan, perlu backend (Python) yang memegang API key.</div>
+<main>
+<section class="p" id="list"><div class="hd"><h2 id="lt">Rekomendasi AI (40)</h2><button id="bk" style="display:none">‹ Kembali</button></div><div id="lb"></div><div id="ib" style="display:none"></div></section>
+<section class="p" id="chartp"><div class="hd"><h2 id="ct">Chart</h2><div class="tf" id="tfb"></div></div><canvas id="cv"></canvas></section>
+<section class="p" id="hist"><h2 style="margin-bottom:8px">Riwayat eksekusi</h2><table><thead><tr><th>Jam</th><th>Token</th><th>Level</th><th>Hasil</th><th>PnL</th></tr></thead><tbody id="hb"></tbody></table></section>
+<section class="p" id="exec"><h2 style="margin-bottom:8px">Eksekusi</h2>
+<div class="ctl"><button id="go" class="pri">Mulai bot</button><label>Leverage <input id="lev" type="number" value="5" min="1" max="125">x</label><label>TP % <input id="tp" type="number" value="0.25" step="0.05"></label><label>SL poin <input id="sl" type="number" value="50"></label><label>Skor min <input id="ms" type="number" value="50" min="30" max="99"></label><label>Dekat S/R % <input id="nr" type="number" value="0.5" step="0.1"></label><button id="shk">Simulasi lonjakan</button></div>
+<div id="eh" class="mu">Bot berhenti.</div><table><thead><tr><th>Level</th><th>Limit</th><th>Status</th><th>TP</th><th>SL</th><th>Likuidasi</th></tr></thead><tbody id="eb"></tbody></table><div id="pnl" class="sub"></div></section>
+</main>
+<script>
+const RAW="BTC,Kripto,67200,1;ETH,Kripto,3450,1;SOL,Kripto,168,1;SUI,Kripto,3.1,1;LINK,Kripto,15.4,1;AVAX,Kripto,36,1;TON,Kripto,6.2,1;NVDA,Saham US,138,1;PLTR,Saham US,42,1;META,Saham US,570,1;COIN,Saham US,250,1;MSFT,Saham US,420,1;AMD,Saham US,162,1;AAPL,Saham US,228,1;SPX,Indeks,5800,1;NDX,Indeks,20300,1;DJI,Indeks,42500,1;XAU,Komoditas,2680,1;XAG,Komoditas,31.5,1;COPPER,Komoditas,4.35,1;"+
+"XRP,Kripto,0.54,-1;DOGE,Kripto,0.155,-1;ADA,Kripto,0.37,-1;PEPE,Kripto,0.0000085,-1;ARB,Kripto,0.52,-1;TSLA,Saham US,248,-1;INTC,Saham US,23.5,-1;NKE,Saham US,78,-1;BA,Saham US,155,-1;PYPL,Saham US,78,-1;UBER,Saham US,72,-1;RUT,Indeks,2200,-1;VIX,Indeks,19,-1;DXY,Indeks,104,-1;WTI,Komoditas,69,-1;BRENT,Komoditas,73,-1;NG,Komoditas,2.6,-1;WHEAT,Komoditas,5.6,-1;SUGAR,Komoditas,0.2,-1;COFFEE,Komoditas,2.4,-1";
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const T=RAW.split(";").map(s=>{const a=s.split(","),t={sym:a[0],cls:a[1],price:+a[2],side:+a[3],c:[]};const st=rnd()<.4;let p=t.price*(1-t.side*.02*rnd());
+for(let i=0;i<2400;i++){const o=p;p=o*(1+(rnd()-.5)*.004+t.side*(st&&i>2340?.0007:.00012));t.c.push({o,h:Math.max(o,p)*(1+rnd()*.0012),l:Math.min(o,p)*(1-rnd()*.0012),c:p,v:50+rnd()*100})}
+t.vol24=Math.round(50+rnd()*950)/10;t.chg=t.side*(1+rnd()*6)+(rnd()-.5)*2;return t});
+const agg=(c,k)=>{if(k==1)return c;const r=[];for(let i=c.length%k;i+k<=c.length;i+=k){const g=c.slice(i,i+k);r.push({o:g[0].o,h:Math.max(...g.map(x=>x.h)),l:Math.min(...g.map(x=>x.l)),c:g[k-1].c,v:g.reduce((s,x)=>s+x.v,0)})}return r};
+const ema=(a,n)=>{const k=2/(n+1);let e=a[0];return a.map(x=>e=x*k+e*(1-k))};
+function ind(c){const n=c.length,cl=c.map(x=>x.c),e9=ema(cl,9),e21=ema(cl,21),a=ema(cl,12),b=ema(cl,26),m=a.map((x,i)=>x-b[i]),sg=ema(m,9),mh=m.map((x,i)=>x-sg[i]);
+const rs=[];let g=0,l=0;for(let i=1;i<n;i++){const d=cl[i]-cl[i-1];if(i<=14){g+=Math.max(d,0)/14;l+=Math.max(-d,0)/14}else{g=(g*13+Math.max(d,0))/14;l=(l*13+Math.max(-d,0))/14}rs[i]=i<14?null:(l==0?100:100-100/(1+g/l))}
+const sr=[c[0].l],su=[true];let up=true,af=.02,ep=c[0].h,s=c[0].l;
+for(let i=1;i<n;i++){s+=af*(ep-s);if(up){if(c[i].l<s){up=false;s=ep;ep=c[i].l;af=.02}else if(c[i].h>ep){ep=c[i].h;af=Math.min(af+.02,.2)}}else{if(c[i].h>s){up=true;s=ep;ep=c[i].h;af=.02}else if(c[i].l<ep){ep=c[i].l;af=Math.min(af+.02,.2)}}sr.push(s);su.push(up)}
+const ph=[],pl=[];for(let i=3;i<n-3;i++){let H=1,L=1;for(let j=1;j<=3;j++){if(c[i].h<=c[i-j].h||c[i].h<=c[i+j].h)H=0;if(c[i].l>=c[i-j].l||c[i].l>=c[i+j].l)L=0}if(H)ph.push(c[i].h);if(L)pl.push(c[i].l)}
+return{cl,e9,e21,rs,mh,sr,su,ph,pl}}
+const ZN=s=>s>=100?["Persiapan tutup","var(--dn)"]:s>=90?["Eksekusi","var(--up)"]:s>=70?["Persiapan","var(--ac)"]:s>=50?["Pantau","var(--wr)"]:["Abaikan","var(--mu)"];
+const cp=(x,m)=>Math.max(0,Math.min(m,x));
+function an(t){const c=agg(t.c,5),I=ind(c),n=c.length,L=c[n-1],p=L.c,s=t.side,rsi=I.rs[n-1],mh=I.mh;
+const lows=I.pl.filter(x=>x<p).sort((a,b)=>b-a),highs=I.ph.filter(x=>x>p).sort((a,b)=>a-b);
+const S1=lows[0]??p*.99,S2=lows[1]??p*.98,R1=highs[0]??p*1.01,R2=highs[1]??p*1.02,HL=I.pl.length?I.pl.at(-1):p*.985,HH=I.ph.length?I.ph.at(-1):p*1.015;
+const rp=Math.round(cp((s>0?rsi-50:50-rsi),20)),ep=(I.e9[n-1]*s>I.e21[n-1]*s?10:0)+(p*s>I.e9[n-1]*s?10:0),mp=(mh[n-1]*s>0?10:0)+(mh[n-1]*s>mh[n-2]*s?10:0),sp=I.su[n-1]==(s>0)?20:0;
+const bd=Math.abs(L.c-L.o),avg=c.slice(-21,-1).reduce((q,x)=>q+Math.abs(x.c-x.o),0)/20,rg=(L.h-L.l)||1e-9,pos=s>0?(L.c-L.l)/rg:(L.h-L.c)/rg;
+const cdp=((L.c-L.o)*s>0?8:0)+(bd>avg?6:0)+(pos>.66?6:0),ext=bd/L.o>.012&&bd>4*avg,raw=rp+ep+mp+sp+cdp,ph=I.ph,pl=I.pl,tr=(ph.length>1&&pl.length>1)?(ph.at(-1)>ph.at(-2)&&pl.at(-1)>pl.at(-2)?1:ph.at(-1)<ph.at(-2)&&pl.at(-1)<pl.at(-2)?-1:0):0,dist=(s>0?p-S1:R1-p)/p*100,ck=[tr==s,(I.e9[n-1]-I.e21[n-1])*s/p>.0003,mh[n-1]*s>0&&mh[n-1]*s>mh[n-2]*s,dist<=NEAR],ready=ck.every(Boolean)&&!ext&&raw>=MS;
+return{p,S1,S2,R1,R2,HL,HH,raw,ext,rank:ext?-1:raw,ready,ck,dist,tr,score:ext?100:Math.min(raw,99),
+parts:[["RSI",rp,"RSI "+rsi.toFixed(1)],["EMA",ep,I.e9[n-1]>I.e21[n-1]?"EMA9 di atas EMA21":"EMA9 di bawah EMA21"],["MACD",mp,mh[n-1]>0?"histogram positif":"histogram negatif"],["SAR",sp,I.su[n-1]?"SAR di bawah harga":"SAR di atas harga"],["Candle",cdp,(L.c>=L.o?"candle hijau":"candle merah")+(ext?", lonjakan ekstrem":"")]]}}
+const f=x=>x>=100?x.toFixed(2):x>=1?x.toFixed(3):x.toPrecision(3),$=i=>document.getElementById(i);
+let sel=T[0],bot=null,hist=[],run=false,tk=0,top5=[],cand=[],NEAR=.5,MS=50,last="",tf=5,view="list";
+function rank(){NEAR=+$("nr").value||.5;MS=+$("ms").value||50;T.forEach(t=>t.a=an(t));top5=[...T].sort((a,b)=>b.a.rank-a.a.rank).slice(0,5);cand=T.filter(t=>t.a.ready).sort((x,y)=>((y.a.raw<70?1000:0)+y.a.raw)-((x.a.raw<70?1000:0)+x.a.raw))}
+function renderList(){const mk=(s,l)=>`<div class="sub">${l}</div>`+T.filter(t=>t.side==s).sort((a,b)=>b.a.rank-a.a.rank).map(t=>{const z=ZN(t.a.score);return`<div class="row ${t===sel?"sel":""} ${s>0?"up":"dn"}" data-s="${t.sym}"><b>${cand.includes(t)?"★ ":""}${t.sym}</b><span style="color:${z[1]}">${t.a.score} ${z[0]}</span></div>`}).join("");
+$("lb").innerHTML=mk(1,"BULLISH (20)")+mk(-1,"BEARISH (20)");
+document.querySelectorAll("#lb .row").forEach(r=>r.onclick=()=>{sel=T.find(t=>t.sym==r.dataset.s);view="sig";show();draw()})}
+function show(){$("lb").style.display=view=="list"?"":"none";$("ib").style.display=view=="sig"?"":"none";$("bk").style.display=view=="sig"?"":"none";$("lt").textContent=view=="sig"?"Sinyal token":"Rekomendasi AI (40)";if(view=="sig")renderInfo()}
+function renderInfo(){const t=sel,a=t.a,z=ZN(a.score);$("ib").innerHTML=`<div class="kv"><span>Token</span><b class="${t.side>0?"up":"dn"}">${t.sym} · ${t.cls}</b><span>Arah AI</span><span class="${t.side>0?"up":"dn"}">${t.side>0?"Bullish":"Bearish"}</span><span>Harga</span><span>${f(a.p)}</span><span>Ubah 24j</span><span class="${t.chg>=0?"up":"dn"}">${t.chg.toFixed(2)}%</span><span>Volume 24j</span><span>${t.vol24} (rel.)</span></div>
+<div class="sub">Skor sinyal (5m)</div><div class="big" style="color:${z[1]}">${a.score}</div><b style="color:${z[1]}">${z[0]}</b>
+<div class="mt"><i style="width:${a.score}%;background:${z[1]}"></i><u style="left:50%"></u><u style="left:70%"></u><u style="left:90%"></u></div>
+<table><thead><tr><th>Komponen</th><th>Poin</th><th>Kondisi</th></tr></thead><tbody>${a.parts.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}/20</td><td class="mu">${x[2]}</td></tr>`).join("")}</tbody></table>
+<div class="sub">Syarat masuk bot ${a.ready?"· LAYAK ★":"· belum layak"}</div><div class="kv">${[["Tren jelas",0],["EMA jelas",1],["MACD jelas",2],["Dekat S/R ("+a.dist.toFixed(2)+"%)",3]].map(([n,i])=>`<span>${n}</span><span class="${a.ck[i]?"up":"dn"}">${a.ck[i]?"✓":"✗"}</span>`).join("")}</div><div class="sub">Level</div><div class="kv"><span>Support 1 / 2</span><span>${f(a.S1)} / ${f(a.S2)}</span><span>Resist 1 / 2</span><span>${f(a.R1)} / ${f(a.R2)}</span><span>HL / HH</span><span>${f(a.HL)} / ${f(a.HH)}</span></div>
+<div class="sub">Zona: 50 Pantau · 70 Persiapan · 90 Eksekusi · 100 Persiapan tutup (lonjakan ekstrem)</div><div class="sub">Berita / alasan AI: diisi AI di versi live.</div>`}
+function draw(){const cv=$("cv"),d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;cv.width=w*d;cv.height=h*d;const x=cv.getContext("2d");x.scale(d,d);
+const st=getComputedStyle(document.documentElement),C=k=>st.getPropertyValue(k).trim(),t=sel,a=t.a,A=agg(t.c,tf),I=ind(A),m=70,o=A.length-m,c=A.slice(-m);
+$("ct").textContent=`${t.sym} · ${t.cls} · ${f(a.p)}`;
+const ph=Math.floor(h*.72),r0=ph+10,r1=h-12;let lo=Math.min(...c.map(z=>z.l)),hi=Math.max(...c.map(z=>z.h));const pd=(hi-lo)*.06;lo-=pd;hi+=pd;
+const X=i=>40+i*(w-50)/m,Y=v=>ph-8-(v-lo)/(hi-lo)*(ph-18),R=v=>r1-v/100*(r1-r0),bw=Math.max(2,(w-50)/m*.6);x.font="10px system-ui";
+const L=(v,col,lb)=>{if(v<lo||v>hi)return;x.strokeStyle=col;x.setLineDash([4,4]);x.beginPath();x.moveTo(40,Y(v));x.lineTo(w-6,Y(v));x.stroke();x.setLineDash([]);x.fillStyle=col;x.fillText(lb+" "+f(v),44,Y(v)-2)};
+c.forEach((z,i)=>{const u=z.c>=z.o;x.strokeStyle=x.fillStyle=u?C("--up"):C("--dn");x.beginPath();x.moveTo(X(i)+bw/2,Y(z.h));x.lineTo(X(i)+bw/2,Y(z.l));x.stroke();x.fillRect(X(i),Math.min(Y(z.o),Y(z.c)),bw,Math.max(1,Math.abs(Y(z.o)-Y(z.c))))});
+const ln=(arr,col,Fy)=>{x.strokeStyle=col;x.beginPath();let b=0;arr.slice(o).forEach((v,i)=>{if(v==null)return;b?x.lineTo(X(i)+bw/2,Fy(v)):x.moveTo(X(i)+bw/2,Fy(v));b=1});x.stroke()};
+ln(I.e9,C("--ac"),Y);ln(I.e21,C("--wr"),Y);
+x.fillStyle=C("--tx");I.sr.slice(o).forEach((v,i)=>{if(v<lo||v>hi)return;x.beginPath();x.arc(X(i)+bw/2,Y(v),1.6,0,7);x.fill()});
+if(tf==5){L(a.S1,C("--up"),"S1");L(a.S2,C("--up"),"S2");L(a.R1,C("--dn"),"R1");L(a.R2,C("--dn"),"R2")}
+if(bot&&bot.t===t)bot.o.forEach(q=>L(q.lim,C("--wr"),"Limit "+q.n));
+x.fillStyle=C("--ac");x.fillText("EMA9",44,10);x.fillStyle=C("--wr");x.fillText("EMA21",80,10);x.fillStyle=C("--tx");x.fillText("● SAR",124,10);
+x.strokeStyle=C("--bd");x.strokeRect(40,r0,w-46,r1-r0);[30,70].forEach(v=>{x.setLineDash([3,3]);x.beginPath();x.moveTo(40,R(v));x.lineTo(w-6,R(v));x.stroke();x.setLineDash([])});
+ln(I.rs,C("--ac"),R);x.fillStyle=C("--mu");x.fillText("RSI 14: "+(I.rs.at(-1)||0).toFixed(1),44,r0+11)}
+function grid(t){const a=t.a,tp=+$("tp").value/100,sl=+$("sl").value,pt=a.p*1e-4,s=t.side,lev=+$("lev").value||1;
+const lv=s>0?[["S1",a.S1],["S2",a.S2],["HL",a.HL]]:[["R1",a.R1],["R2",a.R2],["HH",a.HH]],ref=s>0?a.HL:a.HH;
+return{t,o:lv.map(([n,l])=>({n,lim:l,st:"menunggu",tp:l*(1+s*tp),sl:ref-s*sl*pt,liq:l*(1-s/lev),lev}))}}
+function showExec(){const b=bot,ms=+$("ms").value;
+if(!run){$("eh").textContent="Bot berhenti.";$("eb").innerHTML=""}
+else if(!b){$("eh").innerHTML=`Mencari token: skor ≥ ${ms}, tren/EMA/MACD jelas, dekat S/R ≤ ${NEAR}%. Token layak sekarang: ${cand.length}${cand[0]?" (berikutnya "+cand[0].sym+")":""}`;$("eb").innerHTML=""}
+else{$("eh").innerHTML=`Token aktif: <b class="${b.t.side>0?"up":"dn"}">${b.t.sym} ${b.t.side>0?"LONG":"SHORT"}</b> · ${b.o[0].lev}x · harga ${f(b.t.a.p)} · skor ${b.t.a.score} (${ZN(b.t.a.score)[0]})`;
+$("eb").innerHTML=b.o.map(q=>`<tr><td>${q.n} (25%)</td><td>${f(q.lim)}</td><td>${q.st}</td><td>${f(q.tp)}</td><td>${f(q.sl)}</td><td class="${Math.abs(q.lim-q.sl)>=Math.abs(q.lim-q.liq)?"dn":""}">${f(q.liq)}</td></tr>`).join("")}
+$("pnl").textContent="PnL paper total: "+hist.reduce((s,h)=>s+h.pnl,0).toFixed(2)+"% dari modal (25% alokasi per level, sudah dikali leverage, belum termasuk fee). Likuidasi merah = SL berada di luar harga likuidasi."}
+function renderHist(){$("hb").innerHTML=hist.slice(0,30).map(h=>`<tr><td>${h.tm}</td><td>${h.sym}</td><td>${h.n}</td><td class="${h.r=="TP"?"up":h.r=="SL"?"dn":"mu"}">${h.r}</td><td class="${h.pnl>=0?"up":"dn"}">${h.pnl.toFixed(3)}%</td></tr>`).join("")}
+function log(t,o,r,pct){hist.unshift({tm:new Date().toLocaleTimeString("id-ID"),sym:t.sym,n:o.n,r,pnl:pct*.25*o.lev});renderHist()}
+function manage(){const t=bot.t,a=t.a,s=t.side,np=a.p;
+if(a.ext){bot.o.forEach(o=>{if(o.st=="terisi"){log(t,o,"TUTUP",(np-o.lim)/o.lim*100*s);o.st="TUTUP"}});last=t.sym;bot=null;return}
+bot.age=(bot.age||0)+1;bot.o.forEach(o=>{if(o.st=="menunggu"&&(s>0?np<=o.lim:np>=o.lim))o.st="terisi";
+if(o.st=="terisi"){const w=s>0?np>=o.tp:np<=o.tp,q=s>0?np<=o.sl:np>=o.sl;if(w||q){log(t,o,w?"TP":"SL",w?+$("tp").value:-Math.abs(o.lim-o.sl)/o.lim*100);o.st=w?"TP":"SL"}}});
+const open=bot.o.some(o=>o.st=="terisi"),res=bot.o.some(o=>o.st=="TP"||o.st=="SL");if(!open&&(res||bot.age>150)){last=t.sym;bot=null}}
+function enter(){const c=cand.find(t=>t.sym!=last&&(t.a=an(t)).ready);if(c){bot=grid(c);bot.age=0;sel=c;last=""}}
+function tick(){tk++;const nc=tk%15==0;T.forEach(t=>{const c=t.c,l=c[c.length-1];let np=l.c*(1+(rnd()-.5)*.004+t.side*.00008);if(rnd()<.0002)np*=1+(rnd()<.5?-.025:.025);
+if(nc){c.push({o:l.c,h:l.c,l:l.c,c:l.c,v:l.v});c.shift()}const z=c[c.length-1];z.c=np;z.h=Math.max(z.h,np);z.l=Math.min(z.l,np)});
+if(nc)rank();else new Set([sel,bot&&bot.t]).forEach(t=>t&&(t.a=an(t)));
+if(run){if(bot)manage();else enter()}
+if(nc||view=="list")renderList();if(view=="sig")renderInfo();draw();showExec()}
+$("go").onclick=function(){run=!run;bot=null;last="";this.textContent=run?"Hentikan bot":"Mulai bot";showExec()};
+$("shk").onclick=()=>{const t=bot?bot.t:sel,c=t.c,z=c[c.length-1];z.c*=1+(rnd()<.5?-.03:.03);z.h=Math.max(z.h,z.c);z.l=Math.min(z.l,z.c);t.a=an(t)};
+$("bk").onclick=()=>{view="list";show()};
+$("theme").onclick=()=>{const r=document.documentElement;r.dataset.theme=getComputedStyle(r).colorScheme=="dark"?"light":"dark";draw()};
+const TFS=[["1m",1],["5m",5],["15m",15],["30m",30],["1j",60]];
+function tfb(){$("tfb").innerHTML=TFS.map(([n,k])=>`<button class="${k==tf?"on":""}" data-k="${k}">${n}</button>`).join("");document.querySelectorAll("#tfb button").forEach(b=>b.onclick=()=>{tf=+b.dataset.k;tfb();draw()})}
+addEventListener("resize",draw);tfb();rank();sel=cand[0]||top5[0];renderList();show();draw();showExec();$("nr").onchange=$("ms").onchange=()=>{rank();renderList();showExec()};setInterval(tick,700);
+</script>
+</body>
+</html>

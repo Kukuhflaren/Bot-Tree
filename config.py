@@ -40,6 +40,10 @@ TP_PERCENT = _f("TP_PERCENT", 0.25)
 SL_POINTS = _f("SL_POINTS", 50)
 SCORE_MIN = _f("SCORE_MIN", 50)
 NEAR_SR_PERCENT = _f("NEAR_SR_PERCENT", 0.5)
+NEAR_MODE = os.getenv("NEAR_MODE", "atr").strip().lower()
+if NEAR_MODE not in ("atr", "persen"):
+    raise SystemExit("NEAR_MODE di .env harus atr atau persen.")
+NEAR_ATR_MULT = _f("NEAR_ATR_MULT", 1.5)
 
 MAX_DAILY_LOSS_USDT = _f("MAX_DAILY_LOSS_USDT", 2)
 MAX_OPEN_TOKENS = int(_f("MAX_OPEN_TOKENS", 1))

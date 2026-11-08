@@ -2,6 +2,11 @@
 Candle = dict dengan kunci: t (waktu), o, h, l, c, v."""
 
 
+PIVOT_W = 10  # jendela puncak/lembah untuk support/resistance (10 x 5m = 50 menit)
+GRID_MAKS_ATR = 12  # titik grid lebih jauh dari 12 x ATR dari harga dibuang (hampir tidak akan terisi)
+TREN_W = 5    # jendela lebih pendek khusus untuk menilai tren (respons lebih cepat)
+
+
 def ema(nilai, n):
     k = 2 / (n + 1)
     e = nilai[0]
@@ -73,6 +78,50 @@ def pivot(c, w=3):
     return ph, pl
 
 
+def atr(c, n=14):
+    tr = []
+    for i in range(1, len(c)):
+        tr.append(max(c[i]["h"] - c[i]["l"], abs(c[i]["h"] - c[i - 1]["c"]), abs(c[i]["l"] - c[i - 1]["c"])))
+    return sum(tr[-n:]) / n
+
+
+def klaster(level, toleransi):
+    """Gabungkan level yang berdekatan (selisih <= toleransi) menjadi satu level (rata-rata)."""
+    hasil, grup = [], []
+    for x in sorted(level):
+        if grup and x - grup[-1] > toleransi:
+            hasil.append(sum(grup) / len(grup))
+            grup = []
+        grup.append(x)
+    if grup:
+        hasil.append(sum(grup) / len(grup))
+    return hasil
+
+
+def _titik_grid(p, s, kandidat, cadangan, jarak_min, jarak_maks):
+    """Pilih sampai 3 titik limit yang berada di sisi benar dari harga (bullish: di bawah,
+    bearish: di atas) dan tidak kembar (selisih >= jarak_min). Kandidat sesuai urutan titik 1-2-3;
+    kalau ada yang kembar atau di sisi salah, diganti level cadangan berikutnya."""
+    hasil = []
+
+    def boleh(h):
+        if (s > 0 and h >= p) or (s < 0 and h <= p):
+            return False
+        if abs(h - p) > jarak_maks:
+            return False
+        return all(abs(h - x[1]) >= jarak_min for x in hasil)
+
+    for nama, h in kandidat:
+        if len(hasil) < 3 and boleh(h):
+            hasil.append((nama, h))
+    for nama, h in cadangan:
+        if len(hasil) >= 3:
+            break
+        if boleh(h):
+            hasil.append((nama, h))
+    return hasil
+
+
 def zona(skor):
     if skor >= 100:
         return "Persiapan tutup"
@@ -89,7 +138,7 @@ def _batas(x, maks):
     return max(0, min(maks, x))
 
 
-def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50):
+def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr=1.5):
     """c = candle yang SUDAH TUTUP (buang candle terakhir yang masih berjalan).
     arah: 1 = bullish, -1 = bearish (dari pilihan AI)."""
     if len(c) < 60:
@@ -99,12 +148,15 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50):
     e9, e21 = ema(cl, 9), ema(cl, 21)
     rs, mh = rsi_seri(cl), macd_hist(cl)
     _, su = sar(c)
-    ph, pl = pivot(c)
+    ph, pl = pivot(c, PIVOT_W)
+    rata_tr = atr(c)
+    tol = 0.5 * rata_tr
+    pht, plt = pivot(c, TREN_W)
     L = c[-1]
     p = L["c"]
 
-    bawah = sorted([x for x in pl if x < p], reverse=True)
-    atas = sorted([x for x in ph if x > p])
+    bawah = sorted([x for x in klaster(pl, tol) if x < p], reverse=True)
+    atas = sorted([x for x in klaster(ph, tol) if x > p])
     S1 = bawah[0] if bawah else p * 0.99
     S2 = bawah[1] if len(bawah) > 1 else p * 0.98
     R1 = atas[0] if atas else p * 1.01
@@ -127,24 +179,40 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50):
     mentah = rp + ep + mp + sp + cdp
 
     tr = 0
-    if len(ph) > 1 and len(pl) > 1:
-        if ph[-1] > ph[-2] and pl[-1] > pl[-2]:
+    if len(pht) > 1 and len(plt) > 1:
+        if pht[-1] > pht[-2] and plt[-1] > plt[-2]:
             tr = 1
-        elif ph[-1] < ph[-2] and pl[-1] < pl[-2]:
+        elif pht[-1] < pht[-2] and plt[-1] < plt[-2]:
             tr = -1
-    jarak = ((p - S1) if s > 0 else (R1 - p)) / p * 100
-    syarat = [
+    selisih = (p - S1) if s > 0 else (R1 - p)
+    jarak = selisih / p * 100  # dalam persen harga
+    jarak_atr = selisih / rata_tr  # dalam kelipatan ATR
+    ok_persen = jarak <= dekat_sr_persen
+    ok_atr = jarak_atr <= dekat_atr
+    dasar = [
         tr == s,
         (e9[-1] - e21[-1]) * s / p > 0.0003,
         mh[-1] * s > 0 and mh[-1] * s > mh[-2] * s,
-        jarak <= dekat_sr_persen,
     ]
+    syarat = dasar + [ok_atr if mode == "atr" else ok_persen]
+    jarak_min = max(0.5 * rata_tr, p * 0.0005)
+    jarak_maks = GRID_MAKS_ATR * rata_tr
+    # Hanya level NYATA (dari puncak/lembah di chart) yang boleh jadi titik grid, bukan nilai cadangan
+    if s > 0:
+        kand = [(f"S{i + 1}", x) for i, x in enumerate(bawah[:2])] + ([("HL", HL)] if pl else [])
+        cad = [(f"S{i + 3}", x) for i, x in enumerate(bawah[2:])]
+    else:
+        kand = [(f"R{i + 1}", x) for i, x in enumerate(atas[:2])] + ([("HH", HH)] if ph else [])
+        cad = [(f"R{i + 3}", x) for i, x in enumerate(atas[2:])]
+    grid = _titik_grid(p, s, kand, cad, jarak_min, jarak_maks)
     skor = 100 if ekstrem else min(mentah, 99)
     return {
         "harga": p, "S1": S1, "S2": S2, "R1": R1, "R2": R2, "HL": HL, "HH": HH,
         "mentah": mentah, "skor": skor, "zona": zona(skor), "ekstrem": ekstrem,
-        "syarat": syarat, "jarak_sr": jarak,
+        "syarat": syarat, "jarak_sr": jarak, "jarak_atr": jarak_atr, "dasar": dasar,
+        "layak_persen": all(dasar) and ok_persen and not ekstrem and mentah >= skor_min and len(grid) >= 1,
+        "layak_atr": all(dasar) and ok_atr and not ekstrem and mentah >= skor_min and len(grid) >= 1,
         "layak": all(syarat) and not ekstrem and mentah >= skor_min,
         "rincian": [("RSI", rp), ("EMA", ep), ("MACD", mp), ("SAR", sp), ("Candle", cdp)],
-        "rsi": rsi,
+        "rsi": rsi, "atr": rata_tr, "grid": grid, "tren_info": {"puncak": pht[-2:], "lembah": plt[-2:], "tren": tr},
     }

@@ -30,7 +30,10 @@ AI_KEYS = {
     "grok": os.getenv("XAI_API_KEY", ""),
     "gpt": os.getenv("OPENAI_API_KEY", ""),
 }
+AI_MODEL = os.getenv("AI_MODEL", "").strip()
+AI_MODEL_CARI = os.getenv("AI_MODEL_CARI", "").strip()  # model khusus untuk eksperimen dengan pencarian Google
 AI_MAX_CALLS_PER_DAY = int(_f("AI_MAX_CALLS_PER_DAY", 24))
+AI_MAX_TOKENS_PER_HARI = int(_f("AI_MAX_TOKENS_PER_HARI", 30000))
 
 MODAL_DEMO_USDT = _f("MODAL_DEMO_USDT", 10)
 MODAL_LIVE_USDT = _f("MODAL_LIVE_USDT", 5)
@@ -49,4 +52,10 @@ MAX_DAILY_LOSS_USDT = _f("MAX_DAILY_LOSS_USDT", 2)
 MAX_OPEN_TOKENS = int(_f("MAX_OPEN_TOKENS", 1))
 DRY_RUN = os.getenv("DRY_RUN", "on").strip().lower() != "off"
 MAX_CONSECUTIVE_LOSSES = int(_f("MAX_CONSECUTIVE_LOSSES", 3))
+
+# --- Penyaring 24 jam  ---
+PENYARING_VOL_MIN_USDT = _f("PENYARING_VOL_MIN_USDT", 5000000)
+PENYARING_TOP_VOLUME = int(_f("PENYARING_TOP_VOLUME", 60))
+JUMLAH_PER_SISI = int(_f("JUMLAH_PER_SISI", 20))
+UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 0)
 KILL_SWITCH = os.getenv("KILL_SWITCH", "off").strip().lower() == "on"

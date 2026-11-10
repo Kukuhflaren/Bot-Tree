@@ -1,0 +1,336 @@
+{
+  "token": [
+    {
+      "nama": "INIT",
+      "arah": 1,
+      "ubah": 54.215
+    },
+    {
+      "nama": "PIEVERSE",
+      "arah": 1,
+      "ubah": 41.247
+    },
+    {
+      "nama": "EDGE",
+      "arah": 1,
+      "ubah": 22.967
+    },
+    {
+      "nama": "SOXL",
+      "arah": 1,
+      "ubah": 21.33
+    },
+    {
+      "nama": "HOT",
+      "arah": 1,
+      "ubah": 15.12
+    },
+    {
+      "nama": "AKE",
+      "arah": -1,
+      "ubah": -44.358
+    },
+    {
+      "nama": "UAI",
+      "arah": -1,
+      "ubah": -35.376
+    },
+    {
+      "nama": "SOXS",
+      "arah": -1,
+      "ubah": -21.643
+    },
+    {
+      "nama": "ONE",
+      "arah": -1,
+      "ubah": -17.21
+    },
+    {
+      "nama": "ICNT",
+      "arah": -1,
+      "ubah": -10.842
+    }
+  ],
+  "berita": {
+    "INIT": {
+      "berita": [
+        {
+          "judul": "META_TITLE_QUOTE - Yahoo Finance UK",
+          "sumber": "Yahoo Finance UK",
+          "tanggal": "2026-11-09T02:20:11+00:00",
+          "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBQaF8wX3FDRV8zWGJIY1RXV2c2LXpvdXlrVl9IS2lNLVVpaEZ3eVZyaVNOeXR1eXg0WV9Wa0EzWWw2T0pDU0RyQlBmd1hUUzVScjZiQVZhaDBCRU9rVzZSSVJybGpKVk5wMGFj?oc=5"
+        },
+        {
+          "judul": "Initia Buyers Defy Rollup Investigation With an 8x Trading Volume Surge - InteractiveCrypto",
+          "sumber": "InteractiveCrypto",
+          "tanggal": "2026-11-10T01:49:20+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNMlI0bkdXMmVoTHNodUZHeWV5dDBaVGpNSFVGcERIeFVfelo4VXhkYlozeE1QTXZoZ3g5WWZqVmFxNVZWaENJVEpQV0JncktJS2Y4a1NPNnlEeGpQLVBWV0dtWTBuc25KdllWamNOUldKMkk4X1VCa0YzeUlCQV9Md0I2cjJHNS0yQTBCbVlBNzBBeVphaHphbzR3NmFycVlWc3NWb1d0Z0E?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "PIEVERSE": {
+      "berita": [
+        {
+          "judul": "Pieverse Surges 4.08% Amid AI Narrative and Token Unlock - CoinMarketCap",
+          "sumber": "CoinMarketCap",
+          "tanggal": "2026-11-09T13:06:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9TOW9JTF9qNlczX3laUEM4OWZYRjBBcHM5Y2EyQURPVi00OUt5dUhJYWtyOURsbENad25aYkpqRUF4SGY5bEdLZXVXWS1qT25iXzMxZ1BvcnloTzcxNVBVLTVwWnNlM1VZMGdfckRPZEc?oc=5"
+        },
+        {
+          "judul": "Mastering Crypto(@MasteringCrypto)'s insights - Binance",
+          "sumber": "Binance",
+          "tanggal": "2026-11-09T07:15:21+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBiemhfQ3JSa1BJWTc4THJQejNVUUJZcmNZLUp0NDBKOVE5V2U4MzVJT1Fkc2VZVWl3Q0dPTDllVzg1Y01ySWJOV3MySEVwMVd3YmRKbkhHbG9OWUQ1dkpHaDBJSlQ?oc=5"
+        },
+        {
+          "judul": "Shahz Crypto(@shahzad4567)'s insights - Binance",
+          "sumber": "Binance",
+          "tanggal": "2026-11-09T12:11:03+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9tdzh6ajh2LWszY0ZEZmEtaGdGc3NGdGZkVkRpUlF1cGZvS0IzbjlzSDFDekYtQ29yRmE3VjFkbFZIcHN3OThCWV83RnFnLVh3Yk5aUnJ3Q0VzRWJiTktrNm01X3poOW5f?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "EDGE": {
+      "berita": [
+        {
+          "judul": "Edge Seek gave my phone gesture controls that feel light-years ahead of stock Android - Android Police",
+          "sumber": "Android Police",
+          "tanggal": "2026-11-10T00:00:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQdXlBWk1RZkU5aVFwTlh0YV9PUVlOZV9RY3Vlbko0dzZKMmZ6ZHMtNFBsX3dILTVOcUFBajVydG1VUmdVYTFoa2ZlVDhhek8zWmhENFdZZmpjVWxpbHQ5STZLM2NPYjJwemdtTmwxYlZreGo0MVdVYXg0QTc3UXJrTC1CM2ZpQmc?oc=5"
+        },
+        {
+          "judul": "BioNTech vs. Moderna: The COVID Vaccine Giants Are Entering a New Era. One Stock Could Have the Edge for 2027 - The Motley Fool",
+          "sumber": "The Motley Fool",
+          "tanggal": "2026-11-09T10:00:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxQNE9JTG1veVczTE9GT1ZfTlAySlBSMUJFSzVvYmRRajhjRUVvYUFZUXJZWHI3Z29ESWVXRFJrTThyX01NeTZPRXJMOFJPeE9VX3RqRS10Ti1DbFB5Z1Q2b0kzdUNZRk9YTUpxWTc0N0RmTlhYUXNNZjMyc3NNdFFOSmdYakdCNVdqdXJrakVQNnBrdWFocDByREtLbml0SEFIeTVhdlo3SmdrS3hkc2t2MGw2YldVUW5wR2lsQUllZlUyRW9RSzREYXdQazAzR3J6WXZEbU5xSURKNXdRX3dxNlBhVEVuQ3dhRTBXWUFFbFQ?oc=5"
+        },
+        {
+          "judul": "Stock Market Today: Dow, S&P 500 Futures Rise Despite Nvidia Sell-Off Over Jensen Huang Controversy — NVD - Benzinga",
+          "sumber": "Benzinga",
+          "tanggal": "2026-11-09T10:36:54+00:00",
+          "link": "https://news.google.com/rss/articles/CBMihgJBVV95cUxPRnhxQjE3Q0xKUFdFcUVsWm1YXzhKcnlsLXpjOVpaRHEtVmJRRWpiaC1jOXhrTkhfV0V0MmhIT0xRZUhXZUtxVmxva2F6TURobGNROUFtQnc3NXlha2ZvWWQ2RkU0QVRfQy1SNVpoRUVkMFdLWkxmeDNjUTQxRFZvbXYzb3pjYmlVdE1Zb2xZQl9IdWZ4dDNSX2ZudXpuWXJiMXRaNU4tcmdMbGVHNlpPOWlDbkR1ZTRoUXBfZ3MyVlBrQVI3aUJGdHhlMmhZaGtqLXgwRXo5bTROUWZiREszUEFhTkZFV3V4dG9USmxqbDRZY2kyX0dObUFpVnVSMHVXSmZhLTZn?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "SOXL": {
+      "berita": [
+        {
+          "judul": "$Direxion Daily Semiconductor Bull 3x Shares ETF (SOXL.US)$ - Moomoo",
+          "sumber": "Moomoo",
+          "tanggal": "2026-11-09T15:59:42+00:00",
+          "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQWUxESlFtSmVySGlFSmJfLWNlYVc0MDNUU3h5RUZYNmZaODkwMkVNdXdsVnVhMk9pcC1MdjFoampEbGF2LTlwQzM2TFFLNlBWbE1CN0JMeDhzSFFfcENLM1pmMkFLYThzT0drLXY2MlBlQmVzN09ueGFiellXMURTOTJVRjNKRnRyR21jRlc0c1pkV3BCNUcxeElvSGRKZWRvbF9XY1RVcVdOSUFsbXc?oc=5"
+        },
+        {
+          "judul": "SOXL: Hard Lesson On 3X Leverage During A Semiconductor Bust (NYSEARCA:SOXL) - Seeking Alpha",
+          "sumber": "Seeking Alpha",
+          "tanggal": "2026-11-09T08:38:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOVDlwejFBQ0FkYmxQREZ1anZPWEc3ZnBVY0VXMENFT0dwR1lhTm5VTmJ6c21UMUQ2NVBUalZEUlJFTGdyd29jMW54Z2k5WklnY2JlNEpJMkV3ZXM2NF9BTkhsM0w0RFZUc2JPTjVxNndpRlJobEdIZmc5dFpGSFNNV2JkVHZRYXFXeU95d1hFbnl5cHFuOS1mZHNfMkNyNUFVZXc?oc=5"
+        },
+        {
+          "judul": "SOXL ETF Shares Rise 5% After Key Trading Signal - Benzinga",
+          "sumber": "Benzinga",
+          "tanggal": "2026-11-09T19:13:18+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNYWNRUUh6eWU2anNZbnpVQ3AtSE90X0lHSld6TW1iOTdiSkx4dVg0a1phcWg3bVRfYl9WUnM5Q1NNUXlPY0xGc1Frc0Ywb0k5TXV3eEJjWV91M0VkaE90X3RPSktVaVRnS09jS1NaMmZ1V3B0bWZ0N2taM0V5NWIwRjlhc242OEJwanM5aXhaNnVQTlJkLWp3WU04LUZlcENEOXBMaXpQWWE?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "HOT": {
+      "berita": [
+        {
+          "judul": "Nvidia’s Once-Hot Stock Is Falling With CEO Jensen Huang in the Hot Seat - Investopedia",
+          "sumber": "Investopedia",
+          "tanggal": "2026-11-09T17:03:11+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQb1psOXlHUExvUU1mcGJIRjZfZng4SEtwbHh5b25ZVTUwY3V6LW9MVkl6VzFqRnZUR19GNlpPY3hnRTJlZWtPY2xJOXI2N245RkNBdHRWRHNpcTFkQjRGdi1FNmJhd2ppQUpMSW5CdjBKRWdRaFJ3cVRBbm5qNlFFYWNzZ0t5TUhWNlQxMEVxUHpYT19qUUNteG1VRnpJVm10eEZmb0lUYXZSSWV1ekYwcU5MRQ?oc=5"
+        },
+        {
+          "judul": "Why Nvidia Stock Was Down Today - Yahoo Finance",
+          "sumber": "Yahoo Finance",
+          "tanggal": "2026-11-09T23:30:02+00:00",
+          "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOVEpYdmpLay1McEtHNGlrWWFMWVVnN29oaFhoWDczcGJ6R0lGcnNyUGVVV3h1YkhqVThCOG5KWWo3cDZlcWcwY0Uzem1NUlVPdmRid2d1Wi1wMWo2T3dCTU41RW1RRDBic19Ud2N2bjJrVHl4bjhIT2V5dXEtS1BNNlFNZGVUOWJBcXpNSE80c19mTnA4cVVN?oc=5"
+        },
+        {
+          "judul": "Cramer’s Advice For Nvidia Makes Even More Sense Now As Stock Drops As Board Investigates CEO - Yahoo Finance",
+          "sumber": "Yahoo Finance",
+          "tanggal": "2026-11-09T15:14:18+00:00",
+          "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNc3h5dlh3Q0xZRlc5b0hQREU2TUlpV1dmQVp2bjQ4cjNPVmp3Mno4dkVURFl6dGhuSHNDemNwRWhFcllkVU1KVWpHa0p5a0lOUmlNQXEwZlJwd0FJMFY5a3UxWDdXc01tcWNRZncyLWJDSEVfQXFnemFNLWdjRkQ0LVBJbmd1NmIzMDMtTU4zSlBibGsyMHJyQ1c0dFc?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "AKE": {
+      "berita": [
+        {
+          "judul": "Pro-lifers take stock of midterm election rout - WORLD News Group",
+          "sumber": "WORLD News Group",
+          "tanggal": "2026-11-09T22:40:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOVDhFU2Vpc3ozbTVleklLM1FRZGRXY0xjbjBpOHZkTko3S2FpZVoxS19VV2hJT1JQR01vdkJyYk9rX3pDdERCOXNSSklSSEhlalliUnRlNjRiM0RYR2F4NVM5SVZkcFJsOHc0S0M3eUZuTWhQVFNqcUNIZkFlMzRpV0tBaHFfOFJMaFE?oc=5"
+        },
+        {
+          "judul": "Arkema (ENXTPA:AKE) Stock May Be Fully Priced As EBITDA Growth Holds - Yahoo Finance Singapore",
+          "sumber": "Yahoo Finance Singapore",
+          "tanggal": "2026-11-09T17:23:35+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQaEpjd1FEX3JOMmppZzBIa3Zwb0Y3MUdTWU0zZ3AzOW1tQklVT2RvQTAtektxeDl5ZTZzeklyN216SE1UUnRac2YtazVCcGMzN1Q1cGh3NVIyVmN1aFhKRUYyV3VjYlU1c3pCTG1CUUlHdEVWUmlWa2VqRzF4QjJoTTBR?oc=5"
+        },
+        {
+          "judul": "Sell-side analysts fail to adequately adjust stock forecasts after Fed meetings - Phys.org",
+          "sumber": "Phys.org",
+          "tanggal": "2026-11-09T12:00:02+00:00",
+          "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5zZUVUMkxQVFdMYlREM0prRWdKMjExeTVZRV94UEFKQVFzcFluaWpwdlJVbTlPaHRzUHExVnBRVk55Z0dwTGJuV1J2YzhtT1dSTjE2NG1yVW91Q0x4LXZqQUxuS1dyOVFyU05uY29MU3dLQ0dIWHptQ0hBcW0?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "UAI": {
+      "berita": [
+        {
+          "judul": "Jordan Crypto 2C(@Square-Creator-09bf122616a7)'s insights - Binance",
+          "sumber": "Binance",
+          "tanggal": "2026-11-09T05:25:21+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1EVkp5azBHa1F2UzJFdHQ2bTZuaHBpSE93REZsYmRvVW1kSlhlaUx0YzhkTWJFVHVySUVBdTUzU181NVl1b1g4SHE2cUlJbHN2QmFiU09QSjN2TE83OWtZR1Z1STQ?oc=5"
+        },
+        {
+          "judul": "Your Easiest Way to Crypto - Trade Bitcoin, Ethereum &Most Trending Tokens - MEXC",
+          "sumber": "MEXC",
+          "tanggal": "2026-11-09T13:24:55+00:00",
+          "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPSWNMM1V5ZE1TV1RMN0JTN2ZBUWtncG9RMVp3OW8ybW90eFdXNGc3ekw2UUlDd2xDdmFaWE5RRHRIUnVxc1E0WVBsN2NjbmZWWnEyOVBQaVNzUEJLeFY3NmlHZFpJa0RFczFwUkJBUUY3NkhCWG43dHJTVWtNaWo5UG0tMUlvUQ?oc=5"
+        },
+        {
+          "judul": "guhongyan_crypto(@guhongyan)'s insights - Binance",
+          "sumber": "Binance",
+          "tanggal": "2026-11-09T13:27:31+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBUQXpQaEJuRXRYbGhwNEpGUzZ1Z0RxZkNJX3c2cHJVUGxob0dsMjB6dERJN0d5N3RwRzg5bk1VcnFHNGIwQlRpaEc3SGZOaE5nSkxrV2syYUV5T1NVcVdYS2ZkQXA?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "SOXS": {
+      "berita": [
+        {
+          "judul": "U.S. ETF Express | GraniteShares 2x Long AMD Daily ETF Was the Top Gainer, Rising 26.77% - Moomoo",
+          "sumber": "Moomoo",
+          "tanggal": "2026-11-09T21:30:05+00:00",
+          "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNSUtVRWk1NUdiX0lOS1lieHRTc1dObzdhU0NNOTd5WGExWnZtZ0dMTUtsVkswUkNvTjNYNjdHblRBYjhodzBHX09XTzYwNkVfTE5QN1lNWEcxeUViM0VBVkdLUEJ1YmxnNnA4Rnh0ZjRla0s2Rk8zdHJoSHlUZTZ3UUtlTzNEYmY4R210OERvdzdtMFVlUjNpU1liS0Q4Smc?oc=5"
+        },
+        {
+          "judul": "Quarterly Reports and an Independent Board Inquiry Frame the Chip Sector's Week - Yahoo! Finance Canada",
+          "sumber": "Yahoo! Finance Canada",
+          "tanggal": "2026-11-09T17:02:00+00:00",
+          "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPOVlRSmNOeHpCVlVOUk9pbkNoQ2hTbTNvUERfRTBadlgzVkp2YWZaZ1lURDhEeVdadl9HU2oxRFFiVVh6VnlKYkU2OS1zSnE4RE1rUy12Z2ZYN2NRcnZHWFlNMDZJVWdsNFdCYlhoOTlhWkp5aXVDQ3BnUGtYSm1aRG1iV1pYYzJZYlRtVWNabG5hb0J5ejFJ?oc=5"
+        },
+        {
+          "judul": "Market Heatmap: AMD Jumps 8.9%, NVDA Slumps in Chip Split - Moomoo",
+          "sumber": "Moomoo",
+          "tanggal": "2026-11-09T14:53:50+00:00",
+          "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOSlBMMjcxb0RwUnp1b3hCcTRtQzFQUHNRazRXLURQRFltU2VhV0EwcldWazFLbXVJT1YxSERQZmd5azZORG9tUkZ0UjNRRFBwTmtPOHNWR2dYRmREakJXbzRLZDN2SWdIMTRGeWxKOTVGZV9fMzBHMDBhT3VadVBBUGJzNjJEaURoVW52aVFzYlNLM2w4OU9LVDJjRS1MOVJ3cjh4Nw?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "ONE": {
+      "berita": [
+        {
+          "judul": "Graphite One Inc. (GPHOF) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+          "sumber": "Yahoo! Finance Canada",
+          "tanggal": "2026-11-09T12:46:14+00:00",
+          "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE96ZjdCWHZ3a0JJUlZpemgzTkxRWGJVbUQ5TDJmQzlxWVlxanQ3ZUttNk1iYkxBVkNjY290cmQ0SnpGcS1XaG10TmZrZXgzTWNWU09n?oc=5"
+        },
+        {
+          "judul": "Plummeting Cable One on the Brink – Shares Face Delisting from New York Stock Exchange - Broadband Breakfast",
+          "sumber": "Broadband Breakfast",
+          "tanggal": "2026-11-09T13:29:36+00:00",
+          "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQTURPUGllWG85c0JhWHZzQ2ZhNWNPb3pwTDAyZlVqMGc3ZXZadUR2cHVrT0FtQjZtcnR6dlFDVHRGRU1rZDBxci0zWG1UbmRwUW51aElKLU9PNXctS294RS1XODFMZFF2anBYcFlpVmVLUi04X3pVcVdEN0Y2MzM3WVBjTWFBeG5uM3l2SFNPeXNBOERadXVGLTNYQ2dOSERiWng1RWw5N211UHp6Mmxrd3MzTkh3ejg?oc=5"
+        },
+        {
+          "judul": "Securitize pushes into $6 trillion asset-backed finance market with River One acquisition - CoinDesk",
+          "sumber": "CoinDesk",
+          "tanggal": "2026-11-09T22:56:27+00:00",
+          "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPdnJCRW90Tlh3WkdvOU4xUGotZmxtbEtsdDBHcGFrN2FUYWlZcU1NRUlNUC16V2FjS25pNVJ0d21JdGlzUmhVUUdDeU1PRmxvZFBaX1c3UXRHNnJkN2R3QmRsVURRQXg4MEpoMHRNNlo4eFF3R3llU0J0a1lzUDc1ZFQ0NlhrNDJqYmdGelZfeEJ3dWJRWjZ1R1hQYzd4aFpSUlBUSGs3M3l6RUs0aTFDZnZobW1SZ1Q5TjlVMUhYVjhXWXJIeVNnNUsxb0VxYmtvLXc?oc=5"
+        }
+      ],
+      "galat": null
+    },
+    "ICNT": {
+      "berita": [],
+      "galat": null
+    }
+  },
+  "jawaban": {
+    "hasil": [
+      {
+        "simbol": "INIT",
+        "dampak": "naik",
+        "selaras": true,
+        "katalis": "Initia buyers defy rollup investigation with an 8x trading volume surge.",
+        "risiko": "Risiko investigasi rollup."
+      },
+      {
+        "simbol": "PIEVERSE",
+        "dampak": "naik",
+        "selaras": true,
+        "katalis": "Pieverse surges 4.08% amid AI narrative and token unlock.",
+        "risiko": "Risiko dari token unlock."
+      },
+      {
+        "simbol": "EDGE",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Nama token ambigu dengan topik non-kripto."
+      },
+      {
+        "simbol": "SOXL",
+        "dampak": "naik",
+        "selaras": true,
+        "katalis": "SOXL ETF shares rise 5% after key trading signal.",
+        "risiko": "Risiko volatilitas tinggi leverage 3x."
+      },
+      {
+        "simbol": "HOT",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Nama token ambigu dengan berita saham Nvidia."
+      },
+      {
+        "simbol": "AKE",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Nama token ambigu dengan berita saham tradisional."
+      },
+      {
+        "simbol": "UAI",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Berita tidak memberikan informasi spesifik terkait token."
+      },
+      {
+        "simbol": "SOXS",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Berita membahas sektor chip secara umum."
+      },
+      {
+        "simbol": "ONE",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Nama token sangat umum dan ambigu."
+      },
+      {
+        "simbol": "ICNT",
+        "dampak": "tidak jelas",
+        "selaras": null,
+        "katalis": null,
+        "risiko": "Tidak ada berita ditemukan."
+      }
+    ]
+  },
+  "jumlah_token": 2280
+}

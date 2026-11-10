@@ -1,10 +1,15 @@
 """Fase 3: indikator dan skor sinyal (port dari dashboard demo). Murni Python, tanpa pandas.
-Candle = dict dengan kunci: t (waktu), o, h, l, c, v."""
+Candle = dict dengan kunci: t (waktu), o, h, l, c, v.
 
+Perubahan penting:
+  - VWAP sebagai penentu tren (harga di atas VWAP = bias bullish, di bawah = bias bearish)
+  - Konfirmasi tren 30 menit terakhir (6 candle x 5m)
+"""
 
 PIVOT_W = 10  # jendela puncak/lembah untuk support/resistance (10 x 5m = 50 menit)
 GRID_MAKS_ATR = 12  # titik grid lebih jauh dari 12 x ATR dari harga dibuang (hampir tidak akan terisi)
 TREN_W = 5    # jendela lebih pendek khusus untuk menilai tren (respons lebih cepat)
+CANDLE_30M = 6  # 6 x 5 menit = 30 menit untuk konfirmasi tren pendek
 
 
 def ema(nilai, n):
@@ -84,6 +89,73 @@ def atr(c, n=14):
         tr.append(max(c[i]["h"] - c[i]["l"], abs(c[i]["h"] - c[i - 1]["c"]), abs(c[i]["l"] - c[i - 1]["c"])))
     return sum(tr[-n:]) / n
 
+def vwap(c):
+    """VWAP kumulatif sesi data yang diberikan.
+    typical price = (h + l + c) / 3.
+    Mengembalikan list nilai VWAP sepanjang candle.
+    """
+    hasil = []
+    kumul_pv = 0.0
+    kumul_v = 0.0
+    for x in c:
+        tp = (x["h"] + x["l"] + x["c"]) / 3.0
+        vol = x.get("v") or 0.0
+        kumul_pv += tp * vol
+        kumul_v += vol
+        hasil.append(kumul_pv / kumul_v if kumul_v > 0 else tp)
+    return hasil
+
+
+def konfirmasi_tren_30m(c, arah):
+    """Konfirmasi tren 30 menit terakhir (6 candle x 5m).
+
+    Syarat lolos (semua harus benar untuk arah yang diminta):
+      1. Harga penutupan terakhir di sisi benar relatif VWAP 30m
+      2. Arah pergerakan 30m (close akhir vs close awal) sama dengan arah
+      3. Minimal 4 dari 6 candle terakhir berwarna sesuai arah (body positif/negatif)
+
+    Mengembalikan dict: ok (bool), arah_30m (-1/0/1), di_atas_vwap (bool), candle_sesuai (int).
+    """
+    n = CANDLE_30M
+    if len(c) < n:
+        return {"ok": False, "arah_30m": 0, "di_atas_vwap": False, "candle_sesuai": 0}
+
+    potong = c[-n:]
+    closes = [x["c"] for x in potong]
+    vw = vwap(potong)
+    harga = closes[-1]
+    di_atas_vwap = harga > vw[-1]
+
+    # Arah net 30 menit
+    delta = closes[-1] - closes[0]
+    if delta > 0:
+        arah_30m = 1
+    elif delta < 0:
+        arah_30m = -1
+    else:
+        arah_30m = 0
+
+    # Jumlah candle body sesuai arah
+    sesuai = 0
+    for x in potong:
+        body = x["c"] - x["o"]
+        if arah > 0 and body > 0:
+            sesuai += 1
+        elif arah < 0 and body < 0:
+            sesuai += 1
+
+    vwap_ok = (arah > 0 and di_atas_vwap) or (arah < 0 and not di_atas_vwap)
+    arah_ok = arah_30m == arah
+    candle_ok = sesuai >= 4  # minimal 4 dari 6
+
+    return {
+        "ok": vwap_ok and arah_ok and candle_ok,
+        "arah_30m": arah_30m,
+        "di_atas_vwap": di_atas_vwap,
+        "candle_sesuai": sesuai,
+        "vwap_30m": vw[-1],
+    }
+
 
 def klaster(level, toleransi):
     """Gabungkan level yang berdekatan (selisih <= toleransi) menjadi satu level (rata-rata)."""
@@ -140,7 +212,16 @@ def _batas(x, maks):
 
 def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr=1.5):
     """c = candle yang SUDAH TUTUP (buang candle terakhir yang masih berjalan).
-    arah: 1 = bullish, -1 = bearish (dari pilihan AI)."""
+    arah: 1 = bullish, -1 = bearish (dari pilihan AI).
+
+    Syarat masuk (semua harus True agar layak):
+      1. tren struktur (HH/HL) sesuai arah
+      2. EMA bias sesuai arah
+      3. MACD histogram sesuai arah + menguat
+      4. dekat S/R (persen atau ATR sesuai mode)
+      5. VWAP mendukung arah (harga di atas VWAP untuk bullish, di bawah untuk bearish)
+      6. konfirmasi tren 30 menit terakhir
+    """
     if len(c) < 60:
         raise ValueError("Butuh minimal 60 candle.")
     s = arah
@@ -150,6 +231,8 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
     _, su = sar(c)
     ph, pl = pivot(c, PIVOT_W)
     rata_tr = atr(c)
+    vw_seri = vwap(c)
+    vw = vw_seri[-1]
     tol = 0.5 * rata_tr
     pht, plt = pivot(c, TREN_W)
     L = c[-1]
@@ -178,6 +261,13 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
     ekstrem = badan / L["o"] > 0.012 and badan > 4 * rata
     mentah = rp + ep + mp + sp + cdp
 
+    # VWAP sebagai penentu tren: harga di sisi benar relatif VWAP
+    di_atas_vwap = p > vw
+    vwap_ok = (s > 0 and di_atas_vwap) or (s < 0 and not di_atas_vwap)
+
+    # Konfirmasi 30 menit terakhir
+    k30 = konfirmasi_tren_30m(c, s)
+
     tr = 0
     if len(pht) > 1 and len(plt) > 1:
         if pht[-1] > pht[-2] and plt[-1] > plt[-2]:
@@ -194,7 +284,8 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
         (e9[-1] - e21[-1]) * s / p > 0.0003,
         mh[-1] * s > 0 and mh[-1] * s > mh[-2] * s,
     ]
-    syarat = dasar + [ok_atr if mode == "atr" else ok_persen]
+    # syarat lengkap: dasar + dekat S/R + VWAP + tren 30m
+    syarat = dasar + [ok_atr if mode == "atr" else ok_persen, vwap_ok, k30["ok"]]
     jarak_min = max(0.5 * rata_tr, p * 0.0005)
     jarak_maks = GRID_MAKS_ATR * rata_tr
     # Hanya level NYATA (dari puncak/lembah di chart) yang boleh jadi titik grid, bukan nilai cadangan
@@ -206,13 +297,18 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
         cad = [(f"R{i + 3}", x) for i, x in enumerate(atas[2:])]
     grid = _titik_grid(p, s, kand, cad, jarak_min, jarak_maks)
     skor = 100 if ekstrem else min(mentah, 99)
+
+    layak_inti = all(dasar) and not ekstrem and mentah >= skor_min and len(grid) >= 1
     return {
         "harga": p, "S1": S1, "S2": S2, "R1": R1, "R2": R2, "HL": HL, "HH": HH,
         "mentah": mentah, "skor": skor, "zona": zona(skor), "ekstrem": ekstrem,
         "syarat": syarat, "jarak_sr": jarak, "jarak_atr": jarak_atr, "dasar": dasar,
-        "layak_persen": all(dasar) and ok_persen and not ekstrem and mentah >= skor_min and len(grid) >= 1,
-        "layak_atr": all(dasar) and ok_atr and not ekstrem and mentah >= skor_min and len(grid) >= 1,
-        "layak": all(syarat) and not ekstrem and mentah >= skor_min,
+        "vwap": vw, "di_atas_vwap": di_atas_vwap, "vwap_ok": vwap_ok,
+        "tren_30m": k30,
+        "layak_persen": layak_inti and ok_persen and vwap_ok and k30["ok"],
+        "layak_atr": layak_inti and ok_atr and vwap_ok and k30["ok"],
+        "layak": all(syarat) and not ekstrem and mentah >= skor_min and len(grid) >= 1,
         "rincian": [("RSI", rp), ("EMA", ep), ("MACD", mp), ("SAR", sp), ("Candle", cdp)],
-        "rsi": rsi, "atr": rata_tr, "grid": grid, "tren_info": {"puncak": pht[-2:], "lembah": plt[-2:], "tren": tr},
+        "rsi": rsi, "atr": rata_tr, "grid": grid,
+        "tren_info": {"puncak": pht[-2:], "lembah": plt[-2:], "tren": tr},
     }

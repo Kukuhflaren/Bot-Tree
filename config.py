@@ -39,9 +39,10 @@ MODAL_DEMO_USDT = _f("MODAL_DEMO_USDT", 10)
 MODAL_LIVE_USDT = _f("MODAL_LIVE_USDT", 5)
 MODAL_USDT = MODAL_LIVE_USDT if MODE == "live" else MODAL_DEMO_USDT
 LEVERAGE = _f("LEVERAGE", 5)
-TP_PERCENT = _f("TP_PERCENT", 0.25)
+TP_PERCENT = _f("TP_PERCENT", 0.25)  # legacy; TP utama sekarang di HH/HL
 SL_POINTS = _f("SL_POINTS", 50)
 SCORE_MIN = _f("SCORE_MIN", 50)
+RR_MIN = _f("RR_MIN", 1.0)  # minimum reward:risk per titik grid (setelah TP di HH/HL)
 NEAR_SR_PERCENT = _f("NEAR_SR_PERCENT", 0.5)
 NEAR_MODE = os.getenv("NEAR_MODE", "atr").strip().lower()
 if NEAR_MODE not in ("atr", "persen"):

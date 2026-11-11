@@ -39,9 +39,8 @@ MODAL_DEMO_USDT = _f("MODAL_DEMO_USDT", 10)
 MODAL_LIVE_USDT = _f("MODAL_LIVE_USDT", 5)
 MODAL_USDT = MODAL_LIVE_USDT if MODE == "live" else MODAL_DEMO_USDT
 LEVERAGE = _f("LEVERAGE", 5)
-# Persen modal yang dialokasikan per setup (margin). Notional ≈ margin * leverage.
 RISK_PER_SETUP_PCT = _f("RISK_PER_SETUP_PCT", 5.0)
-TP_PERCENT = _f("TP_PERCENT", 0.25)  # cadangan; TP utama di S/R lawan (kerangka v2)
+TP_PERCENT = _f("TP_PERCENT", 0.25)
 SL_POINTS = _f("SL_POINTS", 50)
 SCORE_MIN = _f("SCORE_MIN", 50)
 RR_MIN = _f("RR_MIN", 1.0)
@@ -64,16 +63,14 @@ PENYARING_VOL_MIN_USDT = _f("PENYARING_VOL_MIN_USDT", 5000000)
 PENYARING_TOP_VOLUME = int(_f("PENYARING_TOP_VOLUME", 60))
 JUMLAH_PER_SISI = int(_f("JUMLAH_PER_SISI", 20))
 UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 0)
-# off = semua (minus blacklist) | only = hanya isi watchlist.json
-WATCHLIST_MODE = os.getenv("WATCHLIST_MODE", "only").strip().lower()
-if WATCHLIST_MODE not in ("off", "only"):
-    raise SystemExit("WATCHLIST_MODE di .env harus off atau only.")
+# off    = tidak pakai watchlist (hanya blacklist + volume)
+# prefer = token di watchlist diutamakan masuk daftar_40 (token lain tetap boleh)
+# only   = HANYA token di watchlist yang boleh lolos
+WATCHLIST_MODE = os.getenv("WATCHLIST_MODE", "prefer").strip().lower()
+if WATCHLIST_MODE not in ("off", "prefer", "only"):
+    raise SystemExit("WATCHLIST_MODE di .env harus off, prefer, atau only.")
 WATCHLIST_FILE = os.getenv("WATCHLIST_FILE", "watchlist.json").strip()
 
-_raw_bl = os.getenv(
-    "TOKEN_BLACKLIST",
-    "CSOP,CSOPSK,2L,2S,3L,3S,5L,5S,UP,DOWN,BULL,BEAR,"
-    "NVDA,TSLA,AAPL,MSFT,GOOGL,META,AMZN,AMD,INTC,COIN,MSTR,QQQ,SPY,TQQQ,SQQQ,"
-    "SOXL,SOXS,XAU,XAG,XAUT,PAXG,CL,BZ,NATGAS,COPPER,SP500,SPX",
-)
+# Kosongkan di .env (TOKEN_BLACKLIST=) untuk menonaktifkan blacklist saat eksperimen
+_raw_bl = os.getenv("TOKEN_BLACKLIST", "")
 TOKEN_BLACKLIST = [x.strip().upper() for x in _raw_bl.split(",") if x.strip()]

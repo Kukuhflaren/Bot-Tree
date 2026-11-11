@@ -1,13 +1,12 @@
-"""Fase 4a / Fase A: Penyaring tanpa AI + universe (blacklist + watchlist).
+"""Penyaring tanpa AI + universe (blacklist + watchlist prefer/only).
 
-Alur:
-  1. Ambil ticker futures USDT.
-  2. Buang stablecoin, blacklist, (opsional) di luar watchlist, volume kecil.
-  3. Rasio volume 7 hari.
-  4. Skor |ubah24j| × rasio × likuiditas.
-  5. Top N bullish / bearish → daftar_40.json.
-
-Hanya MEMBACA data publik. Tidak membuat order."""
+WATCHLIST_MODE=prefer:
+  Token di watchlist diutamakan masuk top N per sisi; token lain tetap bisa mengisi sisa slot.
+WATCHLIST_MODE=only:
+  Hanya token watchlist.
+WATCHLIST_MODE=off:
+  Tidak ada prioritas watchlist.
+"""
 import json
 from datetime import datetime, timezone
 
@@ -97,22 +96,27 @@ def hitung_skor(k):
     return ubah * min(k["rasio_vol"], 3.0) * likuid
 
 
-def susun_daftar(kandidat, jumlah):
+def susun_daftar(kandidat, jumlah, watchlist):
     for k in kandidat:
         k["skor"] = hitung_skor(k)
+        base = k["simbol"].split("/")[0].upper()
+        k["prioritas_watchlist"] = base in {s.upper() for s in watchlist}
     naik = [k for k in kandidat if k["ubah_24j"] > 0]
     turun = [k for k in kandidat if k["ubah_24j"] < 0]
-    urut = lambda daftar: sorted(daftar, key=lambda k: k["skor"], reverse=True)[:jumlah]
-    return urut(naik), urut(turun)
+    return (
+        uni.prioritaskan_watchlist(naik, watchlist, jumlah),
+        uni.prioritaskan_watchlist(turun, watchlist, jumlah),
+    )
 
 
 def cetak(judul, daftar):
     print(f"\n{judul} ({len(daftar)})")
-    print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}")
+    print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}  W")
     for i, k in enumerate(daftar, 1):
         tanda = " !" if abs(k["ubah_24j"]) >= 30 else ""
+        w = "*" if k.get("prioritas_watchlist") else " "
         print(f"  {i:>2} {k['simbol']:16} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>13.1f} "
-              f"{k['rasio_vol']:>8.2f}x {k['skor']:>7.2f}{tanda}")
+              f"{k['rasio_vol']:>8.2f}x {k['skor']:>7.2f}{tanda}  {w}")
 
 
 def jalankan(ex=None):
@@ -125,16 +129,17 @@ def jalankan(ex=None):
         f"| mode watchlist: {config.WATCHLIST_MODE} ({len(wl)} simbol)"
     )
     print(
-        f"Dibuang — blacklist: {dibuang['blacklist']} | luar watchlist: {dibuang['watchlist']} "
+        f"Dibuang — blacklist: {dibuang['blacklist']} | luar watchlist(only): {dibuang['watchlist']} "
         f"| volume rendah: {dibuang['volume']} | data kosong: {dibuang['data']}"
     )
     kandidat, gagal = tambah_rasio_volume(ex, kandidat)
     if gagal:
         print(f"Catatan: {gagal} token gagal volume harian (rasio=1.0).")
-    bull, bear = susun_daftar(kandidat, config.JUMLAH_PER_SISI)
+    bull, bear = susun_daftar(kandidat, config.JUMLAH_PER_SISI, wl)
     hasil = {
         "waktu": datetime.now(timezone.utc).isoformat(),
         "watchlist_mode": config.WATCHLIST_MODE,
+        "watchlist": wl,
         "bullish": bull,
         "bearish": bear,
         "kandidat": kandidat,
@@ -152,3 +157,4 @@ if __name__ == "__main__":
     if kurang > 0:
         print(f"\nCatatan: daftar kurang {kurang} dari target {config.JUMLAH_PER_SISI * 2}.")
     print(f"\nTersimpan di {FILE_HASIL}")
+    print("Kolom W=* artinya token ada di watchlist (diprioritaskan).")

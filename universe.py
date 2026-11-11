@@ -1,6 +1,9 @@
-"""Fase A: universe — blacklist + watchlist.
+"""Universe: blacklist + watchlist.
 
-Dipakai penyaring dan (nanti) mesin sinyal agar filter token konsisten.
+WATCHLIST_MODE:
+  off    — abaikan watchlist; saring hanya blacklist + volume
+  prefer — semua token likuid boleh; watchlist diutamakan saat menyusun daftar_40
+  only   — hanya base name di watchlist.json yang boleh lolos
 """
 from __future__ import annotations
 
@@ -12,6 +15,8 @@ import config
 
 def kena_blacklist(nama_base: str) -> bool:
     """True jika base name cocok pola blacklist (sama / awalan / akhiran)."""
+    if not config.TOKEN_BLACKLIST:
+        return False
     n = nama_base.upper()
     for pola in config.TOKEN_BLACKLIST:
         if not pola:
@@ -31,13 +36,16 @@ def muat_watchlist(path: str | None = None) -> list[str]:
     return [str(s).strip().upper() for s in simbol if str(s).strip()]
 
 
-def lolos_universe(nama_base: str, watchlist: list[str] | None = None) -> tuple[bool, str]:
-    """Apakah base name boleh masuk pipeline.
+def dalam_watchlist(nama_base: str, watchlist: list[str] | None = None) -> bool:
+    wl = watchlist if watchlist is not None else muat_watchlist()
+    return nama_base.upper() in wl
 
-    Urutan:
-      1. Blacklist → tolak
-      2. WATCHLIST_MODE=only → harus ada di watchlist
-      3. selain itu → lolos
+
+def lolos_universe(nama_base: str, watchlist: list[str] | None = None) -> tuple[bool, str]:
+    """Apakah base name boleh masuk kandidat likuiditas.
+
+    prefer/off: hanya blacklist yang menolak.
+    only: harus ada di watchlist.
     """
     base = nama_base.upper()
     if kena_blacklist(base):
@@ -51,3 +59,26 @@ def lolos_universe(nama_base: str, watchlist: list[str] | None = None) -> tuple[
             return False, "di luar watchlist"
 
     return True, "ok"
+
+
+def prioritaskan_watchlist(daftar: list[dict], watchlist: list[str], jumlah: int) -> list[dict]:
+    """Susun ulang: isi watchlist yang ada di daftar didahulukan, sisanya menurut skor.
+
+    Tidak menambah token yang tidak lolos saring volume. Hanya mengubah urutan / jatah slot.
+    """
+    if not daftar or not watchlist or config.WATCHLIST_MODE != "prefer":
+        return sorted(daftar, key=lambda k: k.get("skor", 0), reverse=True)[:jumlah]
+
+    wl = {s.upper() for s in watchlist}
+    prioritas = []
+    lainnya = []
+    for k in daftar:
+        base = k["simbol"].split("/")[0].upper()
+        if base in wl:
+            prioritas.append(k)
+        else:
+            lainnya.append(k)
+
+    prioritas.sort(key=lambda k: k.get("skor", 0), reverse=True)
+    lainnya.sort(key=lambda k: k.get("skor", 0), reverse=True)
+    return (prioritas + lainnya)[:jumlah]

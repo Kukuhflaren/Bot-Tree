@@ -2,7 +2,7 @@
 
 Alur (5 langkah):
   1. Ambil data 24 jam SEMUA kontrak futures USDT dari Bitget (1 panggilan).
-  2. Buang token yang kurang likuid (volume kecil) dan stablecoin, ambil N volume terbesar.
+  2. Buang token yang kurang likuid (volume kecil), stablecoin, dan blacklist (leveraged/equity-jam).
   3. Untuk N token itu, bandingkan volume 24 jam dengan rata-rata 7 hari sebelumnya (rasio volume).
   4. Beri skor = |perubahan harga 24 jam| x rasio volume (dibatasi maks 3x).
   5. Naik -> daftar BULLISH, turun -> daftar BEARISH. Simpan ke daftar_40.json.
@@ -25,6 +25,22 @@ def buat_exchange():
     ex = ccxt.bitget({"enableRateLimit": True, "timeout": 20000, "options": {"defaultType": "swap"}})
     ex.has["fetchCurrencies"] = False  # tidak diperlukan, dan endpoint-nya pernah bermasalah
     return ex
+
+
+def kena_blacklist(nama_base):
+    """True jika base name (mis. CSOPSK2LHKD) cocok pola blacklist.
+
+    Cocok jika:
+      - sama persis dengan item blacklist, atau
+      - diawali / diakhiri item (untuk 2L, 3S, CSOP, dll.)
+    """
+    n = nama_base.upper()
+    for pola in config.TOKEN_BLACKLIST:
+        if not pola:
+            continue
+        if n == pola or n.startswith(pola) or n.endswith(pola):
+            return True
+    return False
 
 
 # ---------- Langkah 1 ----------
@@ -51,10 +67,15 @@ def ubah_persen(t):
 # ---------- Langkah 2 ----------
 def saring_likuid(tickers):
     hasil = []
+    dibuang_bl = 0
     for simbol, t in tickers.items():
         if not simbol.endswith(":USDT"):  # hanya perpetual berkolateral USDT
             continue
-        if simbol.split("/")[0] in STABLECOIN:
+        base = simbol.split("/")[0]
+        if base in STABLECOIN:
+            continue
+        if kena_blacklist(base):
+            dibuang_bl += 1
             continue
         vol, ubah = t.get("quoteVolume"), ubah_persen(t)
         if vol is None or ubah is None or not t.get("last"):
@@ -63,7 +84,7 @@ def saring_likuid(tickers):
             continue
         hasil.append({"simbol": simbol, "harga": t["last"], "ubah_24j": ubah, "vol_24j_usdt": vol})
     hasil.sort(key=lambda k: k["vol_24j_usdt"], reverse=True)  # volume terbesar di depan
-    return hasil[: config.PENYARING_TOP_VOLUME]
+    return hasil[: config.PENYARING_TOP_VOLUME], dibuang_bl
 
 
 # ---------- Langkah 3 ----------
@@ -113,8 +134,9 @@ def cetak(judul, daftar):
 def jalankan(ex=None):
     ex = ex or buat_exchange()
     tickers = ambil_semua_ticker(ex)
-    kandidat = saring_likuid(tickers)
-    print(f"Total ticker: {len(tickers)} | lolos likuiditas (maks {config.PENYARING_TOP_VOLUME}): {len(kandidat)}")
+    kandidat, dibuang_bl = saring_likuid(tickers)
+    print(f"Total ticker: {len(tickers)} | lolos likuiditas (maks {config.PENYARING_TOP_VOLUME}): {len(kandidat)}"
+          f" | dibuang blacklist: {dibuang_bl}")
     kandidat, gagal = tambah_rasio_volume(ex, kandidat)
     if gagal:
         print(f"Catatan: {gagal} token gagal diambil volume hariannya (rasio dianggap 1.0).")

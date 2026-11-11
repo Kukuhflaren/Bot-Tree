@@ -10,7 +10,7 @@ Alur:
 Perubahan penting:
   - TP bersama di HH (bullish) / HL (bearish), bukan persen fixed dari entry
   - SL tetap fixed poin di luar HL/HH
-  - Titik dengan sl_salah_sisi atau RR < RR_MIN ditandai tidak valid
+  - Titik valid hanya jika: tidak sl_salah_sisi, RR >= RR_MIN, risk_atr dalam [RISK_ATR_MIN, RISK_ATR_MAX]
   - VWAP + konfirmasi tren 30m ikut dalam syarat bot
 
 AI hanya memberi pendapat (veto/second opinion). Keputusan dan angka tetap dari bot.
@@ -50,7 +50,7 @@ def muat_token():
     return token
 
 
-def rencana(a, arah, rr_min=None):
+def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
     """Titik grid dengan TP bersama di HH/HL dan SL fixed poin di luar HL/HH.
 
     Bullish: TP = HH, SL = HL - (SL_POINTS * harga * 1e-4)
@@ -59,11 +59,19 @@ def rencana(a, arah, rr_min=None):
     Titik ditolak (valid=False) jika:
       - SL berada di sisi yang salah relatif entry (sl_salah_sisi)
       - risk <= 0 atau reward <= 0 (geometri rusak)
-      - RR < rr_min (default config.RR_MIN = 1.0)
+      - RR < rr_min
+      - risk_atr < risk_atr_min  (SL terlalu sempit vs volatilitas → mudah kena noise)
+      - risk_atr > risk_atr_max  (SL terlalu lebar)
     """
     if rr_min is None:
         rr_min = config.RR_MIN
+    if risk_atr_min is None:
+        risk_atr_min = config.RISK_ATR_MIN
+    if risk_atr_max is None:
+        risk_atr_max = config.RISK_ATR_MAX
+
     p = a["harga"]
+    atr = a.get("atr") or 0.0
     # TP bersama: semua grid ditutup saat harga menyentuh HH (long) atau HL (short)
     tp = a["HH"] if arah > 0 else a["HL"]
     # SL fixed poin di luar struktur HL/HH
@@ -83,13 +91,17 @@ def rencana(a, arah, rr_min=None):
 
         risiko_persen = (risk / h * 100) if h > 0 else 0.0
         reward_persen = (reward / h * 100) if h > 0 else 0.0
+        risk_atr = (risk / atr) if atr > 0 else None
 
         if risk <= 0 or reward <= 0:
             rr = None
             valid = False
         else:
             rr = reward / risk
-            valid = (not sl_salah_sisi) and (rr >= rr_min)
+            atr_ok = True
+            if risk_atr is not None:
+                atr_ok = (risk_atr >= risk_atr_min) and (risk_atr <= risk_atr_max)
+            valid = (not sl_salah_sisi) and (rr >= rr_min) and atr_ok
 
         hasil.append({
             "titik": nama,
@@ -100,6 +112,7 @@ def rencana(a, arah, rr_min=None):
             "risiko_sl_persen": r(risiko_persen, 3),
             "reward_persen": r(reward_persen, 3),
             "rr": r(rr, 3) if rr is not None else None,
+            "risk_atr": r(risk_atr, 3) if risk_atr is not None else None,
             "sl_salah_sisi": sl_salah_sisi,
             "valid": valid,
         })
@@ -116,6 +129,7 @@ def snapshot(t, a):
         if i < len(a["syarat"]):
             syarat_dict[nama] = a["syarat"][i]
 
+    risk_atrs = [g["risk_atr"] for g in valid_grid if g.get("risk_atr") is not None]
     return {
         "simbol": t["nama"],
         "arah": "BULLISH" if t["arah"] > 0 else "BEARISH",
@@ -144,7 +158,8 @@ def snapshot(t, a):
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
         "rr_terbaik": r(max((g["rr"] for g in valid_grid if g["rr"] is not None), default=None), 3),
-        # Bot hanya layak jika indikator layak DAN minimal 1 titik grid lolos RR_MIN
+        "risk_atr_min_valid": r(min(risk_atrs), 3) if risk_atrs else None,
+        # Bot hanya layak jika indikator layak DAN minimal 1 titik grid lolos semua filter
         "layak_bot_final": bool(a["layak"] and len(valid_grid) >= 1),
     }
 
@@ -156,6 +171,7 @@ Parameter bot:
 - TP BERSAMA di HH (bullish) atau HL (bearish) — semua grid ditutup sekaligus saat harga menyentuh level itu
 - SL fixed {config.SL_POINTS:.0f} poin (1 poin = 0,01% harga) di luar HL/HH
 - RR minimum per titik grid = {config.RR_MIN}
+- risk (jarak entry→SL) harus antara {config.RISK_ATR_MIN}× dan {config.RISK_ATR_MAX}× ATR (menolak SL terlalu sempit/lebar)
 - biaya pulang-pergi sekitar {BIAYA_PP}% harga
 - tiap titik limit memakai sebagian modal
 
@@ -169,7 +185,7 @@ Tugasmu memberi second opinion (bukan memprediksi harga):
 
 Pertimbangkan:
 - hanya titik dengan valid=true yang boleh dipilih
-- RR harus >= {config.RR_MIN}
+- RR tinggi saja TIDAK cukup jika risk_atr terlalu kecil (mudah kena noise)
 - VWAP dan tren_30m harus mendukung arah
 - jarak ke S/R relatif ATR
 - lonjakan ekstrem
@@ -187,7 +203,10 @@ def jalankan(k):
     token = muat_token()
     ex = dp.exchange_publik()
     print(f"Menghitung {len(token)} token dari candle 5m...")
-    print(f"Aturan: TP di HH/HL | SL {config.SL_POINTS:.0f} poin di luar struktur | RR min {config.RR_MIN}\n")
+    print(
+        f"Aturan: TP di HH/HL | SL {config.SL_POINTS:.0f} poin | "
+        f"RR min {config.RR_MIN} | risk ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]\n"
+    )
     hasil = []
     for t in token:
         try:
@@ -230,6 +249,7 @@ def jalankan(k):
         n_valid = s["titik_valid"]
         print(f"{'':9} grid: {len(s['titik_grid'])} total, {n_valid} valid | "
               f"rr terbaik: {s['rr_terbaik'] if s['rr_terbaik'] is not None else '-'} | "
+              f"risk_atr min valid: {s.get('risk_atr_min_valid')} | "
               f"SL salah sisi: {n_salah} | "
               f"VWAP ok: {s.get('vwap_ok')} | tren30m: {s.get('tren_30m', {}).get('ok')} | "
               f"layak AI: {h.get('titik_layak')}")
@@ -242,6 +262,7 @@ def jalankan(k):
             "layak_bot": s["layak_bot_final"],
             "titik_valid": n_valid,
             "rr_terbaik": s["rr_terbaik"],
+            "risk_atr_min_valid": s.get("risk_atr_min_valid"),
             "verdict": v,
             "keyakinan": h.get("keyakinan"),
             "alasan": h.get("alasan"),

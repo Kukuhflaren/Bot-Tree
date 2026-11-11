@@ -43,6 +43,9 @@ TP_PERCENT = _f("TP_PERCENT", 0.25)  # legacy; TP utama sekarang di HH/HL
 SL_POINTS = _f("SL_POINTS", 50)
 SCORE_MIN = _f("SCORE_MIN", 50)
 RR_MIN = _f("RR_MIN", 1.0)  # minimum reward:risk per titik grid (setelah TP di HH/HL)
+# Jarak SL dari entry dalam kelipatan ATR (mencegah SL terlalu sempit / terlalu lebar)
+RISK_ATR_MIN = _f("RISK_ATR_MIN", 1.0)
+RISK_ATR_MAX = _f("RISK_ATR_MAX", 2.5)
 NEAR_SR_PERCENT = _f("NEAR_SR_PERCENT", 0.5)
 NEAR_MODE = os.getenv("NEAR_MODE", "atr").strip().lower()
 if NEAR_MODE not in ("atr", "persen"):
@@ -60,3 +63,11 @@ PENYARING_TOP_VOLUME = int(_f("PENYARING_TOP_VOLUME", 60))
 JUMLAH_PER_SISI = int(_f("JUMLAH_PER_SISI", 20))
 UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 0)
 KILL_SWITCH = os.getenv("KILL_SWITCH", "off").strip().lower() == "on"
+
+# Blacklist nama base (tanpa /USDT:USDT). Pola awalan/akhiran untuk produk leveraged & equity-jam.
+# Format di .env: dipisah koma, contoh: CSOP,2L,2S,3L,3S
+_raw_bl = os.getenv(
+    "TOKEN_BLACKLIST",
+    "CSOP,CSOPSK,2L,2S,3L,3S,5L,5S,UP,DOWN,BULL,BEAR",
+)
+TOKEN_BLACKLIST = [x.strip().upper() for x in _raw_bl.split(",") if x.strip()]

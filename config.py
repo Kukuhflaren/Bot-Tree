@@ -31,7 +31,7 @@ AI_KEYS = {
     "gpt": os.getenv("OPENAI_API_KEY", ""),
 }
 AI_MODEL = os.getenv("AI_MODEL", "").strip()
-AI_MODEL_CARI = os.getenv("AI_MODEL_CARI", "").strip()  # model khusus untuk eksperimen dengan pencarian Google
+AI_MODEL_CARI = os.getenv("AI_MODEL_CARI", "").strip()
 AI_MAX_CALLS_PER_DAY = int(_f("AI_MAX_CALLS_PER_DAY", 24))
 AI_MAX_TOKENS_PER_HARI = int(_f("AI_MAX_TOKENS_PER_HARI", 30000))
 
@@ -39,35 +39,41 @@ MODAL_DEMO_USDT = _f("MODAL_DEMO_USDT", 10)
 MODAL_LIVE_USDT = _f("MODAL_LIVE_USDT", 5)
 MODAL_USDT = MODAL_LIVE_USDT if MODE == "live" else MODAL_DEMO_USDT
 LEVERAGE = _f("LEVERAGE", 5)
-TP_PERCENT = _f("TP_PERCENT", 0.25)  # legacy; TP utama sekarang di HH/HL
+# Persen modal yang dialokasikan per setup (margin). Notional ≈ margin * leverage.
+RISK_PER_SETUP_PCT = _f("RISK_PER_SETUP_PCT", 5.0)
+TP_PERCENT = _f("TP_PERCENT", 0.25)  # cadangan; TP utama di S/R lawan (kerangka v2)
 SL_POINTS = _f("SL_POINTS", 50)
 SCORE_MIN = _f("SCORE_MIN", 50)
-RR_MIN = _f("RR_MIN", 1.0)  # minimum reward:risk per titik grid (setelah TP di HH/HL)
-# Jarak SL dari entry dalam kelipatan ATR (mencegah SL terlalu sempit / terlalu lebar)
+RR_MIN = _f("RR_MIN", 1.0)
 RISK_ATR_MIN = _f("RISK_ATR_MIN", 1.0)
 RISK_ATR_MAX = _f("RISK_ATR_MAX", 2.5)
 NEAR_SR_PERCENT = _f("NEAR_SR_PERCENT", 0.5)
 NEAR_MODE = os.getenv("NEAR_MODE", "atr").strip().lower()
 if NEAR_MODE not in ("atr", "persen"):
     raise SystemExit("NEAR_MODE di .env harus atr atau persen.")
-NEAR_ATR_MULT = _f("NEAR_ATR_MULT", 1.5)
+NEAR_ATR_MULT = _f("NEAR_ATR_MULT", 2.5)
 
 MAX_DAILY_LOSS_USDT = _f("MAX_DAILY_LOSS_USDT", 2)
 MAX_OPEN_TOKENS = int(_f("MAX_OPEN_TOKENS", 1))
 DRY_RUN = os.getenv("DRY_RUN", "on").strip().lower() != "off"
 MAX_CONSECUTIVE_LOSSES = int(_f("MAX_CONSECUTIVE_LOSSES", 3))
+KILL_SWITCH = os.getenv("KILL_SWITCH", "off").strip().lower() == "on"
 
-# --- Penyaring 24 jam  ---
+# --- Penyaring / universe ---
 PENYARING_VOL_MIN_USDT = _f("PENYARING_VOL_MIN_USDT", 5000000)
 PENYARING_TOP_VOLUME = int(_f("PENYARING_TOP_VOLUME", 60))
 JUMLAH_PER_SISI = int(_f("JUMLAH_PER_SISI", 20))
 UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 0)
-KILL_SWITCH = os.getenv("KILL_SWITCH", "off").strip().lower() == "on"
+# off = semua (minus blacklist) | only = hanya isi watchlist.json
+WATCHLIST_MODE = os.getenv("WATCHLIST_MODE", "only").strip().lower()
+if WATCHLIST_MODE not in ("off", "only"):
+    raise SystemExit("WATCHLIST_MODE di .env harus off atau only.")
+WATCHLIST_FILE = os.getenv("WATCHLIST_FILE", "watchlist.json").strip()
 
-# Blacklist nama base (tanpa /USDT:USDT). Pola awalan/akhiran untuk produk leveraged & equity-jam.
-# Format di .env: dipisah koma, contoh: CSOP,2L,2S,3L,3S
 _raw_bl = os.getenv(
     "TOKEN_BLACKLIST",
-    "CSOP,CSOPSK,2L,2S,3L,3S,5L,5S,UP,DOWN,BULL,BEAR",
+    "CSOP,CSOPSK,2L,2S,3L,3S,5L,5S,UP,DOWN,BULL,BEAR,"
+    "NVDA,TSLA,AAPL,MSFT,GOOGL,META,AMZN,AMD,INTC,COIN,MSTR,QQQ,SPY,TQQQ,SQQQ,"
+    "SOXL,SOXS,XAU,XAG,XAUT,PAXG,CL,BZ,NATGAS,COPPER,SP500,SPX",
 )
 TOKEN_BLACKLIST = [x.strip().upper() for x in _raw_bl.split(",") if x.strip()]

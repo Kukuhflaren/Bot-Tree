@@ -1,11 +1,11 @@
-"""Fase 4a: Penyaring tanpa AI.
+"""Fase 4a / Fase A: Penyaring tanpa AI + universe (blacklist + watchlist).
 
-Alur (5 langkah):
-  1. Ambil data 24 jam SEMUA kontrak futures USDT dari Bitget (1 panggilan).
-  2. Buang token yang kurang likuid (volume kecil), stablecoin, dan blacklist (leveraged/equity-jam).
-  3. Untuk N token itu, bandingkan volume 24 jam dengan rata-rata 7 hari sebelumnya (rasio volume).
-  4. Beri skor = |perubahan harga 24 jam| x rasio volume (dibatasi maks 3x).
-  5. Naik -> daftar BULLISH, turun -> daftar BEARISH. Simpan ke daftar_40.json.
+Alur:
+  1. Ambil ticker futures USDT.
+  2. Buang stablecoin, blacklist, (opsional) di luar watchlist, volume kecil.
+  3. Rasio volume 7 hari.
+  4. Skor |ubah24j| × rasio × likuiditas.
+  5. Top N bullish / bearish → daftar_40.json.
 
 Hanya MEMBACA data publik. Tidak membuat order."""
 import json
@@ -16,6 +16,7 @@ import math
 import ccxt
 
 import config
+import universe as uni
 
 FILE_HASIL = "daftar_40.json"
 STABLECOIN = {"USDC", "USDE", "FDUSD", "TUSD", "DAI", "USDD"}
@@ -23,29 +24,11 @@ STABLECOIN = {"USDC", "USDE", "FDUSD", "TUSD", "DAI", "USDD"}
 
 def buat_exchange():
     ex = ccxt.bitget({"enableRateLimit": True, "timeout": 20000, "options": {"defaultType": "swap"}})
-    ex.has["fetchCurrencies"] = False  # tidak diperlukan, dan endpoint-nya pernah bermasalah
+    ex.has["fetchCurrencies"] = False
     return ex
 
 
-def kena_blacklist(nama_base):
-    """True jika base name (mis. CSOPSK2LHKD) cocok pola blacklist.
-
-    Cocok jika:
-      - sama persis dengan item blacklist, atau
-      - diawali / diakhiri item (untuk 2L, 3S, CSOP, dll.)
-    """
-    n = nama_base.upper()
-    for pola in config.TOKEN_BLACKLIST:
-        if not pola:
-            continue
-        if n == pola or n.startswith(pola) or n.endswith(pola):
-            return True
-    return False
-
-
-# ---------- Langkah 1 ----------
 def ambil_semua_ticker(ex):
-    """Mencoba beberapa cara pemanggilan; kalau semua gagal, tampilkan semua galatnya."""
     galat = []
     for params in ({}, {"productType": "USDT-FUTURES"}, {"uta": config.BITGET_UTA}):
         try:
@@ -56,7 +39,6 @@ def ambil_semua_ticker(ex):
 
 
 def ubah_persen(t):
-    """Perubahan harga 24 jam (persen). Kalau tidak tersedia langsung, hitung dari harga buka."""
     if t.get("percentage") is not None:
         return t["percentage"]
     if t.get("open") and t.get("last"):
@@ -64,54 +46,56 @@ def ubah_persen(t):
     return None
 
 
-# ---------- Langkah 2 ----------
-def saring_likuid(tickers):
+def saring_likuid(tickers, watchlist):
     hasil = []
-    dibuang_bl = 0
+    dibuang = {"blacklist": 0, "watchlist": 0, "volume": 0, "data": 0}
     for simbol, t in tickers.items():
-        if not simbol.endswith(":USDT"):  # hanya perpetual berkolateral USDT
+        if not simbol.endswith(":USDT"):
             continue
         base = simbol.split("/")[0]
         if base in STABLECOIN:
             continue
-        if kena_blacklist(base):
-            dibuang_bl += 1
+        ok, alasan = uni.lolos_universe(base, watchlist)
+        if not ok:
+            if alasan == "blacklist":
+                dibuang["blacklist"] += 1
+            else:
+                dibuang["watchlist"] += 1
             continue
         vol, ubah = t.get("quoteVolume"), ubah_persen(t)
         if vol is None or ubah is None or not t.get("last"):
-            continue  # data tidak lengkap -> lewati
+            dibuang["data"] += 1
+            continue
         if vol < config.PENYARING_VOL_MIN_USDT:
+            dibuang["volume"] += 1
             continue
         hasil.append({"simbol": simbol, "harga": t["last"], "ubah_24j": ubah, "vol_24j_usdt": vol})
-    hasil.sort(key=lambda k: k["vol_24j_usdt"], reverse=True)  # volume terbesar di depan
-    return hasil[: config.PENYARING_TOP_VOLUME], dibuang_bl
+    hasil.sort(key=lambda k: k["vol_24j_usdt"], reverse=True)
+    return hasil[: config.PENYARING_TOP_VOLUME], dibuang
 
 
-# ---------- Langkah 3 ----------
 def tambah_rasio_volume(ex, kandidat):
     gagal = 0
     for k in kandidat:
         try:
             harian = ex.fetch_ohlcv(k["simbol"], "1d", None, 9)
-            tutup = harian[:-1][-7:]  # buang hari yang masih berjalan, ambil 7 hari terakhir
-            # volume candle dalam koin; dikali harga tutup = perkiraan volume dalam USDT
+            tutup = harian[:-1][-7:]
             per_hari = [r[5] * r[4] for r in tutup]
             rata = sum(per_hari) / len(per_hari) if per_hari else 0
             k["rasio_vol"] = k["vol_24j_usdt"] / rata if rata > 0 else 1.0
         except Exception:
             gagal += 1
-            k["rasio_vol"] = 1.0  # data tidak ada -> anggap volume normal
+            k["rasio_vol"] = 1.0
     return kandidat, gagal
 
 
-# ---------- Langkah 4 dan 5 ----------
 def hitung_skor(k):
     ubah = abs(k["ubah_24j"])
-    if config.UBAH_MAKS_SKOR > 0:  # 0 = tidak dibatasi
+    if config.UBAH_MAKS_SKOR > 0:
         ubah = min(ubah, config.UBAH_MAKS_SKOR)
-    # likuiditas: 1.0 di 1 juta USDT, 2.0 di 10 juta, 3.0 di 100 juta
     likuid = math.log10(max(k["vol_24j_usdt"], 1e6) / 1e6) + 1
     return ubah * min(k["rasio_vol"], 3.0) * likuid
+
 
 def susun_daftar(kandidat, jumlah):
     for k in kandidat:
@@ -126,22 +110,35 @@ def cetak(judul, daftar):
     print(f"\n{judul} ({len(daftar)})")
     print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}")
     for i, k in enumerate(daftar, 1):
-        tanda = " !" if abs(k["ubah_24j"]) >= 30 else ""  # tanda "!" = perubahan ekstrem, hati-hati
+        tanda = " !" if abs(k["ubah_24j"]) >= 30 else ""
         print(f"  {i:>2} {k['simbol']:16} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>13.1f} "
               f"{k['rasio_vol']:>8.2f}x {k['skor']:>7.2f}{tanda}")
 
 
 def jalankan(ex=None):
     ex = ex or buat_exchange()
+    wl = uni.muat_watchlist()
     tickers = ambil_semua_ticker(ex)
-    kandidat, dibuang_bl = saring_likuid(tickers)
-    print(f"Total ticker: {len(tickers)} | lolos likuiditas (maks {config.PENYARING_TOP_VOLUME}): {len(kandidat)}"
-          f" | dibuang blacklist: {dibuang_bl}")
+    kandidat, dibuang = saring_likuid(tickers, wl)
+    print(
+        f"Total ticker: {len(tickers)} | lolos saring: {len(kandidat)} "
+        f"| mode watchlist: {config.WATCHLIST_MODE} ({len(wl)} simbol)"
+    )
+    print(
+        f"Dibuang — blacklist: {dibuang['blacklist']} | luar watchlist: {dibuang['watchlist']} "
+        f"| volume rendah: {dibuang['volume']} | data kosong: {dibuang['data']}"
+    )
     kandidat, gagal = tambah_rasio_volume(ex, kandidat)
     if gagal:
-        print(f"Catatan: {gagal} token gagal diambil volume hariannya (rasio dianggap 1.0).")
+        print(f"Catatan: {gagal} token gagal volume harian (rasio=1.0).")
     bull, bear = susun_daftar(kandidat, config.JUMLAH_PER_SISI)
-    hasil = {"waktu": datetime.now(timezone.utc).isoformat(), "bullish": bull, "bearish": bear, "kandidat": kandidat}
+    hasil = {
+        "waktu": datetime.now(timezone.utc).isoformat(),
+        "watchlist_mode": config.WATCHLIST_MODE,
+        "bullish": bull,
+        "bearish": bear,
+        "kandidat": kandidat,
+    }
     with open(FILE_HASIL, "w", encoding="utf-8") as f:
         json.dump(hasil, f, indent=2, ensure_ascii=False)
     return hasil
@@ -153,6 +150,5 @@ if __name__ == "__main__":
     cetak("BEARISH", h["bearish"])
     kurang = config.JUMLAH_PER_SISI * 2 - len(h["bullish"]) - len(h["bearish"])
     if kurang > 0:
-        print(f"\nCatatan: daftar kurang {kurang} dari target {config.JUMLAH_PER_SISI * 2}. "
-              "Wajar kalau pasar sedang sangat condong satu arah.")
+        print(f"\nCatatan: daftar kurang {kurang} dari target {config.JUMLAH_PER_SISI * 2}.")
     print(f"\nTersimpan di {FILE_HASIL}")

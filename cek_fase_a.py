@@ -17,7 +17,7 @@ def gagal(pesan):
 
 
 def main():
-    print("=== Cek Fase A: Fondasi risk & universe ===\n")
+    print("=== Cek Fondasi risk & universe ===\n")
     masalah = 0
 
     # --- Config risk ---
@@ -109,9 +109,9 @@ def main():
 
     print("\n=== Hasil ===")
     if masalah == 0:
-        print("Fase A SIAP. Lanjut penyaring dengan watchlist, lalu Fase B (entry/exit tertulis).")
+        print("Fondasi risk & universe siap. Lanjut penyaring dengan watchlist, lalu entry/exit tertulis.")
     else:
-        print(f"Ada {masalah} item perlu diperbaiki sebelum menganggap Fase A selesai.")
+        print(f"Ada {masalah} item perlu diperbaiki sebelum menganggap Fondasi risk & universe selesai.")
     return masalah
 
 

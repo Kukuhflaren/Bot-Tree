@@ -1,13 +1,13 @@
 {
   "snapshot": [
     {
-      "simbol": "IDOL",
-      "arah": "BEARISH",
-      "harga": 0.030463,
-      "atr_persen": 1.62,
-      "ubah_24j_persen": -9.16,
-      "volume_24j_juta": 5.12,
-      "rasio_volume": 0.412,
+      "simbol": "CSOPSK2LHKD",
+      "arah": "BULLISH",
+      "harga": 16.15,
+      "atr_persen": 1.11,
+      "ubah_24j_persen": 11.6,
+      "volume_24j_juta": 14.8,
+      "rasio_volume": 1.59,
       "skor_bot": 100,
       "zona": "Eksekusi",
       "lonjakan_ekstrem": false,
@@ -18,216 +18,532 @@
         "SAR": 20,
         "Candle": 20
       },
-      "rsi": 26.2,
+      "rsi": 70.5,
+      "vwap": 15.483,
+      "di_atas_vwap": true,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": true,
+        "arah_30m": 1,
+        "candle_sesuai": 5
+      },
       "syarat": {
         "tren": true,
         "ema": true,
         "macd": true,
-        "dekat_sr": true
+        "dekat_sr": true,
+        "vwap": true,
+        "tren_30m": true
       },
-      "jarak_ke_sr_persen": 1.46,
-      "jarak_ke_sr_atr": 0.901,
-      "titik_grid": [
-        {
-          "titik": "R1",
-          "harga": 0.030908,
-          "jarak_persen": 1.46,
-          "tp": 0.030831,
-          "sl": 0.034933,
-          "risiko_sl_persen": 13.0,
-          "rr": 0.0192,
-          "sl_salah_sisi": false
-        },
-        {
-          "titik": "R2",
-          "harga": 0.031353,
-          "jarak_persen": 2.92,
-          "tp": 0.031275,
-          "sl": 0.034933,
-          "risiko_sl_persen": 11.4,
-          "rr": 0.0219,
-          "sl_salah_sisi": false
-        },
-        {
-          "titik": "HH",
-          "harga": 0.034781,
-          "jarak_persen": 14.2,
-          "tp": 0.034694,
-          "sl": 0.034933,
-          "risiko_sl_persen": 0.438,
-          "rr": 0.571,
-          "sl_salah_sisi": false
-        }
-      ]
-    },
-    {
-      "simbol": "PIEVERSE",
-      "arah": "BULLISH",
-      "harga": 2.0932,
-      "atr_persen": 1.19,
-      "ubah_24j_persen": 17.4,
-      "volume_24j_juta": 26.0,
-      "rasio_volume": 7.02,
-      "skor_bot": 85,
-      "zona": "Persiapan",
-      "lonjakan_ekstrem": false,
-      "komponen_dari_20": {
-        "RSI": 11,
-        "EMA": 20,
-        "MACD": 20,
-        "SAR": 20,
-        "Candle": 14
-      },
-      "rsi": 60.8,
-      "syarat": {
-        "tren": true,
-        "ema": true,
-        "macd": true,
-        "dekat_sr": false
-      },
-      "jarak_ke_sr_persen": 2.06,
-      "jarak_ke_sr_atr": 1.72,
+      "jarak_ke_sr_persen": 2.34,
+      "jarak_ke_sr_atr": 2.12,
+      "tp_bersama": 15.929,
       "titik_grid": [
         {
           "titik": "S1",
-          "harga": 2.0501,
-          "jarak_persen": 2.06,
-          "tp": 2.0553,
-          "sl": 1.9427,
-          "risiko_sl_persen": 5.24,
-          "rr": 0.0477,
-          "sl_salah_sisi": false
+          "harga": 15.772,
+          "jarak_persen": 2.34,
+          "tp": 15.929,
+          "sl": 14.648,
+          "risiko_sl_persen": 7.12,
+          "reward_persen": 0.995,
+          "rr": 0.14,
+          "sl_salah_sisi": false,
+          "valid": false
         },
         {
           "titik": "S2",
-          "harga": 2.0303,
-          "jarak_persen": 3.01,
-          "tp": 2.0354,
-          "sl": 1.9427,
-          "risiko_sl_persen": 4.32,
-          "rr": 0.0579,
-          "sl_salah_sisi": false
+          "harga": 15.67,
+          "jarak_persen": 2.97,
+          "tp": 15.929,
+          "sl": 14.648,
+          "risiko_sl_persen": 6.52,
+          "reward_persen": 1.65,
+          "rr": 0.253,
+          "sl_salah_sisi": false,
+          "valid": false
         },
         {
           "titik": "HL",
-          "harga": 1.9531,
-          "jarak_persen": 6.69,
-          "tp": 1.958,
-          "sl": 1.9427,
-          "risiko_sl_persen": 0.536,
-          "rr": 0.467,
-          "sl_salah_sisi": false
+          "harga": 14.729,
+          "jarak_persen": 8.8,
+          "tp": 15.929,
+          "sl": 14.648,
+          "risiko_sl_persen": 0.548,
+          "reward_persen": 8.15,
+          "rr": 14.9,
+          "sl_salah_sisi": false,
+          "valid": true
         }
-      ]
+      ],
+      "titik_valid": 1,
+      "rr_terbaik": 14.9,
+      "layak_bot_final": true
+    },
+    {
+      "simbol": "SKUU",
+      "arah": "BULLISH",
+      "harga": 13.346,
+      "atr_persen": 0.99,
+      "ubah_24j_persen": 12.5,
+      "volume_24j_juta": 4.72,
+      "rasio_volume": 1.13,
+      "skor_bot": 99,
+      "zona": "Eksekusi",
+      "lonjakan_ekstrem": false,
+      "komponen_dari_20": {
+        "RSI": 19,
+        "EMA": 20,
+        "MACD": 20,
+        "SAR": 20,
+        "Candle": 20
+      },
+      "rsi": 69.1,
+      "vwap": 13.077,
+      "di_atas_vwap": true,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": true,
+        "arah_30m": 1,
+        "candle_sesuai": 4
+      },
+      "syarat": {
+        "tren": true,
+        "ema": true,
+        "macd": true,
+        "dekat_sr": true,
+        "vwap": true,
+        "tren_30m": true
+      },
+      "jarak_ke_sr_persen": 0.135,
+      "jarak_ke_sr_atr": 0.136,
+      "tp_bersama": 12.734,
+      "titik_grid": [
+        {
+          "titik": "S1",
+          "harga": 13.328,
+          "jarak_persen": 0.135,
+          "tp": 12.734,
+          "sl": 12.477,
+          "risiko_sl_persen": 6.38,
+          "reward_persen": -4.46,
+          "rr": null,
+          "sl_salah_sisi": false,
+          "valid": false
+        },
+        {
+          "titik": "S2",
+          "harga": 13.074,
+          "jarak_persen": 2.04,
+          "tp": 12.734,
+          "sl": 12.477,
+          "risiko_sl_persen": 4.56,
+          "reward_persen": -2.6,
+          "rr": null,
+          "sl_salah_sisi": false,
+          "valid": false
+        },
+        {
+          "titik": "HL",
+          "harga": 12.544,
+          "jarak_persen": 6.01,
+          "tp": 12.734,
+          "sl": 12.477,
+          "risiko_sl_persen": 0.532,
+          "reward_persen": 1.51,
+          "rr": 2.85,
+          "sl_salah_sisi": false,
+          "valid": true
+        }
+      ],
+      "titik_valid": 1,
+      "rr_terbaik": 2.85,
+      "layak_bot_final": true
     },
     {
       "simbol": "NATGAS",
       "arah": "BULLISH",
-      "harga": 3.479,
-      "atr_persen": 0.316,
+      "harga": 3.536,
+      "atr_persen": 0.119,
       "ubah_24j_persen": 9.93,
       "volume_24j_juta": 11.6,
       "rasio_volume": 1.92,
-      "skor_bot": 84,
+      "skor_bot": 99,
+      "zona": "Eksekusi",
+      "lonjakan_ekstrem": false,
+      "komponen_dari_20": {
+        "RSI": 19,
+        "EMA": 20,
+        "MACD": 20,
+        "SAR": 20,
+        "Candle": 20
+      },
+      "rsi": 69.0,
+      "vwap": 3.4706,
+      "di_atas_vwap": true,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": false,
+        "arah_30m": 1,
+        "candle_sesuai": 3
+      },
+      "syarat": {
+        "tren": false,
+        "ema": true,
+        "macd": true,
+        "dekat_sr": false,
+        "vwap": true,
+        "tren_30m": false
+      },
+      "jarak_ke_sr_persen": 0.99,
+      "jarak_ke_sr_atr": 8.31,
+      "tp_bersama": 3.536,
+      "titik_grid": [
+        {
+          "titik": "S1",
+          "harga": 3.501,
+          "jarak_persen": 0.99,
+          "tp": 3.536,
+          "sl": 3.4803,
+          "risiko_sl_persen": 0.591,
+          "reward_persen": 1.0,
+          "rr": 1.69,
+          "sl_salah_sisi": false,
+          "valid": true
+        },
+        {
+          "titik": "S2",
+          "harga": 3.498,
+          "jarak_persen": 1.07,
+          "tp": 3.536,
+          "sl": 3.4803,
+          "risiko_sl_persen": 0.505,
+          "reward_persen": 1.09,
+          "rr": 2.15,
+          "sl_salah_sisi": false,
+          "valid": true
+        }
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 2.15,
+      "layak_bot_final": false
+    },
+    {
+      "simbol": "XMR",
+      "arah": "BEARISH",
+      "harga": 560.23,
+      "atr_persen": 0.162,
+      "ubah_24j_persen": -7.33,
+      "volume_24j_juta": 6.19,
+      "rasio_volume": 2.11,
+      "skor_bot": 89,
+      "zona": "Persiapan",
+      "lonjakan_ekstrem": false,
+      "komponen_dari_20": {
+        "RSI": 9,
+        "EMA": 20,
+        "MACD": 20,
+        "SAR": 20,
+        "Candle": 20
+      },
+      "rsi": 41.5,
+      "vwap": 560.05,
+      "di_atas_vwap": true,
+      "vwap_ok": false,
+      "tren_30m": {
+        "ok": false,
+        "arah_30m": -1,
+        "candle_sesuai": 3
+      },
+      "syarat": {
+        "tren": false,
+        "ema": true,
+        "macd": true,
+        "dekat_sr": true,
+        "vwap": false,
+        "tren_30m": false
+      },
+      "jarak_ke_sr_persen": 0.162,
+      "jarak_ke_sr_atr": 1.0,
+      "tp_bersama": 556.95,
+      "titik_grid": [
+        {
+          "titik": "R1",
+          "harga": 561.14,
+          "jarak_persen": 0.162,
+          "tp": 556.95,
+          "sl": 566.94,
+          "risiko_sl_persen": 1.03,
+          "reward_persen": 0.747,
+          "rr": 0.722,
+          "sl_salah_sisi": false,
+          "valid": false
+        },
+        {
+          "titik": "R2",
+          "harga": 561.95,
+          "jarak_persen": 0.307,
+          "tp": 556.95,
+          "sl": 566.94,
+          "risiko_sl_persen": 0.888,
+          "reward_persen": 0.89,
+          "rr": 1.0,
+          "sl_salah_sisi": false,
+          "valid": true
+        },
+        {
+          "titik": "HH",
+          "harga": 564.14,
+          "jarak_persen": 0.698,
+          "tp": 556.95,
+          "sl": 566.94,
+          "risiko_sl_persen": 0.497,
+          "reward_persen": 1.27,
+          "rr": 2.57,
+          "sl_salah_sisi": false,
+          "valid": true
+        }
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 2.57,
+      "layak_bot_final": false
+    },
+    {
+      "simbol": "ZHIPU",
+      "arah": "BULLISH",
+      "harga": 62.96,
+      "atr_persen": 0.285,
+      "ubah_24j_persen": 14.1,
+      "volume_24j_juta": 16.6,
+      "rasio_volume": 1.44,
+      "skor_bot": 88,
       "zona": "Persiapan",
       "lonjakan_ekstrem": false,
       "komponen_dari_20": {
         "RSI": 20,
         "EMA": 20,
-        "MACD": 10,
+        "MACD": 20,
         "SAR": 20,
-        "Candle": 14
+        "Candle": 8
       },
-      "rsi": 72.3,
+      "rsi": 79.6,
+      "vwap": 61.582,
+      "di_atas_vwap": true,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": true,
+        "arah_30m": 1,
+        "candle_sesuai": 5
+      },
       "syarat": {
         "tren": true,
         "ema": true,
-        "macd": false,
-        "dekat_sr": false
+        "macd": true,
+        "dekat_sr": false,
+        "vwap": true,
+        "tren_30m": true
       },
-      "jarak_ke_sr_persen": 2.39,
-      "jarak_ke_sr_atr": 7.55,
+      "jarak_ke_sr_persen": 1.91,
+      "jarak_ke_sr_atr": 6.69,
+      "tp_bersama": 61.87,
       "titik_grid": [
         {
           "titik": "S1",
-          "harga": 3.396,
-          "jarak_persen": 2.39,
-          "tp": 3.4045,
-          "sl": 3.3786,
-          "risiko_sl_persen": 0.512,
-          "rr": 0.488,
-          "sl_salah_sisi": false
+          "harga": 61.76,
+          "jarak_persen": 1.91,
+          "tp": 61.87,
+          "sl": 61.215,
+          "risiko_sl_persen": 0.882,
+          "reward_persen": 0.178,
+          "rr": 0.202,
+          "sl_salah_sisi": false,
+          "valid": false
         },
         {
           "titik": "S2",
-          "harga": 3.378,
-          "jarak_persen": 2.9,
-          "tp": 3.3864,
-          "sl": 3.3786,
-          "risiko_sl_persen": 0.0179,
-          "rr": 14.0,
-          "sl_salah_sisi": true
+          "harga": 61.53,
+          "jarak_persen": 2.27,
+          "tp": 61.87,
+          "sl": 61.215,
+          "risiko_sl_persen": 0.512,
+          "reward_persen": 0.553,
+          "rr": 1.08,
+          "sl_salah_sisi": false,
+          "valid": true
         },
         {
           "titik": "S3",
-          "harga": 3.372,
-          "jarak_persen": 3.08,
-          "tp": 3.3804,
-          "sl": 3.3786,
-          "risiko_sl_persen": 0.196,
-          "rr": 1.28,
-          "sl_salah_sisi": true
+          "harga": 61.317,
+          "jarak_persen": 2.61,
+          "tp": 61.87,
+          "sl": 61.215,
+          "risiko_sl_persen": 0.165,
+          "reward_persen": 0.902,
+          "rr": 5.45,
+          "sl_salah_sisi": false,
+          "valid": true
         }
-      ]
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 5.45,
+      "layak_bot_final": false
     },
     {
-      "simbol": "ANTHROPIC",
-      "arah": "BEARISH",
-      "harga": 1313.1,
-      "atr_persen": 1.77,
-      "ubah_24j_persen": -5.87,
-      "volume_24j_juta": 224.0,
-      "rasio_volume": 4.45,
-      "skor_bot": 78,
+      "simbol": "AMD",
+      "arah": "BULLISH",
+      "harga": 526.44,
+      "atr_persen": 0.282,
+      "ubah_24j_persen": 8.01,
+      "volume_24j_juta": 14.3,
+      "rasio_volume": 0.744,
+      "skor_bot": 80,
       "zona": "Persiapan",
       "lonjakan_ekstrem": false,
       "komponen_dari_20": {
         "RSI": 20,
+        "EMA": 20,
+        "MACD": 20,
+        "SAR": 0,
+        "Candle": 20
+      },
+      "rsi": 76.5,
+      "vwap": 514.51,
+      "di_atas_vwap": true,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": true,
+        "arah_30m": 1,
+        "candle_sesuai": 4
+      },
+      "syarat": {
+        "tren": false,
+        "ema": true,
+        "macd": true,
+        "dekat_sr": false,
+        "vwap": true,
+        "tren_30m": true
+      },
+      "jarak_ke_sr_persen": 2.45,
+      "jarak_ke_sr_atr": 8.69,
+      "tp_bersama": 518.21,
+      "titik_grid": [
+        {
+          "titik": "S1",
+          "harga": 513.52,
+          "jarak_persen": 2.45,
+          "tp": 518.21,
+          "sl": 510.89,
+          "risiko_sl_persen": 0.513,
+          "reward_persen": 0.913,
+          "rr": 1.78,
+          "sl_salah_sisi": false,
+          "valid": true
+        },
+        {
+          "titik": "S2",
+          "harga": 511.99,
+          "jarak_persen": 2.74,
+          "tp": 518.21,
+          "sl": 510.89,
+          "risiko_sl_persen": 0.215,
+          "reward_persen": 1.21,
+          "rr": 5.64,
+          "sl_salah_sisi": false,
+          "valid": true
+        }
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 5.64,
+      "layak_bot_final": false
+    },
+    {
+      "simbol": "UAI",
+      "arah": "BEARISH",
+      "harga": 0.04025,
+      "atr_persen": 1.38,
+      "ubah_24j_persen": -7.15,
+      "volume_24j_juta": 18.5,
+      "rasio_volume": 1.07,
+      "skor_bot": 68,
+      "zona": "Pantau",
+      "lonjakan_ekstrem": false,
+      "komponen_dari_20": {
+        "RSI": 10,
         "EMA": 20,
         "MACD": 10,
         "SAR": 20,
         "Candle": 8
       },
-      "rsi": 21.2,
+      "rsi": 40.5,
+      "vwap": 0.038783,
+      "di_atas_vwap": true,
+      "vwap_ok": false,
+      "tren_30m": {
+        "ok": false,
+        "arah_30m": -1,
+        "candle_sesuai": 3
+      },
       "syarat": {
-        "tren": true,
+        "tren": false,
         "ema": true,
         "macd": false,
-        "dekat_sr": false
+        "dekat_sr": true,
+        "vwap": false,
+        "tren_30m": false
       },
-      "jarak_ke_sr_persen": 9.21,
-      "jarak_ke_sr_atr": 5.2,
+      "jarak_ke_sr_persen": 2.62,
+      "jarak_ke_sr_atr": 1.9,
+      "tp_bersama": 0.04076,
       "titik_grid": [
         {
           "titik": "R1",
-          "harga": 1434.0,
-          "jarak_persen": 9.21,
-          "tp": 1430.4,
-          "sl": 1449.1,
-          "risiko_sl_persen": 1.05,
-          "rr": 0.238,
-          "sl_salah_sisi": false
+          "harga": 0.041305,
+          "jarak_persen": 2.62,
+          "tp": 0.04076,
+          "sl": 0.043531,
+          "risiko_sl_persen": 5.39,
+          "reward_persen": 1.32,
+          "rr": 0.245,
+          "sl_salah_sisi": false,
+          "valid": false
+        },
+        {
+          "titik": "R2",
+          "harga": 0.04225,
+          "jarak_persen": 4.97,
+          "tp": 0.04076,
+          "sl": 0.043531,
+          "risiko_sl_persen": 3.03,
+          "reward_persen": 3.53,
+          "rr": 1.16,
+          "sl_salah_sisi": false,
+          "valid": true
+        },
+        {
+          "titik": "HH",
+          "harga": 0.04333,
+          "jarak_persen": 7.65,
+          "tp": 0.04076,
+          "sl": 0.043531,
+          "risiko_sl_persen": 0.464,
+          "reward_persen": 5.93,
+          "rr": 12.8,
+          "sl_salah_sisi": false,
+          "valid": true
         }
-      ]
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 12.8,
+      "layak_bot_final": false
     },
     {
-      "simbol": "ARIA",
-      "arah": "BULLISH",
-      "harga": 0.20675,
-      "atr_persen": 3.58,
-      "ubah_24j_persen": 30.5,
-      "volume_24j_juta": 7.57,
-      "rasio_volume": 1.32,
+      "simbol": "QNT",
+      "arah": "BEARISH",
+      "harga": 180.88,
+      "atr_persen": 0.268,
+      "ubah_24j_persen": -7.9,
+      "volume_24j_juta": 4.29,
+      "rasio_volume": 0.908,
       "skor_bot": 66,
       "zona": "Pantau",
       "lonjakan_ekstrem": false,
@@ -238,292 +554,159 @@
         "SAR": 20,
         "Candle": 0
       },
-      "rsi": 56.2,
-      "syarat": {
-        "tren": false,
-        "ema": true,
-        "macd": true,
-        "dekat_sr": false
+      "rsi": 44.0,
+      "vwap": 184.28,
+      "di_atas_vwap": false,
+      "vwap_ok": true,
+      "tren_30m": {
+        "ok": false,
+        "arah_30m": -1,
+        "candle_sesuai": 5
       },
-      "jarak_ke_sr_persen": 6.08,
-      "jarak_ke_sr_atr": 1.7,
-      "titik_grid": [
-        {
-          "titik": "S1",
-          "harga": 0.19417,
-          "jarak_persen": 6.08,
-          "tp": 0.19466,
-          "sl": 0.19314,
-          "risiko_sl_persen": 0.532,
-          "rr": 0.47,
-          "sl_salah_sisi": false
-        },
-        {
-          "titik": "S2",
-          "harga": 0.18205,
-          "jarak_persen": 11.9,
-          "tp": 0.18251,
-          "sl": 0.19314,
-          "risiko_sl_persen": 6.09,
-          "rr": 0.0411,
-          "sl_salah_sisi": true
-        },
-        {
-          "titik": "S3",
-          "harga": 0.17403,
-          "jarak_persen": 15.8,
-          "tp": 0.17447,
-          "sl": 0.19314,
-          "risiko_sl_persen": 11.0,
-          "rr": 0.0228,
-          "sl_salah_sisi": true
-        }
-      ]
-    },
-    {
-      "simbol": "CYBER",
-      "arah": "BULLISH",
-      "harga": 0.304,
-      "atr_persen": 5.69,
-      "ubah_24j_persen": 12.6,
-      "volume_24j_juta": 4.41,
-      "rasio_volume": 0.614,
-      "skor_bot": 59,
-      "zona": "Pantau",
-      "lonjakan_ekstrem": false,
-      "komponen_dari_20": {
-        "RSI": 9,
-        "EMA": 20,
-        "MACD": 10,
-        "SAR": 0,
-        "Candle": 20
-      },
-      "rsi": 58.7,
       "syarat": {
         "tren": true,
         "ema": true,
-        "macd": false,
-        "dekat_sr": false
+        "macd": true,
+        "dekat_sr": false,
+        "vwap": true,
+        "tren_30m": false
       },
-      "jarak_ke_sr_persen": 15.2,
-      "jarak_ke_sr_atr": 2.67,
-      "titik_grid": [
-        {
-          "titik": "S1",
-          "harga": 0.25783,
-          "jarak_persen": 15.2,
-          "tp": 0.25848,
-          "sl": 0.25488,
-          "risiko_sl_persen": 1.15,
-          "rr": 0.218,
-          "sl_salah_sisi": false
-        }
-      ]
-    },
-    {
-      "simbol": "BZ",
-      "arah": "BEARISH",
-      "harga": 89.7,
-      "atr_persen": 0.2,
-      "ubah_24j_persen": -5.17,
-      "volume_24j_juta": 61.7,
-      "rasio_volume": 1.52,
-      "skor_bot": 57,
-      "zona": "Pantau",
-      "lonjakan_ekstrem": false,
-      "komponen_dari_20": {
-        "RSI": 1,
-        "EMA": 20,
-        "MACD": 10,
-        "SAR": 20,
-        "Candle": 6
-      },
-      "rsi": 48.7,
-      "syarat": {
-        "tren": false,
-        "ema": true,
-        "macd": false,
-        "dekat_sr": false
-      },
-      "jarak_ke_sr_persen": 0.814,
-      "jarak_ke_sr_atr": 4.07,
+      "jarak_ke_sr_persen": 1.32,
+      "jarak_ke_sr_atr": 4.91,
+      "tp_bersama": 179.97,
       "titik_grid": [
         {
           "titik": "R1",
-          "harga": 90.43,
-          "jarak_persen": 0.814,
-          "tp": 90.204,
-          "sl": 90.879,
-          "risiko_sl_persen": 0.496,
-          "rr": 0.504,
-          "sl_salah_sisi": false
+          "harga": 183.26,
+          "jarak_persen": 1.32,
+          "tp": 179.97,
+          "sl": 184.71,
+          "risiko_sl_persen": 0.794,
+          "reward_persen": 1.8,
+          "rr": 2.26,
+          "sl_salah_sisi": false,
+          "valid": true
         },
         {
           "titik": "R2",
-          "harga": 90.63,
-          "jarak_persen": 1.04,
-          "tp": 90.403,
-          "sl": 90.879,
-          "risiko_sl_persen": 0.274,
-          "rr": 0.912,
-          "sl_salah_sisi": false
+          "harga": 183.81,
+          "jarak_persen": 1.62,
+          "tp": 179.97,
+          "sl": 184.71,
+          "risiko_sl_persen": 0.492,
+          "reward_persen": 2.09,
+          "rr": 4.25,
+          "sl_salah_sisi": false,
+          "valid": true
         },
         {
           "titik": "R3",
-          "harga": 91.12,
-          "jarak_persen": 1.58,
-          "tp": 90.892,
-          "sl": 90.879,
-          "risiko_sl_persen": 0.265,
-          "rr": 0.943,
-          "sl_salah_sisi": true
+          "harga": 185.92,
+          "jarak_persen": 2.79,
+          "tp": 179.97,
+          "sl": 184.71,
+          "risiko_sl_persen": -0.648,
+          "reward_persen": 3.2,
+          "rr": null,
+          "sl_salah_sisi": true,
+          "valid": false
         }
-      ]
-    },
-    {
-      "simbol": "CL",
-      "arah": "BEARISH",
-      "harga": 84.834,
-      "atr_persen": 0.197,
-      "ubah_24j_persen": -3.84,
-      "volume_24j_juta": 68.5,
-      "rasio_volume": 1.02,
-      "skor_bot": 57,
-      "zona": "Pantau",
-      "lonjakan_ekstrem": false,
-      "komponen_dari_20": {
-        "RSI": 1,
-        "EMA": 20,
-        "MACD": 10,
-        "SAR": 20,
-        "Candle": 6
-      },
-      "rsi": 49.2,
-      "syarat": {
-        "tren": false,
-        "ema": false,
-        "macd": false,
-        "dekat_sr": true
-      },
-      "jarak_ke_sr_persen": 0.0354,
-      "jarak_ke_sr_atr": 0.179,
-      "titik_grid": [
-        {
-          "titik": "R1",
-          "harga": 84.864,
-          "jarak_persen": 0.0354,
-          "tp": 84.652,
-          "sl": 85.885,
-          "risiko_sl_persen": 1.2,
-          "rr": 0.208,
-          "sl_salah_sisi": false
-        },
-        {
-          "titik": "R2",
-          "harga": 85.303,
-          "jarak_persen": 0.553,
-          "tp": 85.09,
-          "sl": 85.885,
-          "risiko_sl_persen": 0.682,
-          "rr": 0.366,
-          "sl_salah_sisi": false
-        },
-        {
-          "titik": "HH",
-          "harga": 85.461,
-          "jarak_persen": 0.739,
-          "tp": 85.247,
-          "sl": 85.885,
-          "risiko_sl_persen": 0.496,
-          "rr": 0.504,
-          "sl_salah_sisi": false
-        }
-      ]
+      ],
+      "titik_valid": 2,
+      "rr_terbaik": 4.25,
+      "layak_bot_final": false
     }
   ],
   "jawaban": {
-    "ringkasan": "Sebagian besar token memiliki rasio reward-to-risk rendah dan beberapa titik grid melanggar aturan stop loss.",
+    "ringkasan": "Evaluasi risiko bot scalping futures pada berbagai token berdasarkan parameter teknikal dan validitas titik grid.",
     "hasil": [
       {
-        "simbol": "IDOL",
-        "verdict": "TOLAK",
-        "keyakinan": 1,
-        "alasan": "Skor bot 100 dengan RR 0.0192 sangat buruk menghadapi risiko SL 13.0 persen.",
-        "risiko": "Risiko SL terlalu besar dibanding TP tipis",
-        "titik_layak": []
+        "simbol": "CSOPSK2LHKD",
+        "verdict": "MASUK",
+        "keyakinan": 4,
+        "alasan": "Skor 100 dengan RR 14.9 mendukung masuk pada titik HL.",
+        "risiko": "Jarak ke SR 2.34% cukup jauh.",
+        "titik_layak": [
+          "HL"
+        ]
       },
       {
-        "simbol": "PIEVERSE",
-        "verdict": "TUNGGU",
-        "keyakinan": 2,
-        "alasan": "Volume 24j 26.0 juta bagus, namun RR 0.0477 masih terlalu kecil.",
-        "risiko": "Reward to risk rasio tidak memadai",
-        "titik_layak": []
+        "simbol": "SKUU",
+        "verdict": "MASUK",
+        "keyakinan": 4,
+        "alasan": "Skor bot 99 dengan RR 2.85 pada titik HL.",
+        "risiko": "Jarak ke SR sempit 0.135%.",
+        "titik_layak": [
+          "HL"
+        ]
       },
       {
         "simbol": "NATGAS",
-        "verdict": "TOLAK",
-        "keyakinan": 1,
-        "alasan": "Titik S2 dan S3 memiliki sl_salah_sisi bernilai true sehingga tidak valid.",
-        "risiko": "SL berada di sisi yang salah",
-        "titik_layak": [
-          "S1"
-        ]
-      },
-      {
-        "simbol": "ANTHROPIC",
-        "verdict": "TUNGGU",
-        "keyakinan": 2,
-        "alasan": "Volume 224.0 juta tinggi, tapi jarak ke SR 9.21 persen terlalu jauh.",
-        "risiko": "Jarak ke S/R terlalu jauh dari ATR",
-        "titik_layak": [
-          "R1"
-        ]
-      },
-      {
-        "simbol": "ARIA",
-        "verdict": "TOLAK",
-        "keyakinan": 1,
-        "alasan": "Skor 66 dengan S2 dan S3 memiliki sl_salah_sisi true.",
-        "risiko": "Banyak titik grid dengan SL salah sisi",
-        "titik_layak": [
-          "S1"
-        ]
-      },
-      {
-        "simbol": "CYBER",
-        "verdict": "TOLAK",
-        "keyakinan": 2,
-        "alasan": "Skor bot 59 dan jarak ke SR 15.2 persen terlalu ekstrem.",
-        "risiko": "Jarak S/R jauh dan volatilitas tinggi",
-        "titik_layak": [
-          "S1"
-        ]
-      },
-      {
-        "simbol": "BZ",
         "verdict": "TUNGGU",
         "keyakinan": 3,
-        "alasan": "ATR tipis 0.2 persen dan volume 61.7 juta, tapi R3 salah sisi.",
-        "risiko": "Titik grid R3 invalid karena SL salah sisi",
+        "alasan": "Tren 30m tidak ok meskipun skor bot 99.",
+        "risiko": "Jarak ke SR ATR 8.31 terlalu lebar.",
+        "titik_layak": [
+          "S1",
+          "S2"
+        ]
+      },
+      {
+        "simbol": "XMR",
+        "verdict": "TOLAK",
+        "keyakinan": 2,
+        "alasan": "Zona persiapan dengan VWAP tidak ok dan tren 30m false.",
+        "risiko": "VWAP tidak mendukung arah bearish.",
+        "titik_layak": [
+          "R2",
+          "HH"
+        ]
+      },
+      {
+        "simbol": "ZHIPU",
+        "verdict": "TOLAK",
+        "keyakinan": 2,
+        "alasan": "Jarak ke SR 1.91% dengan zona persiapan.",
+        "risiko": "Jarak ke SR ATR 6.69 terlalu tinggi.",
+        "titik_layak": [
+          "S2",
+          "S3"
+        ]
+      },
+      {
+        "simbol": "AMD",
+        "verdict": "TOLAK",
+        "keyakinan": 2,
+        "alasan": "Syarat tren false dengan jarak ke SR 2.45%.",
+        "risiko": "Rasio volume rendah 0.744.",
+        "titik_layak": [
+          "S1",
+          "S2"
+        ]
+      },
+      {
+        "simbol": "UAI",
+        "verdict": "TOLAK",
+        "keyakinan": 1,
+        "alasan": "Zona pantau dengan skor bot rendah 68.",
+        "risiko": "MACD dan VWAP tidak ok.",
+        "titik_layak": [
+          "R2",
+          "HH"
+        ]
+      },
+      {
+        "simbol": "QNT",
+        "verdict": "TOLAK",
+        "keyakinan": 2,
+        "alasan": "Zona pantau skor 66 dengan tren 30m false.",
+        "risiko": "Tren 30m tidak mendukung.",
         "titik_layak": [
           "R1",
           "R2"
         ]
-      },
-      {
-        "simbol": "CL",
-        "verdict": "MASUK",
-        "keyakinan": 4,
-        "alasan": "Jarak ke SR hanya 0.0354 persen dengan ATR 0.197 persen, dekat sekali.",
-        "risiko": "RR rendah namun posisi dekat S/R valid",
-        "titik_layak": [
-          "R1",
-          "R2",
-          "HH"
-        ]
       }
     ]
   },
-  "token": 4285
+  "token": 5565
 }

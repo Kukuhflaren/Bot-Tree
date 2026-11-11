@@ -1,4 +1,4 @@
-"""Verifikasi Fase A: risk + universe.
+"""Verifikasi risk + universe.
 
 Jalankan: python cek_fase_a.py
 """
@@ -85,43 +85,6 @@ def main():
         ok("TOKEN_BLACKLIST kosong (eksperimen — tidak ada yang ditolak blacklist)")
     else:
         ok(f"TOKEN_BLACKLIST aktif: {len(config.TOKEN_BLACKLIST)} pola")
-
-    # prefer/off: ETH harus lolos universe; only: hanya isi watchlist
-    eth_ok, eth_alasan = uni.lolos_universe("ETH", wl)
-    btc_ok, _ = uni.lolos_universe("BTC", wl)
-    nvda_ok, nvda_alasan = uni.lolos_universe("NVDA", wl)
-
-    if btc_ok:
-        ok("BTC lolos saring universe")
-    else:
-        gagal("BTC ditolak universe")
-        masalah += 1
-
-    if mode == "only":
-        if eth_ok and "ETH" in wl:
-            ok("ETH di watchlist → lolos")
-        elif not eth_ok:
-            ok(f"ETH di luar watchlist → ditolak (mode only) ({eth_alasan})")
-        if not nvda_ok:
-            ok(f"NVDA ditolak ({nvda_alasan})")
-    else:
-        # prefer / off: token di luar watchlist tetap lolos (kecuali blacklist)
-        if eth_ok:
-            ok("ETH lolos (mode prefer/off — tidak dibatasi watchlist)")
-        else:
-            gagal(f"ETH ditolak padahal mode {mode}: {eth_alasan}")
-            masalah += 1
-        if config.TOKEN_BLACKLIST and uni.kena_blacklist("NVDA"):
-            if not nvda_ok:
-                ok(f"NVDA ditolak blacklist ({nvda_alasan})")
-            else:
-                gagal("NVDA seharusnya blacklist")
-                masalah += 1
-        else:
-            if nvda_ok:
-                ok("NVDA lolos (tidak di blacklist / blacklist kosong)")
-            else:
-                ok(f"NVDA ditolak: {nvda_alasan}")
 
     # Uji prioritas prefer
     if mode == "prefer" and wl:

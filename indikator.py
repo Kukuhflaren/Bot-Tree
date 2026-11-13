@@ -10,6 +10,7 @@ PIVOT_W = 10  # jendela puncak/lembah untuk support/resistance (10 x 5m = 50 men
 GRID_MAKS_ATR = 12  # titik grid lebih jauh dari 12 x ATR dari harga dibuang (hampir tidak akan terisi)
 TREN_W = 5    # jendela lebih pendek khusus untuk menilai tren (respons lebih cepat)
 CANDLE_30M = 6  # 6 x 5 menit = 30 menit untuk konfirmasi tren pendek
+MACD30_MENGUAT = False  # [FASE B] True: histogram MACD 30m harus searah DAN menguat; False: cukup searah
 
 
 def ema(nilai, n):
@@ -157,6 +158,33 @@ def konfirmasi_tren_30m(c, arah):
     }
 
 
+# [FASE B] Konfirmasi timeframe 30 MENIT dari candle 30m asli (bukan 6 candle 5m terakhir)
+def konfirmasi_htf(c30, arah, w=3):
+    """Konfirmasi timeframe 30 menit dari candle 30m yang SUDAH TUTUP.
+      - tren_ok : struktur puncak/lembah 30m searah (bullish: HH+HL, bearish: LH+LL)
+                  DAN EMA9 vs EMA21 searah
+      - macd_ok : histogram MACD 30m searah (jika MACD30_MENGUAT=True: searah DAN menguat)
+    ok = keduanya True. Butuh minimal 40 candle 30m."""
+    kosong = {"ok": False, "tren_ok": False, "macd_ok": False, "arah_30m": 0,
+              "candle_sesuai": None, "vwap_30m": None}
+    if not c30 or len(c30) < 40:
+        return kosong
+    cl = [x["c"] for x in c30]
+    e9, e21 = ema(cl, 9), ema(cl, 21)
+    mh = macd_hist(cl)
+    ph, pl = pivot(c30, w)
+    struktur = 0
+    if len(ph) > 1 and len(pl) > 1:
+        if ph[-1] > ph[-2] and pl[-1] > pl[-2]:
+            struktur = 1
+        elif ph[-1] < ph[-2] and pl[-1] < pl[-2]:
+            struktur = -1
+    tren_ok = struktur == arah and (e9[-1] - e21[-1]) * arah > 0
+    macd_ok = mh[-1] * arah > 0 and (not MACD30_MENGUAT or mh[-1] * arah > mh[-2] * arah)
+    return {"ok": tren_ok and macd_ok, "tren_ok": tren_ok, "macd_ok": macd_ok, "arah_30m": struktur,
+            "candle_sesuai": None, "vwap_30m": None}
+
+
 def klaster(level, toleransi):
     """Gabungkan level yang berdekatan (selisih <= toleransi) menjadi satu level (rata-rata)."""
     hasil, grup = [], []
@@ -210,7 +238,7 @@ def _batas(x, maks):
     return max(0, min(maks, x))
 
 
-def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr=1.5):
+def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr=1.5, c30=None):  # [FASE B] c30 = candle 30m
     """c = candle yang SUDAH TUTUP (buang candle terakhir yang masih berjalan).
     arah: 1 = bullish, -1 = bearish (dari pilihan AI).
 
@@ -266,7 +294,8 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
     vwap_ok = (s > 0 and di_atas_vwap) or (s < 0 and not di_atas_vwap)
 
     # Konfirmasi 30 menit terakhir
-    k30 = konfirmasi_tren_30m(c, s)
+    # [FASE B] kalau candle 30m diberikan, pakai tren + MACD timeframe 30m; kalau tidak, cara lama (6 candle 5m)
+    k30 = konfirmasi_htf(c30, s) if c30 else konfirmasi_tren_30m(c, s)
 
     tr = 0
     if len(pht) > 1 and len(plt) > 1:
@@ -310,5 +339,6 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
         "layak": all(syarat) and not ekstrem and mentah >= skor_min and len(grid) >= 1,
         "rincian": [("RSI", rp), ("EMA", ep), ("MACD", mp), ("SAR", sp), ("Candle", cdp)],
         "rsi": rsi, "atr": rata_tr, "grid": grid,
+        "level_bawah": bawah, "level_atas": atas,  # [FASE B] level S/R NYATA (tanpa nilai cadangan)
         "tren_info": {"puncak": pht[-2:], "lembah": plt[-2:], "tren": tr},
     }

@@ -42,6 +42,12 @@ LEVERAGE = _f("LEVERAGE", 5)
 RISK_PER_SETUP_PCT = _f("RISK_PER_SETUP_PCT", 5.0)
 TP_PERCENT = _f("TP_PERCENT", 0.25)
 SL_POINTS = _f("SL_POINTS", 50)
+# [FASE B] SL_BUFFER_ATR > 0: jarak SL di luar HL/HH = nilai ini x ATR (menggantikan SL_POINTS). 0 = pakai SL_POINTS
+SL_BUFFER_ATR = _f("SL_BUFFER_ATR", 0)
+# [FASE B] sr_lawan = TP di S/R lawan terdekat (grid klasik) | struktur = TP di HH/HL | persen = TP_PERCENT dari entry
+TP_MODE = os.getenv("TP_MODE", "sr_lawan").strip().lower()
+if TP_MODE not in ("sr_lawan", "struktur", "persen"):
+    raise SystemExit("TP_MODE di .env harus sr_lawan, struktur, atau persen.")
 SCORE_MIN = _f("SCORE_MIN", 50)
 RR_MIN = _f("RR_MIN", 1.0)
 RISK_ATR_MIN = _f("RISK_ATR_MIN", 1.0)

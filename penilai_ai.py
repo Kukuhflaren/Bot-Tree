@@ -50,19 +50,35 @@ def muat_token():
     return token
 
 
+# [FASE B] TP sesuai TP_MODE; SL bisa berbasis poin atau ATR
+def tp_untuk(a, arah, h):
+    """Harga TP untuk titik masuk h. None = tidak ada level nyata (titik ditolak)."""
+    if config.TP_MODE == "persen":
+        return h * (1 + arah * config.TP_PERCENT / 100)
+    if config.TP_MODE == "struktur":
+        return a["HH"] if arah > 0 else a["HL"]
+    lawan = a["level_atas"] if arah > 0 else a["level_bawah"]  # S/R lawan terdekat (level nyata)
+    return lawan[0] if lawan else None
+
+
+def buffer_sl(a):
+    """Jarak SL di luar HL/HH dalam satuan harga."""
+    if config.SL_BUFFER_ATR > 0:
+        return config.SL_BUFFER_ATR * (a.get("atr") or 0.0)
+    return config.SL_POINTS * a["harga"] * 1e-4  # 1 poin = 0,01% harga
+
+
 def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
-    """Titik grid dengan TP bersama di HH/HL dan SL fixed poin di luar HL/HH.
+    """Titik grid dengan TP (sesuai TP_MODE) dan SL di luar HL/HH.
 
-    Bullish: TP = HH, SL = HL - (SL_POINTS * harga * 1e-4)
-    Bearish: TP = HL, SL = HH + (SL_POINTS * harga * 1e-4)
-
+    Bullish: SL = HL - buffer     Bearish: SL = HH + buffer
     Titik ditolak (valid=False) jika:
-      - SL berada di sisi yang salah relatif entry (sl_salah_sisi)
-      - risk <= 0 atau reward <= 0 (geometri rusak)
+      - tidak ada TP nyata (mode sr_lawan tanpa level lawan)
+      - SL berada di sisi yang salah relatif entry
+      - risk atau reward <= 0
       - RR < rr_min
-      - risk_atr < risk_atr_min  (SL terlalu sempit vs volatilitas → mudah kena noise)
-      - risk_atr > risk_atr_max  (SL terlalu lebar)
-    """
+      - risk_atr di luar [risk_atr_min, risk_atr_max]
+    Kolom "tolak" berisi alasan penolakan."""
     if rr_min is None:
         rr_min = config.RR_MIN
     if risk_atr_min is None:
@@ -72,49 +88,55 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
 
     p = a["harga"]
     atr = a.get("atr") or 0.0
-    # TP bersama: semua grid ditutup saat harga menyentuh HH (long) atau HL (short)
-    tp = a["HH"] if arah > 0 else a["HL"]
-    # SL fixed poin di luar struktur HL/HH
     ref = a["HL"] if arah > 0 else a["HH"]
-    sl_h = ref - arah * config.SL_POINTS * p * 1e-4  # 1 poin = 0,01% harga
+    sl_h = ref - arah * buffer_sl(a)
 
     hasil = []
     for nama, h in a["grid"]:
+        tp_h = tp_untuk(a, arah, h)
+        tolak = []
         if arah > 0:
             sl_salah_sisi = sl_h >= h
             risk = h - sl_h
-            reward = tp - h
+            reward = (tp_h - h) if tp_h is not None else None
         else:
             sl_salah_sisi = sl_h <= h
             risk = sl_h - h
-            reward = h - tp
+            reward = (h - tp_h) if tp_h is not None else None
 
         risiko_persen = (risk / h * 100) if h > 0 else 0.0
-        reward_persen = (reward / h * 100) if h > 0 else 0.0
+        reward_persen = (reward / h * 100) if (reward is not None and h > 0) else None
         risk_atr = (risk / atr) if atr > 0 else None
 
-        if risk <= 0 or reward <= 0:
-            rr = None
-            valid = False
-        else:
+        rr = None
+        if tp_h is None:
+            tolak.append("tanpa TP nyata")
+        if sl_salah_sisi:
+            tolak.append("SL salah sisi")
+        if risk <= 0 or (reward is not None and reward <= 0):
+            tolak.append("geometri rusak")
+        elif reward is not None and not sl_salah_sisi:
             rr = reward / risk
-            atr_ok = True
-            if risk_atr is not None:
-                atr_ok = (risk_atr >= risk_atr_min) and (risk_atr <= risk_atr_max)
-            valid = (not sl_salah_sisi) and (rr >= rr_min) and atr_ok
+            if rr < rr_min:
+                tolak.append(f"RR {rr:.2f} < {rr_min}")
+            if risk_atr is not None and risk_atr < risk_atr_min:
+                tolak.append(f"risk_atr {risk_atr:.2f} < {risk_atr_min}")
+            if risk_atr is not None and risk_atr > risk_atr_max:
+                tolak.append(f"risk_atr {risk_atr:.2f} > {risk_atr_max}")
 
         hasil.append({
             "titik": nama,
             "harga": r(h),
             "jarak_persen": r(abs(h - p) / p * 100, 3),
-            "tp": r(tp),
+            "tp": r(tp_h) if tp_h is not None else None,
             "sl": r(sl_h),
             "risiko_sl_persen": r(risiko_persen, 3),
-            "reward_persen": r(reward_persen, 3),
+            "reward_persen": r(reward_persen, 3) if reward_persen is not None else None,
             "rr": r(rr, 3) if rr is not None else None,
             "risk_atr": r(risk_atr, 3) if risk_atr is not None else None,
             "sl_salah_sisi": sl_salah_sisi,
-            "valid": valid,
+            "valid": not tolak,
+            "tolak": tolak,
         })
     return hasil
 
@@ -154,7 +176,7 @@ def snapshot(t, a):
         "syarat": syarat_dict,
         "jarak_ke_sr_persen": r(a["jarak_sr"], 3),
         "jarak_ke_sr_atr": r(a["jarak_atr"], 3),
-        "tp_bersama": r(a["HH"] if t["arah"] > 0 else a["HL"]),
+        "tp_mode": config.TP_MODE,  # [FASE B] TP per titik ada di titik_grid[].tp
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
         "rr_terbaik": r(max((g["rr"] for g in valid_grid if g["rr"] is not None), default=None), 3),
@@ -164,12 +186,18 @@ def snapshot(t, a):
     }
 
 
+def _teks_sl():
+    if config.SL_BUFFER_ATR > 0:
+        return f"{config.SL_BUFFER_ATR} x ATR"
+    return f"{config.SL_POINTS:.0f} poin (1 poin = 0,01% harga)"
+
+
 def buat_prompt(snaps):
     return f"""Kamu penilai risiko untuk bot scalping grid futures USDT.
 Parameter bot:
 - leverage {config.LEVERAGE:.0f}x
-- TP BERSAMA di HH (bullish) atau HL (bearish) — semua grid ditutup sekaligus saat harga menyentuh level itu
-- SL fixed {config.SL_POINTS:.0f} poin (1 poin = 0,01% harga) di luar HL/HH
+- TP mode "{config.TP_MODE}" (sr_lawan = di level S/R lawan terdekat; struktur = di HH/HL; persen = {config.TP_PERCENT}% dari entry). TP tiap titik ada di field tp
+- SL di luar HL/HH dengan jarak {_teks_sl()}
 - RR minimum per titik grid = {config.RR_MIN}
 - risk (jarak entry→SL) harus antara {config.RISK_ATR_MIN}× dan {config.RISK_ATR_MAX}× ATR (menolak SL terlalu sempit/lebar)
 - biaya pulang-pergi sekitar {BIAYA_PP}% harga
@@ -204,14 +232,15 @@ def jalankan(k):
     ex = dp.exchange_publik()
     print(f"Menghitung {len(token)} token dari candle 5m...")
     print(
-        f"Aturan: TP di HH/HL | SL {config.SL_POINTS:.0f} poin | "
+        f"Aturan: TP {config.TP_MODE} | SL {_teks_sl()} | "
         f"RR min {config.RR_MIN} | risk ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]\n"
     )
     hasil = []
     for t in token:
         try:
             c = dp.ambil_candle(ex, t["simbol"], "5m", 300)[:-1]
-            a = ik.analisis(c, t["arah"], config.NEAR_SR_PERCENT, config.SCORE_MIN, config.NEAR_MODE, config.NEAR_ATR_MULT)
+            c30 = dp.ambil_candle(ex, t["simbol"], "30m", 200)[:-1]  # [FASE B] tren + MACD timeframe 30 menit
+            a = ik.analisis(c, t["arah"], config.NEAR_SR_PERCENT, config.SCORE_MIN, config.NEAR_MODE, config.NEAR_ATR_MULT, c30=c30)
             hasil.append((t, a))
         except Exception as e:
             print(f"  lewati {t['nama']}: {type(e).__name__}: {e}")

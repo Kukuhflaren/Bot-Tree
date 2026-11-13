@@ -34,20 +34,25 @@ Harga menyentuh zona entry → pasang grid + SL di luar struktur
 3. Jalankan python cek_koneksi.py.
 
 # Hasil Demo 
-1. python cek_koneksi.py
-2. python tes_indikator.py
-3. python lihat_aset.py
-4.1 python cek_fase_a.py
-4.2 python penyaring.py
-5. python tes_ai.py
-6. [x] python ai_pemilih.py (hasil AI hanya mengulang kata-kata saja)
+- python cek_koneksi.py
+- python tes_indikator.py
+- python lihat_aset.py
+- python cek_fase_a.py
+- python penyaring.py
+- python tes_ai.py
+- python tes_cmc.py
+- python cek_kelayakan.py
+
 percobaan 1 - Ai mencari dan menilai token sendiri
-7. [x] python eksperimen_ai.py --jumlah 3 (hasil AI tidak bisa karena tidak di dukung)
+- [x] python ai_pemilih.py (hasil AI hanya mengulang kata-kata saja)
+- [x] python eksperimen_ai.py --jumlah 3 (hasil AI tidak bisa karena tidak di dukung)
+
 percobaan 2 - Ai mencari berita dari token hasil penyaringan
-8. [x] python berita.py 
-9. [x] python eksperimen_berita.py --jumlah 5
+- [x] python berita.py 
+- [x] python eksperimen_berita.py --jumlah 5
+
 percobaan 3 - AI sebagai penilai
-10. python penilai_ai.py
+- python penilai_ai.py --jumlah 8
 
 # Ceklis pengembangan
 Fase 0: Akun dan keamanan

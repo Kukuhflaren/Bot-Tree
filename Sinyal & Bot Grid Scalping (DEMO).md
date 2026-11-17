@@ -34,14 +34,14 @@ Harga menyentuh zona entry → pasang grid + SL di luar struktur
 3. Jalankan python cek_koneksi.py.
 
 # Hasil Demo 
-- python cek_koneksi.py
-- python tes_indikator.py
-- python lihat_aset.py
-- python cek_fase_a.py
-- python penyaring.py
-- python tes_ai.py
-- python tes_cmc.py
-- python cek_kelayakan.py
+python cek_koneksi.py
+python tes_indikator.py
+python lihat_aset.py
+python cek_fase_a.py
+python penyaring.py
+python tes_ai.py
+python tes_cmc.py
+python cek_kelayakan.py
 
 percobaan 1 - Ai mencari dan menilai token sendiri
 - [x] python ai_pemilih.py (hasil AI hanya mengulang kata-kata saja)

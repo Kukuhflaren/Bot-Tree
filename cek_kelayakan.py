@@ -4,10 +4,12 @@ Menjawab dua pertanyaan praktis untuk tiap token:
   1. Apakah ukuran order per setup (RISK_PER_SETUP_PCT x modal x leverage) memenuhi MINIMUM order bursa?
   2. Berapa ATR kelipatan jarak SL (SL_POINTS / SL_BUFFER_ATR)? Kalau lebih besar dari RISK_ATR_MAX,
      tidak akan ada titik grid yang valid.
+Di akhir dicetak bagian "YANG PERLU DIPERBAIKI" lengkap dengan angka yang disarankan.
 
 Pakai:
     python cek_kelayakan.py                 (memakai watchlist.json)
     python cek_kelayakan.py BTC ETH SOL     (token pilihan sendiri)"""
+import math
 import sys
 
 import config
@@ -15,6 +17,9 @@ import data_pasar as dp
 import indikator as ik
 import risk
 import universe as uni
+
+JUMLAH_LEVEL = 3   # rencana jumlah level grid per setup (2-3); ubah sesuai rencanamu
+CADANGAN = 1.2     # cadangan 20%: nilai order minimum (USDT) ikut bergerak mengikuti harga token
 
 
 def min_notional(m, harga):
@@ -40,13 +45,15 @@ def main():
         print(f"Catatan: data pasar (batas order minimum) gagal dimuat: {type(e).__name__}")
 
     margin, notional = risk.margin_per_setup(), risk.notional_per_setup()
-    print(f"Modal {config.MODAL_USDT} USDT | alokasi {config.RISK_PER_SETUP_PCT}% -> margin per setup {margin:.3f} USDT "
+    sumber = "MODAL_LIVE_USDT" if config.MODE == "live" else "MODAL_DEMO_USDT"
+    print(f"Mode {config.MODE}: modal dibaca dari {sumber} = {config.MODAL_USDT} USDT")
+    print(f"Alokasi {config.RISK_PER_SETUP_PCT}% -> margin per setup {margin:.3f} USDT "
           f"-> notional {notional:.3f} USDT @ {config.LEVERAGE:.0f}x")
     sl_teks = (f"{config.SL_BUFFER_ATR} x ATR" if config.SL_BUFFER_ATR > 0
                else f"{config.SL_POINTS:.0f} poin (1 poin = 0,01% harga)")
     print(f"SL di luar HL/HH: {sl_teks} | RISK_ATR boleh {config.RISK_ATR_MIN} - {config.RISK_ATR_MAX} | TP mode {config.TP_MODE}\n")
 
-    ok_order, ok_sl, total, margin_perlu_maks = 0, 0, 0, 0.0
+    baris = []
     for n in nama:
         sim = f"{n}/USDT:USDT"
         try:
@@ -54,34 +61,78 @@ def main():
         except Exception as e:
             print(f"{n:8} gagal ambil candle: {type(e).__name__}")
             continue
-        total += 1
         p, atr = c[-1]["c"], ik.atr(c)
         buffer = config.SL_BUFFER_ATR * atr if config.SL_BUFFER_ATR > 0 else config.SL_POINTS * p * 1e-4
         buffer_atr = buffer / atr if atr > 0 else float("inf")
         mn = min_notional((getattr(ex, "markets", None) or {}).get(sim), p)
-        if mn is None:
-            order_txt, order_ok = "order minimum tidak diketahui", None
-        else:
-            perlu = mn / config.LEVERAGE
-            margin_perlu_maks = max(margin_perlu_maks, perlu)
-            order_ok = notional >= mn
-            order_txt = f"order min ~{mn:.2f} USDT (margin {perlu:.2f}) -> {'CUKUP' if order_ok else 'TIDAK CUKUP'}"
-            ok_order += 1 if order_ok else 0
+        perlu = mn / config.LEVERAGE if mn else None
+        order_ok = None if mn is None else notional >= mn
         sl_ok = buffer_atr <= config.RISK_ATR_MAX
-        ok_sl += 1 if sl_ok else 0
+        baris.append({"nama": n, "harga": p, "atr": atr, "buffer_atr": buffer_atr, "mn": mn,
+                      "perlu": perlu, "order_ok": order_ok, "sl_ok": sl_ok})
+        if mn is None:
+            order_txt = "order minimum tidak diketahui"
+        else:
+            order_txt = f"order min ~{mn:.2f} USDT (margin {perlu:.2f}) -> {'CUKUP' if order_ok else 'TIDAK CUKUP'}"
         print(f"{n:8} harga {p:<10.6g} ATR5m {atr / p * 100:.3f}% | buffer SL {buffer / p * 100:.3f}% = {buffer_atr:.1f} ATR "
               f"({'ok' if sl_ok else 'MELEBIHI RISK_ATR_MAX'}) | {order_txt}")
+        if mn is not None:
+            m1 = mn / config.LEVERAGE
+            print(f"{'':8} margin minimum: 1 level {m1:.2f} USDT ({m1 / config.MODAL_USDT * 100:.0f}% modal) | "
+                  f"2 level {2 * m1:.2f} ({2 * m1 / config.MODAL_USDT * 100:.0f}%) | "
+                  f"3 level {3 * m1:.2f} ({3 * m1 / config.MODAL_USDT * 100:.0f}%)")
 
+    total = len(baris)
+    gagal_order = [r for r in baris if r["order_ok"] is False]
+    gagal_sl = [r for r in baris if not r["sl_ok"]]
+    dikenal = [r for r in baris if r["perlu"]]
     print(f"\nRINGKASAN ({total} token)")
-    print(f"  Ukuran setup memenuhi order minimum : {ok_order} dari {total}")
-    print(f"  Buffer SL <= RISK_ATR_MAX           : {ok_sl} dari {total}")
-    if margin_perlu_maks > margin:
-        pct = margin_perlu_maks / config.MODAL_USDT * 100
-        print(f"  Agar semua lolos minimum order, margin per setup minimal ~{margin_perlu_maks:.2f} USDT "
-              f"= {pct:.0f}% dari modal (sekarang {config.RISK_PER_SETUP_PCT}%).")
-    if ok_sl < total:
-        print("  Sebagian token punya buffer SL lebih lebar dari RISK_ATR_MAX: titik grid mereka akan selalu ditolak.")
-        print("  Opsi: SL_BUFFER_ATR (mis. 0.5) atau perkecil SL_POINTS, atau naikkan RISK_ATR_MAX.")
+    print(f"  Ukuran setup memenuhi order minimum : {sum(1 for r in baris if r['order_ok'])} dari {total}")
+    print(f"  Buffer SL <= RISK_ATR_MAX           : {sum(1 for r in baris if r['sl_ok'])} dari {total}")
+
+    print("\nYANG PERLU DIPERBAIKI")
+    if not gagal_order and not gagal_sl:
+        print("  Tidak ada. Ukuran setup dan jarak SL cocok untuk semua token di atas.")
+
+    if gagal_order and dikenal:
+        modal = config.MODAL_USDT
+        perlu_maks = max(r["perlu"] for r in dikenal)
+        pct1 = math.ceil(perlu_maks * CADANGAN / modal * 1000) / 10
+        pctN = math.ceil(perlu_maks * JUMLAH_LEVEL * CADANGAN / modal * 1000) / 10
+        modal1 = perlu_maks * CADANGAN / (config.RISK_PER_SETUP_PCT / 100)
+        print("  1. UKURAN ORDER di bawah minimum bursa")
+        print(f"     Token yang gagal: {', '.join(r['nama'] for r in gagal_order)}")
+        print(f"     Sekarang: margin {margin:.2f} USDT -> notional {notional:.2f} USDT. "
+              f"Butuh minimal {perlu_maks:.2f} USDT margin per level (token terberat).")
+        print("     Pilih salah satu:")
+        print(f"     a. Naikkan RISK_PER_SETUP_PCT di .env menjadi minimal {pct1}% (1 level) atau {pctN}% ({JUMLAH_LEVEL} level).")
+        print("        Sudah termasuk cadangan 20% karena nilai order minimum ikut harga token.")
+        if pctN > 50:
+            print(f"        Peringatan: {pctN}% lebih dari separuh modal, terlalu besar. Pertimbangkan opsi b atau d.")
+        print(f"     b. Atau naikkan modal menjadi minimal ~{modal1:.0f} USDT (1 level) atau ~{modal1 * JUMLAH_LEVEL:.0f} USDT "
+              f"({JUMLAH_LEVEL} level), dengan alokasi tetap {config.RISK_PER_SETUP_PCT}%.")
+        print("        Ingat: modal dibaca dari MODAL_DEMO_USDT saat MODE=demo, dan dari MODAL_LIVE_USDT saat MODE=live.")
+        if margin > 0:
+            lev = max(r["mn"] for r in dikenal) * CADANGAN / margin
+            print(f"     c. Atau leverage ~{lev:.0f}x. TIDAK disarankan: risiko likuidasi naik.")
+        kecil = sorted(dikenal, key=lambda r: r["perlu"])[:3]
+        print("     d. Atau pilih token dengan minimum lebih kecil: " +
+              ", ".join(f"{r['nama']} (margin {r['perlu']:.2f})" for r in kecil))
+    elif gagal_order:
+        print("  1. Batas order minimum tidak diketahui untuk token yang gagal; cek langsung di Bitget.")
+
+    if gagal_sl:
+        print("  2. JARAK SL lebih lebar dari RISK_ATR_MAX")
+        for r in gagal_sl:
+            maks_poin = math.floor(config.RISK_ATR_MAX * r["atr"] / (r["harga"] * 1e-4))
+            print(f"     {r['nama']}: buffer {r['buffer_atr']:.1f} ATR. Agar <= {config.RISK_ATR_MAX} ATR, SL_POINTS maksimal ~{maks_poin}.")
+        print("     Jarak risiko sebenarnya = titik masuk ke SL, jadi buffer sebaiknya jauh di bawah batas itu.")
+        print("     Opsi: SL_BUFFER_ATR (mis. 0.5) yang menyesuaikan volatilitas, atau turunkan SL_POINTS, atau naikkan RISK_ATR_MAX.")
+
+    batas = config.MAX_DAILY_LOSS_USDT / config.MODAL_USDT * 100
+    if batas > 10:
+        print(f"  Catatan: MAX_DAILY_LOSS_USDT={config.MAX_DAILY_LOSS_USDT} = {batas:.0f}% dari modal, cukup longgar. "
+              "Pertimbangkan 5-10% modal.")
 
 
 if __name__ == "__main__":

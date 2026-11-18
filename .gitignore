@@ -2,5 +2,15 @@
 venv/
 __pycache__/
 *.log
+*.pyc
+
+# Runtime / output (jangan di-commit)
 state.json
 daftar_40.json
+daftar_ai.json
+penilai_ai.json
+log_penilai.jsonl
+ai_pemakaian.json
+berita_cache.json
+eksperimen_*.json
+cmc_contoh.json

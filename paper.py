@@ -4,7 +4,7 @@ Mensimulasikan grid limit + TP/SL tanpa mengirim order ke Bitget.
 Hanya memakai data candle publik. State disimpan di state.json.
 
 Alur:
-  1. Baca sinyal layak (dari penilai_ai.json atau daftar_ai.json + analisis ulang).
+  1. Baca sinyal layak dari penilai_ai.json atau daftar_ai.json + analisis ulang, setelah cek daftar_40.json.
   2. Cek risk.boleh_order_baru(state).
   3. Buka posisi paper (grid limit pending).
   4. Setiap candle baru: cek fill limit, TP, SL, lonjakan ekstrem.
@@ -31,6 +31,7 @@ import indikator as ik
 import penilai_ai as pa
 import risk
 import state as st
+import universe as uni
 
 BIAYA_PP = 0.12  # % fee pulang-pergi (perkiraan taker 2 sisi)
 FILE_SINYAL = "penilai_ai.json"
@@ -62,12 +63,28 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     """Ambil token yang layak_bot_final=True dari penilai_ai.json.
     Jika tidak ada yang layak / file belum ada, bangun ulang dari daftar_ai.json.
     """
+    daftar_40 = uni.muat_daftar_40()
+
+    def masih_di_universe(simbol: str, arah: str) -> bool:
+        if not isinstance(simbol, str) or not isinstance(arah, str):
+            return False
+        arah_nilai = {"BULLISH": 1, "BEARISH": -1}.get(arah.upper())
+        return arah_nilai is not None and uni.ada_di_daftar_40(simbol, arah_nilai, daftar_40)
+
     # Prioritas 1: hasil penilai_ai
     try:
         with open(FILE_SINYAL, encoding="utf-8") as f:
             data = json.load(f)
         snaps = data.get("snapshot") or []
-        layak = [s for s in snaps if s.get("layak_bot_final")]
+        layak = [
+            s for s in snaps
+            if s.get("layak_bot_final") and masih_di_universe(s.get("simbol", ""), s.get("arah", ""))
+        ]
+        stale = len(snaps) - sum(
+            1 for s in snaps if masih_di_universe(s.get("simbol", ""), s.get("arah", ""))
+        )
+        if stale:
+            print(f"  Sinyal: {stale} snapshot ditolak karena bukan anggota daftar_40 sisi yang sama.")
         if layak:
             print(f"  Sinyal: {len(layak)} layak dari {len(snaps)} snapshot (penilai_ai.json)")
             return layak[:maks]
@@ -87,9 +104,13 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     ex = dp.exchange_publik()
     hasil = []
     gagal_simbol = 0
+    stale = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
         for k in d.get(kunci, []):
             simbol = k["simbol"]
+            if not isinstance(simbol, str) or not uni.ada_di_daftar_40(simbol, arah, daftar_40):
+                stale += 1
+                continue
             try:
                 c = dp.ambil_candle(ex, simbol, "5m", 300)[:-1]
                 c30 = dp.ambil_candle(ex, simbol, "30m", 200)[:-1]
@@ -118,6 +139,8 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
             break
     if gagal_simbol:
         print(f"  Sinyal: {gagal_simbol} simbol dilewati (BadSymbol/error pasar)")
+    if stale:
+        print(f"  Sinyal: {stale} kandidat daftar_ai ditolak karena bukan anggota daftar_40 sisi yang sama.")
     print(f"  Sinyal: {len(hasil)} layak setelah analisis ulang daftar_ai")
     return hasil
 

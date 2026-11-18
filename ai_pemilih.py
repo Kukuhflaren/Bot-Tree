@@ -1,7 +1,7 @@
-"""Fase 4b: AI sebagai pemilih 20 bullish + 20 bearish.
+"""Fase 4b: AI sebagai pemilih dari daftar 20 bullish + 20 bearish.
 
 Alur:
-  1. Baca kandidat dari daftar_40.json (dibuat penyaring.py, berisi sekitar 100 token + datanya).
+  1. Baca hanya daftar bullish dan bearish yang ditampilkan penyaring.py.
   2. Kirim ringkasan angka ke AI (hemat token: satu baris pendek per token).
   3. AI memilih 20 bullish + 20 bearish dan memberi alasan singkat.
   4. Hasil AI DIPERIKSA: simbol yang tidak ada di daftar dibuang, duplikat dibuang.
@@ -60,26 +60,30 @@ def catat_pakai(token=None):
 
 
 # ---------- Prompt ----------
-def buat_prompt(kandidat, n):
-    baris = [
-        f"{k['simbol'].split('/')[0]}|{k['ubah_24j']:.2f}|{k['rasio_vol']:.2f}|{k['vol_24j_usdt'] / 1e6:.1f}"
-        for k in kandidat
-    ]
+def buat_prompt(bullish, bearish, n):
+    def baris(daftar):
+        return [
+            f"{k['simbol'].split('/')[0]}|{k['ubah_24j']:.2f}|{k['rasio_vol']:.2f}|"
+            f"{k['vol_24j_usdt'] / 1e6:.1f}"
+            for k in daftar
+        ]
+
     return f"""Kamu asisten penyaring token untuk bot scalping grid futures. Data di bawah adalah ringkasan 24 jam dari Bitget.
 Format tiap baris: SIMBOL|ubah_harga_24j_persen|rasio_volume_vs_rata2_7hari|volume_24j_juta_USDT
 
-TUGAS: dari daftar ini pilih tepat {n} token BULLISH (momentum naik) dan {n} token BEARISH (momentum turun) yang paling menarik untuk scalping grid. Pertimbangkan: kenaikan volume, besar perubahan harga, dan likuiditas (volume besar lebih baik). Satu token hanya boleh muncul di satu sisi.
+TUGAS: pilih tepat {n} token BULLISH dari DAFTAR BULLISH dan {n} token BEARISH dari DAFTAR BEARISH. Pertimbangkan kenaikan volume, besar perubahan harga, dan likuiditas. Satu token hanya boleh muncul di satu sisi.
 
 ATURAN KERAS:
 - Gunakan HANYA data di bawah. Jangan mengarang berita, harga, atau level support/resistance.
-- Hanya pilih simbol yang ada di daftar.
+- Jangan memindahkan token dari satu sisi ke sisi lainnya.
 - Alasan maksimal 12 kata, berdasarkan angka di data.
 - Jawab HANYA dengan JSON valid, tanpa teks lain, bentuknya:
 {{"bullish":[{{"simbol":"BTC","alasan":"...","keyakinan":1}}],"bearish":[{{"simbol":"ETH","alasan":"...","keyakinan":1}}]}}
 - keyakinan adalah angka 1 sampai 5.
 
 DATA:
-""" + "\n".join(baris)
+DAFTAR BULLISH:
+""" + "\n".join(baris(bullish)) + "\nDAFTAR BEARISH:\n" + "\n".join(baris(bearish))
 
 
 # ---------- Panggil AI ----------
@@ -159,12 +163,13 @@ def ambil_json(teks):
     return json.loads(teks[awal: akhir + 1])
 
 
-def validasi(jawaban, kandidat, n):
-    """Buang simbol yang tidak ada di daftar kandidat dan duplikat. Mengembalikan (bull, bear, dipakai)."""
-    peta = {k["simbol"].split("/")[0].upper(): k for k in kandidat}
+def validasi(jawaban, bullish_kandidat, bearish_kandidat, n):
+    """Validasi jawaban terhadap daftar yang tampil pada sisi masing-masing."""
+    peta_bull = {k["simbol"].split("/")[0].upper(): k for k in bullish_kandidat}
+    peta_bear = {k["simbol"].split("/")[0].upper(): k for k in bearish_kandidat}
     dipakai = set()
 
-    def ambil(daftar_ai):
+    def ambil(daftar_ai, peta):
         hasil = []
         for item in daftar_ai or []:
             nama = str(item.get("simbol", "")).split("/")[0].upper()
@@ -177,15 +182,15 @@ def validasi(jawaban, kandidat, n):
                 hasil.append(k)
         return hasil
 
-    bull = ambil(jawaban.get("bullish"))
-    bear = ambil(jawaban.get("bearish"))
+    bull = ambil(jawaban.get("bullish"), peta_bull)
+    bear = ambil(jawaban.get("bearish"), peta_bear)
     return bull, bear, dipakai
 
 
-def isi_kekurangan(bull, bear, kandidat, n, dipakai):
-    """Kalau ada sisi yang kurang dari n, isi dari rumus penyaring."""
-    naik, turun = penyaring.susun_daftar(kandidat, len(kandidat))
-    for daftar, cadangan in ((bull, naik), (bear, turun)):
+def isi_kekurangan(bull, bear, bullish_kandidat, bearish_kandidat, n, dipakai):
+    """Isi kekurangan hanya dari daftar sisi yang sedang diproses."""
+    for daftar, kandidat_sisi in ((bull, bullish_kandidat), (bear, bearish_kandidat)):
+        cadangan = sorted(kandidat_sisi, key=lambda k: k.get("skor", 0), reverse=True)
         for k in cadangan:
             if len(daftar) >= n:
                 break
@@ -203,27 +208,32 @@ def muat_kandidat():
             data = json.load(f)
     except FileNotFoundError:
         raise SystemExit("daftar_40.json belum ada. Jalankan dulu: python penyaring.py")
-    if not data.get("kandidat"):
-        raise SystemExit("daftar_40.json belum berisi 'kandidat'. Pakai penyaring.py versi terbaru lalu jalankan ulang.")
-    return data["kandidat"]
+    try:
+        bullish = data["bullish"]
+        bearish = data["bearish"]
+    except KeyError as exc:
+        raise SystemExit("daftar_40.json belum berisi daftar bullish/bearish. Jalankan penyaring.py terlebih dahulu.") from exc
+    if not bullish and not bearish:
+        raise SystemExit("Daftar bullish dan bearish di daftar_40.json kosong.")
+    return bullish, bearish
 
 
 def jalankan(pakai_ai=True):
-    kandidat = muat_kandidat()
+    bullish_kandidat, bearish_kandidat = muat_kandidat()
     n = config.JUMLAH_PER_SISI
     sumber, galat, token = "rumus", None, None
     bull, bear, dipakai = [], [], set()
     if pakai_ai:
         try:
             cek_jatah()
-            teks, token = panggil_ai(buat_prompt(kandidat, n))
+            teks, token = panggil_ai(buat_prompt(bullish_kandidat, bearish_kandidat, n))
             catat_pakai(token)
-            bull, bear, dipakai = validasi(ambil_json(teks), kandidat, n)
+            bull, bear, dipakai = validasi(ambil_json(teks), bullish_kandidat, bearish_kandidat, n)
             sumber = "ai"
         except Exception as e:
             galat = f"{type(e).__name__}: {e}"
             bull, bear, dipakai = [], [], set()
-    isi_kekurangan(bull, bear, kandidat, n, dipakai)
+    isi_kekurangan(bull, bear, bullish_kandidat, bearish_kandidat, n, dipakai)
     hasil = {"waktu": datetime.now(timezone.utc).isoformat(), "sumber": sumber, "galat": galat, "token": token,
              "bullish": bull, "bearish": bear}
     with open(FILE_HASIL, "w", encoding="utf-8") as f:

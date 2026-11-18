@@ -1,6 +1,6 @@
 """Phase 5 signal pipeline. AI is not imported or called (AI stays disabled).
 
-Input: daftar_ai.json, produced by the existing formula fallback or selector.
+Input: daftar_ai.json, restricted to symbols still present on the same side in daftar_40.json.
 Output: signal.json with bot-ready setups and the scoring/entry metadata.
 This module is signal generation only; it never submits orders.
 """
@@ -17,6 +17,7 @@ import config
 import data_pasar as dp
 import indikator as ik
 import penilai_ai as pa
+import universe as uni
 
 INPUT_FILE = "daftar_ai.json"
 OUTPUT_FILE = "signal.json"
@@ -53,7 +54,9 @@ def _read_candidates(path: str) -> list[tuple[str, int, dict[str, Any]]]:
     return candidates
 
 
-def build_signal(symbol: str, direction: int, candidate: dict[str, Any], exchange: Any) -> dict[str, Any] | None:
+def build_signal(
+    symbol: str, direction: int, candidate: dict[str, Any], exchange: Any,
+) -> tuple[dict[str, Any] | None, list[str]]:
     candles = dp.ambil_candle(exchange, symbol, "5m", 300)[:-1]
     candles_30m = dp.ambil_candle(exchange, symbol, "30m", 200)[:-1]
     analysis = ik.analisis(
@@ -64,10 +67,9 @@ def build_signal(symbol: str, direction: int, candidate: dict[str, Any], exchang
     )
     grid = pa.rencana(analysis, direction)
     valid_levels = [level for level in grid if level.get("valid")]
-    # Existing engine applies stricter conditions than the minimum four; retain
-    # them all as hard gates: trend, EMA, MACD, near S/R, VWAP, and 30m trend.
-    if not analysis.get("layak") or not valid_levels:
-        return None
+    gagal = pa.kegagalan_gate(analysis, valid_levels)
+    if gagal:
+        return None, gagal
 
     direction_name = "LONG" if direction > 0 else "SHORT"
     valid_levels.sort(key=lambda level: level["harga"], reverse=direction < 0)
@@ -98,30 +100,46 @@ def build_signal(symbol: str, direction: int, candidate: dict[str, Any], exchang
         "ai_enabled": False,
         "source": "formula-only",
         "candidate_24h_change_pct": candidate.get("ubah_24j"),
-    }
+    }, []
 
 
 def generate(input_file: str = INPUT_FILE, output_file: str = OUTPUT_FILE) -> dict[str, Any]:
     # AI is intentionally a hard-off default; this engine never invokes AI.
     candidates = _read_candidates(input_file)
-    exchange = dp.exchange_publik()
+    daftar_40 = uni.muat_daftar_40()
     signals: list[dict[str, Any]] = []
     rejected: list[dict[str, str]] = []
+    gate_counts = {nama: 0 for nama in pa.GATE_NAMES}
+    gate_counts["displayed_universe_membership"] = 0
+    gate_counts["data_or_runtime_error"] = 0
+    accepted_candidates = []
     for symbol, direction, candidate in candidates:
+        if not uni.ada_di_daftar_40(symbol, direction, daftar_40):
+            rejected.append({"symbol": symbol, "reason": "not in current displayed daftar_40 for this side"})
+            gate_counts["displayed_universe_membership"] += 1
+            continue
+        accepted_candidates.append((symbol, direction, candidate))
+
+    exchange = dp.exchange_publik() if accepted_candidates else None
+    for symbol, direction, candidate in accepted_candidates:
         try:
-            signal = build_signal(symbol, direction, candidate, exchange)
+            signal, gagal = build_signal(symbol, direction, candidate, exchange)
             if signal:
                 signals.append(signal)
             else:
-                rejected.append({"symbol": symbol, "reason": "mandatory technical/risk gates not met"})
+                rejected.append({"symbol": symbol, "reason": "failed gates: " + ", ".join(gagal)})
+                for nama in gagal:
+                    gate_counts[nama] += 1
         except Exception as exc:
             rejected.append({"symbol": symbol, "reason": f"{type(exc).__name__}: {exc}"})
+            gate_counts["data_or_runtime_error"] += 1
 
     result = {
         "generated_at": _timestamp(),
         "ai_enabled": False,
         "source_count": len(candidates),
         "bot_ready_count": len(signals),
+        "rejection_counts": gate_counts,
         "signals": signals,
         "rejected": rejected,
     }
@@ -136,6 +154,9 @@ def main() -> None:
     args = parser.parse_args()
     result = generate(args.input, args.output)
     print(f"Signals: {result['bot_ready_count']}/{result['source_count']} bot-ready -> {args.output}")
+    print("Rejection counts (gate failures may overlap):")
+    for gate, count in result["rejection_counts"].items():
+        print(f"  {gate}: {count}")
     print("AI disabled; no orders are submitted.")
 
 

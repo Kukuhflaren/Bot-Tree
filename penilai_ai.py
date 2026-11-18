@@ -1,7 +1,7 @@
 """Eksperimen: AI sebagai PENILAI (second opinion) atas sinyal bot. Tidak membuat order.
 
 Alur:
-  1. Baca token pilihan dari daftar_ai.json (dibuat ai_pemilih.py) beserta arahnya.
+  1. Baca daftar_40.json
   2. Bot menghitung semuanya dari candle 5m asli: skor, syarat masuk, titik grid, TP/SL, rasio TP:SL.
   3. K token dengan skor bot tertinggi dikirim ke AI sebagai ringkasan angka (bukan berita).
   4. AI memberi verdict MASUK / TUNGGU / TOLAK + alasan + risiko, hanya dari angka yang diberikan.
@@ -24,6 +24,7 @@ import ai_pemilih as ap
 import config
 import data_pasar as dp
 import indikator as ik
+import universe as uni
 
 FILE_HASIL = "penilai_ai.json"
 FILE_LOG = "log_penilai.jsonl"
@@ -41,12 +42,20 @@ def muat_token():
             d = json.load(f)
     except FileNotFoundError:
         raise SystemExit("daftar_ai.json belum ada. Jalankan dulu: python ai_pemilih.py")
+    daftar_40 = uni.muat_daftar_40()
     token = []
+    ditolak = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
-        for k in d[kunci]:
-            token.append({"simbol": k["simbol"], "nama": k["simbol"].split("/")[0], "arah": arah,
+        for k in d.get(kunci, []):
+            simbol = k.get("simbol", "")
+            if not isinstance(simbol, str) or not uni.ada_di_daftar_40(simbol, arah, daftar_40):
+                ditolak += 1
+                continue
+            token.append({"simbol": simbol, "nama": simbol.split("/")[0], "arah": arah,
                           "ubah_24j": k["ubah_24j"], "vol_juta": k["vol_24j_usdt"] / 1e6,
                           "rasio_vol": k["rasio_vol"]})
+    if ditolak:
+        print(f"Universe: {ditolak} kandidat daftar_ai ditolak karena tidak ada di daftar_40 sisi yang sama.")
     return token
 
 
@@ -141,6 +150,28 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
     return hasil
 
 
+GATE_NAMES = (
+    "trend_structure", "ema", "macd", "near_sr", "vwap", "trend_30m",
+    "extreme_candle", "minimum_score", "grid_available", "valid_risk_reward_grid",
+)
+
+
+def kegagalan_gate(a, valid_grid):
+    """Kembalikan semua gate yang gagal; hitungan antar-gate dapat saling tumpang tindih."""
+    syarat = a.get("syarat", [])
+    lolos = {
+        nama: bool(syarat[i]) if i < len(syarat) else False
+        for i, nama in enumerate(GATE_NAMES[:6])
+    }
+    lolos.update({
+        "extreme_candle": not bool(a.get("ekstrem")),
+        "minimum_score": a.get("mentah", 0) >= config.SCORE_MIN,
+        "grid_available": bool(a.get("grid")),
+        "valid_risk_reward_grid": bool(valid_grid),
+    })
+    return [nama for nama in GATE_NAMES if not lolos[nama]]
+
+
 def snapshot(t, a):
     grid = rencana(a, t["arah"])
     valid_grid = [g for g in grid if g["valid"]]
@@ -229,6 +260,8 @@ DATA:
 def jalankan(k):
     ap.cek_jatah()
     token = muat_token()
+    if not token:
+        raise SystemExit("Tidak ada kandidat daftar_ai yang masih menjadi anggota daftar_40.")
     ex = dp.exchange_publik()
     print(f"Menghitung {len(token)} token dari candle 5m...")
     print(
@@ -236,6 +269,7 @@ def jalankan(k):
         f"RR min {config.RR_MIN} | risk ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]\n"
     )
     hasil = []
+    galat_data = 0
     for t in token:
         try:
             c = dp.ambil_candle(ex, t["simbol"], "5m", 300)[:-1]
@@ -244,6 +278,18 @@ def jalankan(k):
             hasil.append((t, a))
         except Exception as e:
             print(f"  lewati {t['nama']}: {type(e).__name__}: {e}")
+            galat_data += 1
+    gate_counts = {nama: 0 for nama in GATE_NAMES}
+    for t, a in hasil:
+        valid_grid = [g for g in rencana(a, t["arah"]) if g["valid"]]
+        for nama in kegagalan_gate(a, valid_grid):
+            gate_counts[nama] += 1
+    print("Penolakan per gate (dapat tumpang tindih):")
+    for nama, jumlah in gate_counts.items():
+        print(f"  {nama}: {jumlah}")
+    print(f"  data_or_runtime_error: {galat_data}")
+    if not hasil:
+        raise SystemExit("Tidak ada kandidat berhasil dianalisis; AI tidak dipanggil.")
     # Urutkan: yang punya titik valid + layak di depan
     def kunci_urut(item):
         t, a = item

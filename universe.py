@@ -13,6 +13,43 @@ import os
 import config
 
 
+FILE_DAFTAR_40 = "daftar_40.json"
+
+
+def base_simbol(simbol: str) -> str:
+    """Normalisasi simbol kontrak menjadi base name untuk pemeriksaan universe."""
+    return simbol.strip().split("/")[0].upper()
+
+
+def muat_daftar_40(path: str = FILE_DAFTAR_40) -> dict[str, set[str]]:
+    """Muat base name yang saat ini tampil pada daftar bullish dan bearish."""
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} harus berisi objek JSON.")
+
+    hasil = {}
+    for sisi in ("bullish", "bearish"):
+        daftar = data.get(sisi)
+        if not isinstance(daftar, list):
+            raise ValueError(f"{path} harus berisi daftar '{sisi}'.")
+        simbol = set()
+        for item in daftar:
+            if not isinstance(item, dict) or not isinstance(item.get("simbol"), str):
+                raise ValueError(f"Entri '{sisi}' di {path} tidak memiliki simbol yang valid.")
+            base = base_simbol(item["simbol"])
+            if not base:
+                raise ValueError(f"Entri '{sisi}' di {path} memiliki simbol kosong.")
+            simbol.add(base)
+        hasil[sisi] = simbol
+    return hasil
+
+
+def ada_di_daftar_40(simbol: str, arah: int, daftar: dict[str, set[str]]) -> bool:
+    sisi = "bullish" if arah > 0 else "bearish"
+    return base_simbol(simbol) in daftar[sisi]
+
+
 def kena_blacklist(nama_base: str) -> bool:
     """True jika base name cocok pola blacklist (sama / awalan / akhiran)."""
     if not config.TOKEN_BLACKLIST:

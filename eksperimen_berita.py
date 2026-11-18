@@ -14,6 +14,7 @@ import sys
 import ai_pemilih as ap
 import berita as br
 import config
+import universe as uni
 
 FILE_DAFTAR = ap.FILE_HASIL
 FILE_HASIL = "eksperimen_berita.json"
@@ -25,10 +26,24 @@ def muat_token(n):
             d = json.load(f)
     except FileNotFoundError:
         raise SystemExit("daftar_ai.json belum ada. Jalankan dulu: python ai_pemilih.py")
+    daftar_40 = uni.muat_daftar_40()
     token = []
+    ditolak = 0
+    jumlah_per_sisi = {1: 0, -1: 0}
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
-        for k in d[kunci][:n]:
-            token.append({"nama": k["simbol"].split("/")[0].upper(), "arah": arah, "ubah": k["ubah_24j"]})
+        for k in d.get(kunci, []):
+            simbol = k.get("simbol", "")
+            if not isinstance(simbol, str) or not uni.ada_di_daftar_40(simbol, arah, daftar_40):
+                ditolak += 1
+                continue
+            if jumlah_per_sisi[arah] >= n:
+                continue
+            token.append({"nama": simbol.split("/")[0].upper(), "arah": arah, "ubah": k["ubah_24j"]})
+            jumlah_per_sisi[arah] += 1
+    if ditolak:
+        print(f"Universe: {ditolak} kandidat daftar_ai ditolak karena tidak ada di daftar_40 sisi yang sama.")
+    if not token:
+        raise SystemExit("Tidak ada kandidat daftar_ai yang masih menjadi anggota daftar_40.")
     return token
 
 

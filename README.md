@@ -95,7 +95,6 @@ python cek_kelayakan.py
 
 # Sinyal dan analisis
 python penyaring.py
-python ai_pemilih.py       # opsional
 python penilai_ai.py --jumlah 8  # opsional
 python tes_indikator.py
 python signal_engine.py    # USE_AI=off; menulis signal.json

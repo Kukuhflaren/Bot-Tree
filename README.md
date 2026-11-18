@@ -78,7 +78,7 @@ Isi `.env`, jangan pernah meng-commit API key atau rahasia.
 | Mode | `MODE=paper`, `demo`, atau `live`; live wajib `LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA` |
 | Bitget | `BITGET_API_KEY`, `BITGET_SECRET_KEY`, `BITGET_PASSPHRASE`, `BITGET_UTA=on` |
 | Demo | `DEMO_API=on`, `DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM`, `DRY_RUN=off` hanya untuk uji Demo |
-| AI | `USE_AI=off` default; pemilih/penilai menggunakan key penyedia hanya jika benar-benar diaktifkan |
+| AI | `USE_AI=off` default; `--pakai-ai` untuk mengaktifkan satu kali jalan, `--tanpa-ai` untuk menonaktifkan |
 | Modal | `MODAL_DEMO_USDT`, `MODAL_LIVE_USDT`, `LEVERAGE`, `RISK_PER_SETUP_PCT` |
 | Strategi | `TP_MODE`, `TP_PERCENT`, `SL_POINTS`, `SL_BUFFER_ATR`, `RR_MIN`, `RISK_ATR_MIN`, `RISK_ATR_MAX` |
 | Sinyal | `SCORE_MIN`, `NEAR_MODE`, `NEAR_ATR_MULT`, `NEAR_SR_PERCENT` |
@@ -95,9 +95,12 @@ python cek_kelayakan.py
 
 # Sinyal dan analisis
 python penyaring.py
-python penilai_ai.py --jumlah 8  # opsional
 python tes_indikator.py
-python signal_engine.py    # USE_AI=off; menulis signal.json
+python signal_engine.py          # membaca langsung daftar_40.json, menulis signal.json
+
+# Tambahkan --pakai-ai atau set USE_AI=on hanya bila ingin memakai token
+python ai_pemilih.py             # tanpa AI secara default
+python penilai_ai.py --jumlah 8  # analisis bot tanpa AI secara default
 
 # Paper trading
 python tes_paper_partial.py
@@ -109,9 +112,9 @@ python scanner.py --sekali
 python scanner.py --interval 300
 
 # Phase 6 paper evaluation
+python tes_phase6.py
 python paper_phase6.py --once
 python paper_phase6.py --days 14 --interval 300
-python tes_phase6.py
 python paper_metrics.py --journal paper_trades.jsonl --capital 30 --min-trades 30 --min-days 7 --max-dd-pct 25
 
 # Phase 7 demo preflight (tidak mengirim order)
@@ -121,6 +124,8 @@ python demo_phase7.py BTC LONG 65000 63000 68000 10
 # Hanya setelah Demo API, review payload, dan uji manual:
 python demo_phase7.py BTC LONG 65000 63000 68000 10 --send
 ```
+
+`ai_pemilih.py` menampilkan kolom penyaring (`Ubah24j`, volume, `RasioVol`, `Skor`, `W`) tanpa alasan AI. AI tidak dipanggil kecuali diaktifkan melalui `USE_AI=on` atau `--pakai-ai`. Paper trading, signal engine, dan tes indikator mengambil universe langsung dari daftar bullish/bearish di `daftar_40.json`; output `daftar_ai.json` dan `penilai_ai.json` bukan sumber kandidat paper.
 
 Contoh Demo di atas tidak boleh dianggap format final untuk semua token. Nilai entry/SL/TP, contract size, minimum notional, dan harga harus dibuat dari setup bot serta market metadata bursa.
 
@@ -221,8 +226,7 @@ Bandingkan hasil Demo terhadap paper: perbedaan yang wajar adalah slippage dan e
 ```text
 Bitget ticker 24 jam
   -> Penyaring likuiditas/universe -> daftar_40.json
-  -> AI pemilih (opsional) -> daftar_ai.json
-  -> Analisis teknikal 5m + 30m
+  -> Analisis teknikal 30m (langsung dari daftar_40.json)
   -> Grid entry + SL + TP
   -> Signal Engine formula-only -> signal.json
   -> Risk gate

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+from typing import Any
 
 import config
 
@@ -21,26 +22,32 @@ def base_simbol(simbol: str) -> str:
     return simbol.strip().split("/")[0].upper()
 
 
-def muat_daftar_40(path: str = FILE_DAFTAR_40) -> dict[str, set[str]]:
-    """Muat base name yang saat ini tampil pada daftar bullish dan bearish."""
+def muat_data_daftar_40(path: str = FILE_DAFTAR_40) -> dict[str, Any]:
+    """Muat baris yang saat ini tampil pada daftar bullish dan bearish."""
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     if not isinstance(data, dict):
         raise ValueError(f"{path} harus berisi objek JSON.")
 
-    hasil = {}
     for sisi in ("bullish", "bearish"):
         daftar = data.get(sisi)
         if not isinstance(daftar, list):
             raise ValueError(f"{path} harus berisi daftar '{sisi}'.")
-        simbol = set()
         for item in daftar:
             if not isinstance(item, dict) or not isinstance(item.get("simbol"), str):
                 raise ValueError(f"Entri '{sisi}' di {path} tidak memiliki simbol yang valid.")
             base = base_simbol(item["simbol"])
             if not base:
                 raise ValueError(f"Entri '{sisi}' di {path} memiliki simbol kosong.")
-            simbol.add(base)
+    return data
+
+
+def muat_daftar_40(path: str = FILE_DAFTAR_40) -> dict[str, set[str]]:
+    """Muat base name yang saat ini tampil pada daftar bullish dan bearish."""
+    data = muat_data_daftar_40(path)
+    hasil = {}
+    for sisi in ("bullish", "bearish"):
+        simbol = {base_simbol(item["simbol"]) for item in data[sisi]}
         hasil[sisi] = simbol
     return hasil
 

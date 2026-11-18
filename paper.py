@@ -1,13 +1,13 @@
 """Fase D — Paper Trading Engine.
 
 Mensimulasikan grid limit + TP/SL tanpa mengirim order ke Bitget.
-Hanya memakai data candle publik. State disimpan di state.json.
+Analisis, target, dan pemantauan eksekusi memakai candle 30m publik. State disimpan di state.json.
 
 Alur:
-  1. Baca sinyal layak dari penilai_ai.json atau daftar_ai.json + analisis ulang, setelah cek daftar_40.json.
+  1. Baca kandidat yang ditampilkan di daftar_40.json dan analisis ulang tanpa AI.
   2. Cek risk.boleh_order_baru(state).
   3. Buka posisi paper (grid limit pending).
-  4. Setiap candle baru: cek fill limit, TP, SL, lonjakan ekstrem.
+  4. Setiap candle 30m baru: cek fill limit, TP bertahap, dan SL.
   5. Tutup posisi → hitung PnL setelah fee → update state.
 
 Pakai:
@@ -34,8 +34,6 @@ import state as st
 import universe as uni
 
 BIAYA_PP = 0.12  # % fee pulang-pergi (perkiraan taker 2 sisi)
-FILE_SINYAL = "penilai_ai.json"
-FILE_DAFTAR = "daftar_ai.json"
 
 # Slippage paper (konservatif):
 # - Limit entry: jika candle gap menembus limit, fill di open (bisa lebih baik/buruk tergantung arah)
@@ -56,69 +54,36 @@ def _id_posisi(simbol: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Baca sinyal dari hasil penilai / daftar AI
+# Analisis kandidat dari universe yang ditampilkan
 # ---------------------------------------------------------------------------
 
 def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
-    """Ambil token yang layak_bot_final=True dari penilai_ai.json.
-    Jika tidak ada yang layak / file belum ada, bangun ulang dari daftar_ai.json.
-    """
-    daftar_40 = uni.muat_daftar_40()
-
-    def masih_di_universe(simbol: str, arah: str) -> bool:
-        if not isinstance(simbol, str) or not isinstance(arah, str):
-            return False
-        arah_nilai = {"BULLISH": 1, "BEARISH": -1}.get(arah.upper())
-        return arah_nilai is not None and uni.ada_di_daftar_40(simbol, arah_nilai, daftar_40)
-
-    # Prioritas 1: hasil penilai_ai
+    """Analisis kandidat bullish/bearish yang tampil di daftar_40.json."""
     try:
-        with open(FILE_SINYAL, encoding="utf-8") as f:
-            data = json.load(f)
-        snaps = data.get("snapshot") or []
-        layak = [
-            s for s in snaps
-            if s.get("layak_bot_final") and masih_di_universe(s.get("simbol", ""), s.get("arah", ""))
-        ]
-        stale = len(snaps) - sum(
-            1 for s in snaps if masih_di_universe(s.get("simbol", ""), s.get("arah", ""))
-        )
-        if stale:
-            print(f"  Sinyal: {stale} snapshot ditolak karena bukan anggota daftar_40 sisi yang sama.")
-        if layak:
-            print(f"  Sinyal: {len(layak)} layak dari {len(snaps)} snapshot (penilai_ai.json)")
-            return layak[:maks]
-        if snaps:
-            print(f"  Sinyal: 0 layak dari {len(snaps)} snapshot penilai — coba daftar_ai...")
+        data = uni.muat_data_daftar_40()
     except FileNotFoundError:
-        print("  Sinyal: penilai_ai.json belum ada — coba daftar_ai...")
-
-    # Prioritas 2: bangun dari daftar_ai + analisis ulang
-    try:
-        with open(FILE_DAFTAR, encoding="utf-8") as f:
-            d = json.load(f)
-    except FileNotFoundError:
-        print("  Sinyal: daftar_ai.json juga belum ada. Jalankan ai_pemilih.py atau penilai_ai.py.")
+        print("  Sinyal: daftar_40.json belum ada. Jalankan penyaring.py terlebih dahulu.")
         return []
 
+    daftar_40 = {
+        sisi: {uni.base_simbol(item["simbol"]) for item in data[sisi]}
+        for sisi in ("bullish", "bearish")
+    }
     ex = dp.exchange_publik()
     hasil = []
     gagal_simbol = 0
-    stale = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
-        for k in d.get(kunci, []):
+        for k in data[kunci]:
             simbol = k["simbol"]
-            if not isinstance(simbol, str) or not uni.ada_di_daftar_40(simbol, arah, daftar_40):
-                stale += 1
+            if not uni.ada_di_daftar_40(simbol, arah, daftar_40):
                 continue
             try:
-                c = dp.ambil_candle(ex, simbol, "5m", 300)[:-1]
-                c30 = dp.ambil_candle(ex, simbol, "30m", 200)[:-1]
+                c = dp.ambil_candle(ex, simbol, "30m", 300)[:-1]
                 a = ik.analisis(
                     c, arah,
                     config.NEAR_SR_PERCENT, config.SCORE_MIN,
                     config.NEAR_MODE, config.NEAR_ATR_MULT,
-                    c30=c30,
+                    c30=c,
                 )
                 grid = pa.rencana(a, arah)
                 valid = [g for g in grid if g["valid"]]
@@ -130,7 +95,8 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
                         a,
                     )
                     hasil.append(snap)
-            except Exception:
+            except Exception as e:
+                print(f"  Sinyal: gagal menganalisis {simbol}: {type(e).__name__}: {e}")
                 gagal_simbol += 1
                 continue
             if len(hasil) >= maks:
@@ -138,10 +104,8 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
         if len(hasil) >= maks:
             break
     if gagal_simbol:
-        print(f"  Sinyal: {gagal_simbol} simbol dilewati (BadSymbol/error pasar)")
-    if stale:
-        print(f"  Sinyal: {stale} kandidat daftar_ai ditolak karena bukan anggota daftar_40 sisi yang sama.")
-    print(f"  Sinyal: {len(hasil)} layak setelah analisis ulang daftar_ai")
+        print(f"  Sinyal: {gagal_simbol} simbol gagal dianalisis.")
+    print(f"  Sinyal: {len(hasil)} layak dari daftar_40.json")
     return hasil
 
 
@@ -176,14 +140,18 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
         st.tambah_log(state, f"{simbol}: tidak ada titik grid valid", "warn")
         return None
 
-    # Ambil SL & TP dari titik pertama yang valid (semua titik share SL yang sama)
+    # Semua titik grid share SL yang sama; TP memakai tangga S/R lawan.
     sl = titik_valid[0].get("sl")
-    # TP bisa berbeda per titik; untuk paper kita pakai TP terbaik (paling jauh)
     tps = [t["tp"] for t in titik_valid if t.get("tp") is not None]
     if not tps or sl is None:
         st.tambah_log(state, f"{simbol}: SL/TP tidak lengkap", "warn")
         return None
-    tp = max(tps) if arah > 0 else min(tps)
+    ladder_dari_sinyal = any(t.get("tp_levels") for t in titik_valid)
+    tp_levels = sorted(
+        {level for t in titik_valid for level in (t.get("tp_levels") or [t["tp"]]) if level is not None},
+        reverse=arah < 0,
+    )
+    tp = tp_levels[-1]
 
     pos = {
         "id": _id_posisi(simbol),
@@ -198,14 +166,22 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
                 "nama": t["titik"],
                 "harga": t["harga"],
                 "tp": t.get("tp"),
+                "tp_levels": t.get("tp_levels") or ([t["tp"]] if t.get("tp") is not None else []),
                 "status": "pending",  # pending | filled | cancelled
             }
             for t in titik_valid
         ],
+        "tp_ladder": [{"harga": level, "status": "pending"} for level in tp_levels],
+        "tp_fraction_per_level": sinyal.get("tp_fraction_per_level", 0.25 if ladder_dari_sinyal else 1.0),
         "sl": sl,
         "tp": tp,
+        "candle_timeframe": sinyal.get("candle_timeframe", "30m"),
         "entry_avg": None,
         "ukuran_terisi": 0.0,       # notional yang sudah terisi
+        "ukuran_masuk_total": 0.0,
+        "ukuran_ditutup": 0.0,
+        "realisasi": {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0},
+        "candle_terakhir_diproses": sinyal.get("candle_timestamp"),
         "status": "open",
         "skor_bot": sinyal.get("skor_bot"),
         "rr_terbaik": sinyal.get("rr_terbaik"),
@@ -216,7 +192,8 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
         state,
         f"BUKA {simbol} {'LONG' if arah > 0 else 'SHORT'} | "
         f"margin={size['margin_usdt']:.2f} notional={size['notional_usdt']:.2f} | "
-        f"grid={len(titik_valid)} titik | SL={sl} TP={tp}",
+        f"grid={len(titik_valid)} titik | SL={sl} TP levels={tp_levels} "
+        f"({pos['tp_fraction_per_level']:.0%} posisi/level)",
         "info",
     )
     return pos
@@ -322,12 +299,15 @@ def _hitung_entry_avg(pos: dict[str, Any]) -> float | None:
 
 
 def _tp_efektif(pos: dict[str, Any]) -> float | None:
-    """TP yang dipakai untuk exit.
+    """Target TP berikutnya atau, untuk posisi lama, TP efektif sebelumnya.
 
-    - Jika ada titik filled yang punya TP sendiri → pakai TP terdekat ke entry
-      (lebih konservatif daripada TP terjauh).
-    - Fallback ke pos['tp'] (shared) jika tidak ada.
+    Posisi baru menggunakan ladder target S/R. Posisi lama yang tersimpan tetap
+    memakai TP per titik untuk menjaga perilakunya.
     """
+    if "tp_ladder" in pos:
+        pending = [level["harga"] for level in pos["tp_ladder"] if level["status"] == "pending"]
+        return pending[0] if pending else None
+
     filled = [t for t in pos["titik_grid"] if t["status"] == "filled" and t.get("tp") is not None]
     if not filled:
         return pos.get("tp")
@@ -351,19 +331,30 @@ def _cek_exit(pos: dict[str, Any], candle: dict) -> str | None:
     arah = pos["arah"]
     low, high = candle["l"], candle["h"]
     sl = pos["sl"]
-    tp = _tp_efektif(pos)
-    if tp is None or sl is None:
+    if sl is None:
         return None
 
     if arah > 0:
         if low <= sl:
             return "sl"
-        if high >= tp:
+        if any(
+            level["status"] == "pending" and high >= level["harga"]
+            for level in pos.get("tp_ladder", [])
+        ):
             return "tp"
     else:
         if high >= sl:
             return "sl"
-        if low <= tp:
+        if any(
+            level["status"] == "pending" and low <= level["harga"]
+            for level in pos.get("tp_ladder", [])
+        ):
+            return "tp"
+    if "tp_ladder" not in pos:
+        tp = _tp_efektif(pos)
+        if tp is None:
+            return None
+        if (arah > 0 and high >= tp) or (arah < 0 and low <= tp):
             return "tp"
     return None
 
@@ -375,13 +366,20 @@ def _cancel_sisa_pending(pos: dict[str, Any]) -> int:
         if t["status"] == "pending":
             t["status"] = "cancelled"
             n += 1
+    for level in pos.get("tp_ladder", []):
+        if level["status"] == "pending":
+            level["status"] = "cancelled"
     return n
 
 
-def _hitung_pnl(pos: dict[str, Any], harga_keluar: float) -> dict[str, float]:
+def _hitung_pnl(
+    pos: dict[str, Any], harga_keluar: float, notional_override: float | None = None,
+) -> dict[str, float]:
     """Hitung PnL setelah fee — hanya dari ukuran yang sudah terisi."""
     entry = pos["entry_avg"]
     notional = pos.get("ukuran_terisi") or 0.0
+    if notional_override is not None:
+        notional = notional_override
     arah = pos["arah"]
 
     if not entry or notional <= 0:
@@ -415,29 +413,46 @@ def _hitung_pnl(pos: dict[str, Any], harga_keluar: float) -> dict[str, float]:
     }
 
 
-def tutup_posisi(state: dict[str, Any], pos: dict[str, Any], alasan: str, harga_keluar: float) -> None:
-    """Tutup posisi, cancel sisa pending, hitung PnL hanya dari yang terisi, pindah ke riwayat."""
-    n_cancel = _cancel_sisa_pending(pos)
-    hasil = _hitung_pnl(pos, harga_keluar)
+def _akumulasi_hasil(pos: dict[str, Any], hasil_baru: dict[str, float], harga_keluar: float) -> dict[str, float]:
+    realisasi = pos.setdefault(
+        "realisasi", {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0, "nilai_keluar": 0.0},
+    )
+    for nama in ("pnl_kotor", "fee", "pnl_bersih"):
+        realisasi[nama] = realisasi.get(nama, 0.0) + hasil_baru[nama]
+    realisasi["notional"] = realisasi.get("notional", 0.0) + hasil_baru["notional_terisi"]
+    realisasi["nilai_keluar"] = realisasi.get("nilai_keluar", 0.0) + hasil_baru["notional_terisi"] * harga_keluar
+    pos["ukuran_ditutup"] = pos.get("ukuran_ditutup", 0.0) + hasil_baru["notional_terisi"]
+    notional_total = realisasi["notional"]
+    return {
+        "pnl_persen": round(realisasi["pnl_kotor"] / notional_total * 100, 4) if notional_total else 0.0,
+        "pnl_kotor": round(realisasi["pnl_kotor"], 4),
+        "fee": round(realisasi["fee"], 4),
+        "pnl_bersih": round(realisasi["pnl_bersih"], 4),
+        "harga_keluar": round(realisasi["nilai_keluar"] / notional_total, 8) if notional_total else harga_keluar,
+        "notional_terisi": round(notional_total, 4),
+        "n_filled": _n_filled(pos),
+    }
 
-    # Catat slippage vs level teoritis
-    level_teori = pos["sl"] if alasan == "sl" else (_tp_efektif(pos) or pos["tp"])
+
+def _catat_pnl(state: dict[str, Any], pnl_bersih: float) -> None:
+    state["modal_saat_ini"] = round(state["modal_saat_ini"] + pnl_bersih, 4)
+    state["daily_pnl_usdt"] = round(state["daily_pnl_usdt"] + pnl_bersih, 4)
+
+
+def _finalisasi_posisi(
+    state: dict[str, Any], pos: dict[str, Any], alasan: str, hasil: dict[str, float],
+    harga_keluar: float, level_teori: float | None,
+) -> None:
+    n_cancel = _cancel_sisa_pending(pos)
     slip = None
     if level_teori and pos.get("entry_avg"):
-        # slippage dalam persen harga (positif = lebih buruk bagi trader)
         if pos["arah"] > 0:
-            # long SL: keluar lebih rendah = buruk; long TP: keluar lebih tinggi = baik
-            if alasan == "sl":
-                slip = (level_teori - harga_keluar) / level_teori * 100
-            else:
-                slip = (harga_keluar - level_teori) / level_teori * 100
+            slip = ((level_teori - harga_keluar) if alasan == "sl" else (harga_keluar - level_teori)) / level_teori * 100
         else:
-            if alasan == "sl":
-                slip = (harga_keluar - level_teori) / level_teori * 100
-            else:
-                slip = (level_teori - harga_keluar) / level_teori * 100
+            slip = ((harga_keluar - level_teori) if alasan == "sl" else (level_teori - harga_keluar)) / level_teori * 100
     hasil["slippage_pct"] = round(slip, 4) if slip is not None else 0.0
     hasil["level_teori"] = level_teori
+    hasil["notional_sisa"] = round(pos.get("ukuran_terisi", 0.0), 4)
 
     pos["status"] = "closed"
     pos["waktu_tutup"] = _waktu_iso()
@@ -445,11 +460,7 @@ def tutup_posisi(state: dict[str, Any], pos: dict[str, Any], alasan: str, harga_
     pos["hasil"] = hasil
     pos["pending_dibatalkan"] = n_cancel
 
-    # Update state agregat
-    state["modal_saat_ini"] = round(state["modal_saat_ini"] + hasil["pnl_bersih"], 4)
-    state["daily_pnl_usdt"] = round(state["daily_pnl_usdt"] + hasil["pnl_bersih"], 4)
     state["total_trades"] = state.get("total_trades", 0) + 1
-
     if hasil["pnl_bersih"] >= 0:
         state["total_wins"] = state.get("total_wins", 0) + 1
         state["consecutive_losses"] = 0
@@ -457,28 +468,65 @@ def tutup_posisi(state: dict[str, Any], pos: dict[str, Any], alasan: str, harga_
         state["total_losses"] = state.get("total_losses", 0) + 1
         state["consecutive_losses"] = state.get("consecutive_losses", 0) + 1
 
-    # Pindahkan ke riwayat
     state["open_positions"] = [p for p in state["open_positions"] if p["id"] != pos["id"]]
     state.setdefault("riwayat", []).append(pos)
     state["riwayat"] = state["riwayat"][-100:]
 
-    partial_txt = ""
-    total_level = len(pos["titik_grid"])
-    if hasil["n_filled"] < total_level:
-        partial_txt = f" | partial {hasil['n_filled']}/{total_level} level"
-
-    slip = hasil.get("slippage_pct") or 0
-    slip_txt = f" | slip={slip:+.3f}%" if abs(slip) > 0.001 else ""
-
+    slip_txt = f" | slip={hasil['slippage_pct']:+.3f}%" if abs(hasil["slippage_pct"]) > 0.001 else ""
     st.tambah_log(
         state,
         f"TUTUP {pos['simbol']} {alasan.upper()} | "
         f"entry={pos['entry_avg']:.6g} keluar={harga_keluar:.6g} | "
-        f"PnL={hasil['pnl_bersih']:+.4f} USDT ({hasil['pnl_persen']:+.3f}%) | "
-        f"fee={hasil['fee']:.4f}{partial_txt}{slip_txt}"
+        f"PnL kumulatif={hasil['pnl_bersih']:+.4f} USDT ({hasil['pnl_persen']:+.3f}%) | "
+        f"fee={hasil['fee']:.4f}{slip_txt}"
         + (f" | cancel {n_cancel} pending" if n_cancel else ""),
         "info" if hasil["pnl_bersih"] >= 0 else "warn",
     )
+
+
+def tutup_posisi(state: dict[str, Any], pos: dict[str, Any], alasan: str, harga_keluar: float) -> None:
+    """Tutup posisi, cancel sisa pending, hitung PnL hanya dari yang terisi, pindah ke riwayat."""
+    hasil_baru = _hitung_pnl(pos, harga_keluar)
+    _catat_pnl(state, hasil_baru["pnl_bersih"])
+    hasil = _akumulasi_hasil(pos, hasil_baru, harga_keluar)
+    pos["ukuran_terisi"] = 0.0
+    level_teori = pos["sl"] if alasan == "sl" else (_tp_efektif(pos) or pos["tp"])
+    _finalisasi_posisi(state, pos, alasan, hasil, harga_keluar, level_teori)
+
+
+def _realisasi_tp(
+    state: dict[str, Any], pos: dict[str, Any], level: dict[str, Any],
+) -> None:
+    harga = level["harga"]
+    level["status"] = "hit"
+    if pos.get("tp_notional_basis") is None:
+        pos["tp_notional_basis"] = pos.get("ukuran_terisi", 0.0)
+    jumlah = min(
+        pos.get("ukuran_terisi", 0.0),
+        pos["tp_notional_basis"] * pos.get("tp_fraction_per_level", 0.25),
+    )
+    if jumlah <= 0:
+        return
+
+    hasil_baru = _hitung_pnl(pos, harga, jumlah)
+    _catat_pnl(state, hasil_baru["pnl_bersih"])
+    hasil = _akumulasi_hasil(pos, hasil_baru, harga)
+    pos["ukuran_terisi"] = max(0.0, pos.get("ukuran_terisi", 0.0) - jumlah)
+    pos.setdefault("tp_events", []).append({
+        "harga": harga,
+        "notional": round(jumlah, 4),
+        "pnl_bersih": hasil_baru["pnl_bersih"],
+    })
+    st.tambah_log(
+        state,
+        f"TP {pos['simbol']} @ {harga:.8g} | ditutup={jumlah:.4f} "
+        f"({pos.get('tp_fraction_per_level', 0.25):.0%} posisi) | "
+        f"PnL={hasil_baru['pnl_bersih']:+.4f} USDT",
+        "info" if hasil_baru["pnl_bersih"] >= 0 else "warn",
+    )
+    if pos["ukuran_terisi"] <= 1e-10:
+        pos["ukuran_terisi"] = 0.0
+        _finalisasi_posisi(state, pos, "tp", hasil, harga, harga)
 
 
 def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> None:
@@ -493,10 +541,17 @@ def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> N
     baru_filled = _cek_fill(pos, candle)
     if baru_filled:
         total = len(pos["titik_grid"])
+        ukuran_baru = pos["notional"] * len(baru_filled) / total if total else 0.0
+        ukuran_lama = pos.get("ukuran_terisi", 0.0)
+        harga_lama = pos.get("entry_avg")
+        harga_baru = sum(t.get("harga_fill", t["harga"]) for t in baru_filled) / len(baru_filled)
+        pos["ukuran_masuk_total"] = pos.get("ukuran_masuk_total", ukuran_lama) + ukuran_baru
+        pos["ukuran_terisi"] = ukuran_lama + ukuran_baru
+        pos["entry_avg"] = (
+            (harga_lama * ukuran_lama + harga_baru * ukuran_baru) / pos["ukuran_terisi"]
+            if harga_lama is not None and ukuran_lama > 0 else harga_baru
+        )
         n_filled = _n_filled(pos)
-        # Alokasi notional proporsional terhadap jumlah level yang terisi
-        pos["ukuran_terisi"] = pos["notional"] * (n_filled / total) if total else 0.0
-        pos["entry_avg"] = _hitung_entry_avg(pos)
         nama = ",".join(t["nama"] for t in baru_filled)
         st.tambah_log(
             state,
@@ -508,14 +563,29 @@ def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> N
 
     # 2. Cek exit (hanya jika sudah ada minimal 1 fill)
     alasan = _cek_exit(pos, candle)
-    if alasan:
-        if alasan == "sl":
-            # Slippage adverse: long fill di low, short di high
-            harga_keluar = _harga_exit_sl(pos["sl"], pos["arah"], candle)
-        else:
+    if alasan == "sl":
+        # Prioritaskan SL jika candle menyentuh SL dan TP sekaligus.
+        harga_keluar = _harga_exit_sl(pos["sl"], pos["arah"], candle)
+        tutup_posisi(state, pos, "sl", harga_keluar)
+        return
+    if alasan == "tp":
+        ladder = pos.get("tp_ladder")
+        if ladder is None:
             tp = _tp_efektif(pos) or pos["tp"]
-            harga_keluar = _harga_exit_tp(tp, pos["arah"], candle)
-        tutup_posisi(state, pos, alasan, harga_keluar)
+            tutup_posisi(state, pos, "tp", _harga_exit_tp(tp, pos["arah"], candle))
+            return
+        for level in ladder:
+            if level["status"] != "pending":
+                continue
+            tersentuh = (
+                candle["h"] >= level["harga"] if pos["arah"] > 0
+                else candle["l"] <= level["harga"]
+            )
+            if not tersentuh:
+                continue
+            _realisasi_tp(state, pos, level)
+            if pos.get("status") == "closed":
+                return
         return
 
 
@@ -530,12 +600,20 @@ def satu_siklus(state: dict[str, Any], buka_baru: bool = True) -> None:
     # --- Update posisi yang sudah terbuka ---
     for pos in list(state.get("open_positions") or []):
         try:
-            candles = dp.ambil_candle(ex, pos["simbol"], "5m", 5)
+            candles = dp.ambil_candle(ex, pos["simbol"], "30m", 5)
             if len(candles) < 2:
                 continue
-            # Pakai candle yang sudah tutup (index -2)
-            candle = candles[-2]
-            update_posisi(state, pos, candle)
+            candle_tutup = candles[:-1]
+            terakhir = pos.get("candle_terakhir_diproses")
+            baru = (
+                [candle_tutup[-1]] if terakhir is None and candle_tutup
+                else [c for c in candle_tutup if c["t"] > terakhir]
+            )
+            for candle in baru:
+                update_posisi(state, pos, candle)
+                pos["candle_terakhir_diproses"] = candle["t"]
+                if pos.get("status") == "closed":
+                    break
         except Exception as e:
             st.tambah_log(state, f"Error update {pos['simbol']}: {type(e).__name__}: {e}", "error")
 
@@ -571,15 +649,18 @@ def tampil_status(state: dict[str, Any]) -> None:
             total = len(p["titik_grid"])
             partial = " (partial)" if 0 < filled < total else ""
             tp_eff = _tp_efektif(p)
+            tp_label = f"TP berikut={tp_eff}" if tp_eff is not None else "TP ladder habis; sisa ke SL"
             print(
                 f"  {p['simbol']} {arah}{partial} | entry={p.get('entry_avg') or '-'} | "
                 f"filled={filled}/{total} pending={pending} | "
                 f"notional={p.get('ukuran_terisi', 0):.2f}/{p['notional']:.2f} | "
-                f"SL={p['sl']} TP={tp_eff or p['tp']}"
+                f"SL={p['sl']} {tp_label}"
             )
             # Detail level
             for t in p["titik_grid"]:
                 print(f"      {t['nama']:4} @ {t['harga']} → {t['status']}")
+            for level in p.get("tp_ladder", []):
+                print(f"      TP  @ {level['harga']} → {level['status']}")
     print()
     riwayat = state.get("riwayat") or []
     if riwayat:

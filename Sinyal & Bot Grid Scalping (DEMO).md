@@ -7,7 +7,8 @@ Harga di halaman ini hasil simulasi acak, bukan harga pasar. Untuk data live dan
 
 Harga menyentuh zona entry → pasang grid + SL di luar struktur
      │
-     ├─ Bounce ke TP (S/R lawan) → tutup, cari setup baru
+     ├─ Capai level S/R lawan → realisasikan 25% posisi per level
+     │                         sisa berjalan ke target berikutnya atau SL
      │
      └─ Tembus SL → tutup rugi, hitung consecutive loss
               │
@@ -24,7 +25,7 @@ Harga menyentuh zona entry → pasang grid + SL di luar struktur
 │  4. Second opinion                → AI (hanya jika bot  │
 │                                       bilang layak)     │
 │  5. Eksekusi order / paper        → bot                 │
-│  6. Monitor TP (HH/HL) / SL       → bot                 │
+│  6. Monitor TP bertahap (S/R) / SL→ bot                 │
 │  7. Setelah TP → cari token baru  → ulang dari 1        │
 └─────────────────────────────────────────────────────────┘
 
@@ -73,7 +74,7 @@ Fase 2: Koneksi baca-saja
  [✓] Jalankan python cek_koneksi.py, sampai data publik dan login API sama-sama OK.
 
 Fase 3: Data dan indikator
- [✓] Ambil candle 5m lewat ccxt.
+ [✓] Ambil candle 30m lewat ccxt untuk analisis sinyal dan grid.
  [✓] Pindahkan hitungan RSI, EMA, MACD, SAR, dan S/R dari demo ke Python.
  [✓] python tes_indikator.py jalan tanpa error
  [✓] Angka skor dan harga masuk akal. Bandingkan harga dengan yang tampil di aplikasi Bitget.
@@ -94,15 +95,14 @@ Fase 4: Pemilih token AI
  [] MAX_DAILY_LOSS + MAX_CONSECUTIVE_LOSSES + KILL_SWITCH dihormati di semua path order
 
 Fase B — Aturan entry/exit final (tulis di config, bukan di kepala)
- [] Entry: hanya jika dekat S/R (NEAR) + tren 30m ok + MACD 30m ok + VWAP ok
+ [] Analisis utama: candle 30m untuk skor, syarat entry, S/R, dan grid; konfirmasi tren 30m tetap menjadi gate terpisah.
  [] SL: 50 poin di luar HL/HH dan lolos risk_atr
- [] TP default: level S/R berlawanan (C1), dokumentasikan di README
+ [] TP bertahap: level S/R berlawanan; realisasikan 25% posisi pada tiap level dan biarkan sisa mengikuti target/SL
  [] Skor 80–100 tidak memaksa entry jika jarak ke level besar
  [] Tidak ada average down otomatis tanpa batas
 
 Fase C — Indikator & data
- [] Candle 30m untuk tren + MACD (sumber utama bias)
- [] Candle 5m untuk grid & jarak ke S/R
+ [] Candle 30m untuk seluruh analisis sinyal, grid, dan pemantauan paper
  [] VWAP konsisten definisinya (session vs rolling — pilih satu)
  [] Uji silang RSI/EMA/MACD vs TradingView/Bitget (sudah sebagian)
  [] Unit test kecil: geometri RR, risk_atr, sl_salah_sisi

@@ -1,7 +1,8 @@
 """Phase 5 signal pipeline. AI is not imported or called (AI stays disabled).
 
-Input: daftar_ai.json, restricted to symbols still present on the same side in daftar_40.json.
+Input: displayed bullish/bearish candidates from daftar_40.json.
 Output: signal.json with bot-ready setups and the scoring/entry metadata.
+Analysis uses closed 30m candles and TP targets ladder through opposing S/R levels.
 This module is signal generation only; it never submits orders.
 """
 from __future__ import annotations
@@ -19,9 +20,8 @@ import indikator as ik
 import penilai_ai as pa
 import universe as uni
 
-INPUT_FILE = "daftar_ai.json"
+INPUT_FILE = uni.FILE_DAFTAR_40
 OUTPUT_FILE = "signal.json"
-AI_ENABLED = os.getenv("USE_AI", "off").strip().lower() == "on"
 
 
 def _timestamp() -> str:
@@ -57,13 +57,12 @@ def _read_candidates(path: str) -> list[tuple[str, int, dict[str, Any]]]:
 def build_signal(
     symbol: str, direction: int, candidate: dict[str, Any], exchange: Any,
 ) -> tuple[dict[str, Any] | None, list[str]]:
-    candles = dp.ambil_candle(exchange, symbol, "5m", 300)[:-1]
-    candles_30m = dp.ambil_candle(exchange, symbol, "30m", 200)[:-1]
+    candles = dp.ambil_candle(exchange, symbol, "30m", 300)[:-1]
     analysis = ik.analisis(
         candles, direction,
         config.NEAR_SR_PERCENT, config.SCORE_MIN,
         config.NEAR_MODE, config.NEAR_ATR_MULT,
-        c30=candles_30m,
+        c30=candles,
     )
     grid = pa.rencana(analysis, direction)
     valid_levels = [level for level in grid if level.get("valid")]
@@ -80,14 +79,18 @@ def build_signal(
         "direction": direction_name,
         "entry_levels": [
             {"level": level["titik"], "price": level["harga"], "tp": level["tp"],
-             "sl": level["sl"], "risk_atr": level["risk_atr"], "rr": level["rr"]}
+             "tp_levels": level["tp_levels"], "sl": level["sl"],
+             "risk_atr": level["risk_atr"], "rr": level["rr"]}
             for level in valid_levels
         ],
+        "take_profit_fraction_per_level": 0.25,
         "sl": best["sl"],
         "tp": best["tp"],
         "risk_atr": best["risk_atr"],
         "rr": best["rr"],
         "score": analysis["mentah"],
+        "candle_timeframe": "30m",
+        "candle_timestamp": analysis.get("candle_timestamp"),
         "score_components": {name: score for name, score in analysis["rincian"]},
         "zone": analysis["zona"],
         "conditions": {
@@ -104,7 +107,7 @@ def build_signal(
 
 
 def generate(input_file: str = INPUT_FILE, output_file: str = OUTPUT_FILE) -> dict[str, Any]:
-    # AI is intentionally a hard-off default; this engine never invokes AI.
+    # This engine is formula-only and consumes the displayed universe directly.
     candidates = _read_candidates(input_file)
     daftar_40 = uni.muat_daftar_40()
     signals: list[dict[str, Any]] = []

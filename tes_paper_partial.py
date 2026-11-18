@@ -241,6 +241,135 @@ def test_pnl_hanya_dari_ukuran_terisi():
     print(f"  [OK] PnL partial ≈ 1/3 full (rasio={rasio:.3f})")
 
 
+def test_tp_bertingkat_menutup_25_persen_dan_sisa_ke_sl():
+    state = _state()
+    pos = _pos_contoh()
+    pos["tp_ladder"] = [
+        {"harga": 103.0, "status": "pending"},
+        {"harga": 105.0, "status": "pending"},
+    ]
+    pos["tp_fraction_per_level"] = 0.25
+    pos["ukuran_masuk_total"] = 0.0
+    pos["ukuran_ditutup"] = 0.0
+    pos["realisasi"] = {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0}
+    state["open_positions"] = [pos]
+
+    paper.update_posisi(state, pos, _candle(100.5, 100.5, 97.5, 99.0))
+    assert paper._n_filled(pos) == 3
+    assert pos["ukuran_terisi"] == 7.5
+
+    paper.update_posisi(state, pos, _candle(100.0, 103.5, 99.0, 103.0))
+    assert pos["status"] == "open"
+    assert abs(pos["ukuran_terisi"] - 5.625) < 1e-9
+    assert abs(pos["tp_events"][0]["notional"] - 1.875) < 1e-9
+
+    paper.update_posisi(state, pos, _candle(103.5, 105.5, 103.0, 105.0))
+    assert pos["status"] == "open"
+    assert abs(pos["ukuran_terisi"] - 3.75) < 1e-9
+    assert paper._tp_efektif(pos) is None
+
+    paper.update_posisi(state, pos, _candle(100.0, 100.0, 96.0, 97.0))
+    assert pos["status"] == "closed"
+    assert pos["alasan_tutup"] == "sl"
+    assert pos["hasil"]["notional_terisi"] == 7.5
+    assert len(pos["tp_events"]) == 2
+    assert state["total_trades"] == 1
+    assert abs(state["modal_saat_ini"] - (state["modal_awal"] + pos["hasil"]["pnl_bersih"])) < 1e-4
+    print("  [OK] two S/R targets realize 25% each; remaining position exits at SL")
+
+
+def test_tp_ladder_short_menutup_25_persen_per_target():
+    state = _state()
+    pos = _pos_contoh(arah=-1)
+    pos["tp_ladder"] = [
+        {"harga": 97.0, "status": "pending"},
+        {"harga": 95.0, "status": "pending"},
+    ]
+    pos["tp_fraction_per_level"] = 0.25
+    pos["ukuran_masuk_total"] = 0.0
+    pos["ukuran_ditutup"] = 0.0
+    pos["realisasi"] = {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0}
+    state["open_positions"] = [pos]
+
+    paper.update_posisi(state, pos, _candle(99.5, 102.5, 99.0, 100.0))
+    assert paper._n_filled(pos) == 3
+    paper.update_posisi(state, pos, _candle(100.0, 101.0, 94.5, 96.0))
+
+    assert pos["status"] == "open"
+    assert abs(pos["ukuran_terisi"] - 3.75) < 1e-9
+    assert [event["harga"] for event in pos["tp_events"]] == [97.0, 95.0]
+    print("  [OK] short TP ladder realizes 25% at descending S/R targets")
+
+
+def test_paper_memproses_candle_30m_baru_saja():
+    state = _state()
+    pos = _pos_contoh()
+    pos["candle_terakhir_diproses"] = 100
+    state["open_positions"] = [pos]
+    candle_calls = []
+    originals = (
+        paper.dp.exchange_publik,
+        paper.dp.ambil_candle,
+        paper.update_posisi,
+        paper.st.simpan,
+    )
+    paper.dp.exchange_publik = lambda: object()
+    paper.dp.ambil_candle = lambda _ex, _symbol, timeframe, _limit: (
+        candle_calls.append(timeframe) or [
+            _candle(100, 101, 99, 100) | {"t": 100},
+            _candle(100, 101, 99, 100) | {"t": 200},
+            _candle(100, 101, 99, 100) | {"t": 300},
+        ]
+    )
+    paper.update_posisi = lambda _state, _pos, candle: candle_calls.append(candle["t"])
+    paper.st.simpan = lambda _state: None
+    try:
+        paper.satu_siklus(state, buka_baru=False)
+    finally:
+        (
+            paper.dp.exchange_publik,
+            paper.dp.ambil_candle,
+            paper.update_posisi,
+            paper.st.simpan,
+        ) = originals
+    assert candle_calls == ["30m", 200]
+    assert pos["candle_terakhir_diproses"] == 200
+    print("  [OK] paper monitor uses 30m and processes each closed candle once")
+
+
+def test_kandidat_paper_diambil_dari_daftar_40():
+    data = paper.uni.muat_data_daftar_40()
+    expected = [
+        item["simbol"]
+        for side in ("bullish", "bearish")
+        for item in data[side]
+    ]
+    calls = []
+    originals = (
+        paper.dp.exchange_publik,
+        paper.dp.ambil_candle,
+        paper.ik.analisis,
+        paper.pa.rencana,
+    )
+    try:
+        paper.dp.exchange_publik = lambda: object()
+        paper.dp.ambil_candle = lambda _exchange, symbol, _timeframe, _limit: (
+            calls.append(symbol) or []
+        )
+        paper.ik.analisis = lambda *_args, **_kwargs: {"layak": False}
+        paper.pa.rencana = lambda *_args, **_kwargs: []
+        assert paper.muat_sinyal_layak(maks=len(expected) + 1) == []
+    finally:
+        (
+            paper.dp.exchange_publik,
+            paper.dp.ambil_candle,
+            paper.ik.analisis,
+            paper.pa.rencana,
+        ) = originals
+    assert calls == expected
+    print("  [OK] paper candidate analysis reads only the displayed daftar_40 universe")
+
+
 # ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
@@ -258,6 +387,10 @@ def main():
         test_short_partial_fill,
         test_cancel_sisa_pending,
         test_pnl_hanya_dari_ukuran_terisi,
+        test_tp_bertingkat_menutup_25_persen_dan_sisa_ke_sl,
+        test_tp_ladder_short_menutup_25_persen_per_target,
+        test_paper_memproses_candle_30m_baru_saja,
+        test_kandidat_paper_diambil_dari_daftar_40,
     ]
     gagal = 0
     for t in tests:

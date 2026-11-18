@@ -11,7 +11,7 @@ Pakai:
   python scanner.py                     # loop default (300 detik ≈ 1 candle 5m)
   python scanner.py --interval 60       # tiap 60 detik
   python scanner.py --sekali            # satu putaran saja
-  python scanner.py --refresh-sinyal    # jalankan penilai_ai tiap putaran (butuh AI key)
+  python scanner.py --refresh-sinyal    # jalankan analisis penilai tiap putaran (AI hanya jika USE_AI=on)
   python scanner.py --no-buka           # hanya update posisi terbuka
 """
 from __future__ import annotations

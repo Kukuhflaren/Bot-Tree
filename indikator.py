@@ -1,12 +1,13 @@
 """Fase 3: indikator dan skor sinyal (port dari dashboard demo). Murni Python, tanpa pandas.
 Candle = dict dengan kunci: t (waktu), o, h, l, c, v.
+Signal, scoring, S/R, dan grid memakai candle tertutup 30m; konfirmasi 30m tetap gate terpisah.
 
 Perubahan penting:
   - VWAP sebagai penentu tren (harga di atas VWAP = bias bullish, di bawah = bias bearish)
   - Konfirmasi tren 30 menit terakhir (6 candle x 5m)
 """
 
-PIVOT_W = 10  # jendela puncak/lembah untuk support/resistance (10 x 5m = 50 menit)
+PIVOT_W = 10  # jendela puncak/lembah; rentang waktu mengikuti timeframe candle pemanggil
 GRID_MAKS_ATR = 12  # titik grid lebih jauh dari 12 x ATR dari harga dibuang (hampir tidak akan terisi)
 TREN_W = 5    # jendela lebih pendek khusus untuk menilai tren (respons lebih cepat)
 CANDLE_30M = 6  # 6 x 5 menit = 30 menit untuk konfirmasi tren pendek
@@ -329,7 +330,8 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
 
     layak_inti = all(dasar) and not ekstrem and mentah >= skor_min and len(grid) >= 1
     return {
-        "harga": p, "S1": S1, "S2": S2, "R1": R1, "R2": R2, "HL": HL, "HH": HH,
+        "harga": p, "candle_timestamp": L.get("t"),
+        "S1": S1, "S2": S2, "R1": R1, "R2": R2, "HL": HL, "HH": HH,
         "mentah": mentah, "skor": skor, "zona": zona(skor), "ekstrem": ekstrem,
         "syarat": syarat, "jarak_sr": jarak, "jarak_atr": jarak_atr, "dasar": dasar,
         "vwap": vw, "di_atas_vwap": di_atas_vwap, "vwap_ok": vwap_ok,

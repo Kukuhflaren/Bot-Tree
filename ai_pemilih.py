@@ -3,14 +3,15 @@
 Alur:
   1. Baca hanya daftar bullish dan bearish yang ditampilkan penyaring.py.
   2. Kirim ringkasan angka ke AI (hemat token: satu baris pendek per token).
-  3. AI memilih 20 bullish + 20 bearish dan memberi alasan singkat.
+  3. AI memilih 20 bullish + 20 bearish.
   4. Hasil AI DIPERIKSA: simbol yang tidak ada di daftar dibuang, duplikat dibuang.
   5. Kalau kurang dari 20 atau AI error, sisanya diisi dari rumus penyaring (cadangan).
   6. Simpan ke daftar_ai.json.
 
 Pakai:
-    python ai_pemilih.py             -> pakai AI (memakai jatah panggilan harian)
-    python ai_pemilih.py --tanpa-ai  -> hanya rumus penyaring (gratis, untuk uji)
+    python ai_pemilih.py             -> ikut USE_AI (default off)
+    python ai_pemilih.py --pakai-ai  -> aktifkan AI untuk pemanggilan ini
+    python ai_pemilih.py --tanpa-ai  -> paksa tanpa AI
 Hanya memilih token. Tidak membuat order."""
 import json
 import sys
@@ -76,10 +77,8 @@ TUGAS: pilih tepat {n} token BULLISH dari DAFTAR BULLISH dan {n} token BEARISH d
 ATURAN KERAS:
 - Gunakan HANYA data di bawah. Jangan mengarang berita, harga, atau level support/resistance.
 - Jangan memindahkan token dari satu sisi ke sisi lainnya.
-- Alasan maksimal 12 kata, berdasarkan angka di data.
 - Jawab HANYA dengan JSON valid, tanpa teks lain, bentuknya:
-{{"bullish":[{{"simbol":"BTC","alasan":"...","keyakinan":1}}],"bearish":[{{"simbol":"ETH","alasan":"...","keyakinan":1}}]}}
-- keyakinan adalah angka 1 sampai 5.
+{{"bullish":[{{"simbol":"BTC"}}],"bearish":[{{"simbol":"ETH"}}]}}
 
 DATA:
 DAFTAR BULLISH:
@@ -176,8 +175,8 @@ def validasi(jawaban, bullish_kandidat, bearish_kandidat, n):
             if nama in peta and nama not in dipakai and len(hasil) < n:
                 dipakai.add(nama)
                 k = dict(peta[nama])
-                k["alasan"] = str(item.get("alasan", ""))[:120]
-                k["keyakinan"] = item.get("keyakinan")
+                k.pop("alasan", None)
+                k.pop("keyakinan", None)
                 k["sumber"] = "ai"
                 hasil.append(k)
         return hasil
@@ -190,15 +189,16 @@ def validasi(jawaban, bullish_kandidat, bearish_kandidat, n):
 def isi_kekurangan(bull, bear, bullish_kandidat, bearish_kandidat, n, dipakai):
     """Isi kekurangan hanya dari daftar sisi yang sedang diproses."""
     for daftar, kandidat_sisi in ((bull, bullish_kandidat), (bear, bearish_kandidat)):
-        cadangan = sorted(kandidat_sisi, key=lambda k: k.get("skor", 0), reverse=True)
-        for k in cadangan:
+        for k in kandidat_sisi:
             if len(daftar) >= n:
                 break
             nama = k["simbol"].split("/")[0].upper()
             if nama not in dipakai:
                 dipakai.add(nama)
                 k = dict(k)
-                k["alasan"], k["keyakinan"], k["sumber"] = "rumus penyaring", None, "rumus"
+                k.pop("alasan", None)
+                k.pop("keyakinan", None)
+                k["sumber"] = "rumus"
                 daftar.append(k)
 
 
@@ -215,11 +215,27 @@ def muat_kandidat():
         raise SystemExit("daftar_40.json belum berisi daftar bullish/bearish. Jalankan penyaring.py terlebih dahulu.") from exc
     if not bullish and not bearish:
         raise SystemExit("Daftar bullish dan bearish di daftar_40.json kosong.")
-    return bullish, bearish
+    watchlist = data.get("watchlist", [])
+    if not isinstance(watchlist, list):
+        raise SystemExit("watchlist di daftar_40.json harus berupa daftar.")
+    metadata = {
+        "watchlist_mode": data.get("watchlist_mode", config.WATCHLIST_MODE),
+        "watchlist": [str(simbol).strip().upper() for simbol in watchlist if str(simbol).strip()],
+    }
+    return bullish, bearish, metadata
 
 
-def jalankan(pakai_ai=True):
-    bullish_kandidat, bearish_kandidat = muat_kandidat()
+def jalankan(pakai_ai=None):
+    pakai_ai = config.AI_ENABLED if pakai_ai is None else pakai_ai
+    bullish_kandidat, bearish_kandidat, metadata = muat_kandidat()
+    watchlist = set(metadata["watchlist"])
+
+    def tandai_watchlist(daftar):
+        for item in daftar:
+            item.pop("alasan", None)
+            item.pop("keyakinan", None)
+            item["prioritas_watchlist"] = item["simbol"].split("/")[0].upper() in watchlist
+
     n = config.JUMLAH_PER_SISI
     sumber, galat, token = "rumus", None, None
     bull, bear, dipakai = [], [], set()
@@ -234,8 +250,18 @@ def jalankan(pakai_ai=True):
             galat = f"{type(e).__name__}: {e}"
             bull, bear, dipakai = [], [], set()
     isi_kekurangan(bull, bear, bullish_kandidat, bearish_kandidat, n, dipakai)
-    hasil = {"waktu": datetime.now(timezone.utc).isoformat(), "sumber": sumber, "galat": galat, "token": token,
-             "bullish": bull, "bearish": bear}
+    tandai_watchlist(bull)
+    tandai_watchlist(bear)
+    hasil = {
+        "waktu": datetime.now(timezone.utc).isoformat(),
+        "sumber": sumber,
+        "galat": galat,
+        "token": token,
+        "watchlist_mode": metadata["watchlist_mode"],
+        "watchlist": metadata["watchlist"],
+        "bullish": bull,
+        "bearish": bear,
+    }
     with open(FILE_HASIL, "w", encoding="utf-8") as f:
         json.dump(hasil, f, indent=2, ensure_ascii=False)
     return hasil
@@ -243,14 +269,21 @@ def jalankan(pakai_ai=True):
 
 def cetak(judul, daftar):
     print(f"\n{judul} ({len(daftar)})")
-    print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol(Juta)':>10} {'Sumber':7} Alasan")
+    print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}  W")
     for i, k in enumerate(daftar, 1):
-        print(f"  {i:>2} {k['simbol']:16} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>10.1f} "
-              f"{k['sumber']:7} {k.get('alasan', '')}")
+        tanda = " !" if abs(k["ubah_24j"]) >= 30 else ""
+        w = "*" if k.get("prioritas_watchlist") else " "
+        print(f"  {i:>2} {k['simbol']:16} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>13.1f} "
+              f"{k['rasio_vol']:>8.2f}x {k['skor']:>7.2f}{tanda}  {w}")
 
 
 if __name__ == "__main__":
-    h = jalankan(pakai_ai="--tanpa-ai" not in sys.argv)
+    pakai_ai = config.AI_ENABLED
+    if "--pakai-ai" in sys.argv:
+        pakai_ai = True
+    if "--tanpa-ai" in sys.argv:
+        pakai_ai = False
+    h = jalankan(pakai_ai=pakai_ai)
     print(f"Sumber daftar: {h['sumber'].upper()}")
     if h.get("token"):
         pakai = _baca_pakai()
@@ -260,6 +293,8 @@ if __name__ == "__main__":
         print(f"AI gagal, memakai rumus penyaring. Penyebab: {h['galat']}")
     cetak("BULLISH", h["bullish"])
     cetak("BEARISH", h["bearish"])
+    print(f"\nWatchlist ({h['watchlist_mode']}): {', '.join(h['watchlist']) or '-'}")
     dari_ai = sum(1 for k in h["bullish"] + h["bearish"] if k["sumber"] == "ai")
     print(f"\nDari AI: {dari_ai} | dari rumus: {len(h['bullish']) + len(h['bearish']) - dari_ai}")
     print(f"Tersimpan di {FILE_HASIL}")
+    print("Kolom W=* artinya token ada di watchlist (diprioritaskan).")

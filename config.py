@@ -24,6 +24,7 @@ BITGET_PASSPHRASE = os.getenv("BITGET_PASSPHRASE", "")
 BITGET_UTA = os.getenv("BITGET_UTA", "on").strip().lower() != "off"
 
 AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini").strip().lower()
+AI_ENABLED = os.getenv("USE_AI", "off").strip().lower() == "on"
 AI_KEYS = {
     "gemini": os.getenv("GEMINI_API_KEY", ""),
     "claude": os.getenv("ANTHROPIC_API_KEY", ""),

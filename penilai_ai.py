@@ -1,14 +1,14 @@
 """Eksperimen: AI sebagai PENILAI (second opinion) atas sinyal bot. Tidak membuat order.
 
 Alur:
-  1. Baca daftar_40.json
-  2. Bot menghitung semuanya dari candle 5m asli: skor, syarat masuk, titik grid, TP/SL, rasio TP:SL.
+  1. Ambil pilihan daftar_ai.json yang masih ada pada sisi sama di daftar_40.json.
+  2. Bot menghitung semuanya dari candle 30m asli: skor, syarat masuk, titik grid, TP/SL, rasio TP:SL.
   3. K token dengan skor bot tertinggi dikirim ke AI sebagai ringkasan angka (bukan berita).
   4. AI memberi verdict MASUK / TUNGGU / TOLAK + alasan + risiko, hanya dari angka yang diberikan.
   5. Dicetak berdampingan dengan penilaian bot, dan dicatat di log_penilai.jsonl untuk dievaluasi nanti.
 
 Perubahan penting:
-  - TP bersama di HH (bullish) / HL (bearish), bukan persen fixed dari entry
+  - TP bertahap di S/R lawan; 25% posisi yang terisi direalisasikan per level
   - SL tetap fixed poin di luar HL/HH
   - Titik valid hanya jika: tidak sl_salah_sisi, RR >= RR_MIN, risk_atr dalam [RISK_ATR_MIN, RISK_ATR_MAX]
   - VWAP + konfirmasi tren 30m ikut dalam syarat bot
@@ -42,18 +42,35 @@ def muat_token():
             d = json.load(f)
     except FileNotFoundError:
         raise SystemExit("daftar_ai.json belum ada. Jalankan dulu: python ai_pemilih.py")
-    daftar_40 = uni.muat_daftar_40()
+    daftar_40_json = uni.muat_daftar_40()
+    try:
+        with open(uni.FILE_DAFTAR_40, encoding="utf-8") as f:
+            data_40 = json.load(f)
+    except FileNotFoundError:
+        raise SystemExit("daftar_40.json belum ada. Jalankan dulu: python penyaring.py")
+    pilihan = {}
+    for sisi in ("bullish", "bearish"):
+        pilihan[sisi] = {
+            uni.base_simbol(k.get("simbol", ""))
+            for k in d.get(sisi, [])
+            if isinstance(k, dict) and isinstance(k.get("simbol"), str)
+        }
     token = []
     ditolak = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
-        for k in d.get(kunci, []):
-            simbol = k.get("simbol", "")
-            if not isinstance(simbol, str) or not uni.ada_di_daftar_40(simbol, arah, daftar_40):
-                ditolak += 1
+        for k in data_40[kunci]:
+            simbol = k["simbol"]
+            if not uni.ada_di_daftar_40(simbol, arah, daftar_40_json) or uni.base_simbol(simbol) not in pilihan[kunci]:
                 continue
             token.append({"simbol": simbol, "nama": simbol.split("/")[0], "arah": arah,
                           "ubah_24j": k["ubah_24j"], "vol_juta": k["vol_24j_usdt"] / 1e6,
                           "rasio_vol": k["rasio_vol"]})
+    for sisi, arah in (("bullish", 1), ("bearish", -1)):
+        ditolak += sum(
+            1 for k in d.get(sisi, [])
+            if not isinstance(k, dict) or not isinstance(k.get("simbol"), str)
+            or not uni.ada_di_daftar_40(k["simbol"], arah, daftar_40_json)
+        )
     if ditolak:
         print(f"Universe: {ditolak} kandidat daftar_ai ditolak karena tidak ada di daftar_40 sisi yang sama.")
     return token
@@ -67,7 +84,22 @@ def tp_untuk(a, arah, h):
     if config.TP_MODE == "struktur":
         return a["HH"] if arah > 0 else a["HL"]
     lawan = a["level_atas"] if arah > 0 else a["level_bawah"]  # S/R lawan terdekat (level nyata)
-    return lawan[0] if lawan else None
+    sesuai = [level for level in lawan if level > h] if arah > 0 else [level for level in lawan if level < h]
+    sesuai.sort(reverse=arah < 0)
+    return sesuai[0] if sesuai else None
+
+
+def tp_levels_untuk(a, arah, h):
+    """Target bertahap; tiap level berikutnya dapat merealisasikan 25% notional."""
+    if config.TP_MODE == "persen":
+        target = tp_untuk(a, arah, h)
+        return [target] if target is not None else []
+    if config.TP_MODE == "struktur":
+        target = tp_untuk(a, arah, h)
+        return [target] if target is not None else []
+    lawan = a["level_atas"] if arah > 0 else a["level_bawah"]
+    sesuai = [level for level in lawan if level > h] if arah > 0 else [level for level in lawan if level < h]
+    return sorted(set(sesuai), reverse=arah < 0)
 
 
 def buffer_sl(a):
@@ -102,7 +134,8 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
 
     hasil = []
     for nama, h in a["grid"]:
-        tp_h = tp_untuk(a, arah, h)
+        tp_levels = tp_levels_untuk(a, arah, h)
+        tp_h = tp_levels[0] if tp_levels else None
         tolak = []
         if arah > 0:
             sl_salah_sisi = sl_h >= h
@@ -138,6 +171,7 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
             "harga": r(h),
             "jarak_persen": r(abs(h - p) / p * 100, 3),
             "tp": r(tp_h) if tp_h is not None else None,
+            "tp_levels": [r(level) for level in tp_levels],
             "sl": r(sl_h),
             "risiko_sl_persen": r(risiko_persen, 3),
             "reward_persen": r(reward_persen, 3) if reward_persen is not None else None,
@@ -185,6 +219,8 @@ def snapshot(t, a):
     risk_atrs = [g["risk_atr"] for g in valid_grid if g.get("risk_atr") is not None]
     return {
         "simbol": t["nama"],
+        "candle_timeframe": "30m",
+        "candle_timestamp": a.get("candle_timestamp"),
         "arah": "BULLISH" if t["arah"] > 0 else "BEARISH",
         "harga": r(a["harga"]),
         "atr_persen": r(a["atr"] / a["harga"] * 100, 3),
@@ -207,7 +243,8 @@ def snapshot(t, a):
         "syarat": syarat_dict,
         "jarak_ke_sr_persen": r(a["jarak_sr"], 3),
         "jarak_ke_sr_atr": r(a["jarak_atr"], 3),
-        "tp_mode": config.TP_MODE,  # [FASE B] TP per titik ada di titik_grid[].tp
+        "tp_mode": config.TP_MODE,
+        "tp_fraction_per_level": 0.25,
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
         "rr_terbaik": r(max((g["rr"] for g in valid_grid if g["rr"] is not None), default=None), 3),
@@ -227,14 +264,15 @@ def buat_prompt(snaps):
     return f"""Kamu penilai risiko untuk bot scalping grid futures USDT.
 Parameter bot:
 - leverage {config.LEVERAGE:.0f}x
-- TP mode "{config.TP_MODE}" (sr_lawan = di level S/R lawan terdekat; struktur = di HH/HL; persen = {config.TP_PERCENT}% dari entry). TP tiap titik ada di field tp
+- TP mode "{config.TP_MODE}" (sr_lawan = target bertahap pada S/R lawan; struktur = di HH/HL; persen = {config.TP_PERCENT}% dari entry)
+- tiap level TP merealisasikan 25% dari posisi yang terisi saat target pertama tercapai; sisa tetap terbuka sampai target berikutnya atau SL
 - SL di luar HL/HH dengan jarak {_teks_sl()}
 - RR minimum per titik grid = {config.RR_MIN}
 - risk (jarak entry→SL) harus antara {config.RISK_ATR_MIN}× dan {config.RISK_ATR_MAX}× ATR (menolak SL terlalu sempit/lebar)
 - biaya pulang-pergi sekitar {BIAYA_PP}% harga
 - tiap titik limit memakai sebagian modal
 
-Di bawah ini ringkasan ANGKA tiap token yang dihitung bot dari candle 5 menit asli.
+Di bawah ini ringkasan ANGKA tiap token yang dihitung bot dari candle 30 menit asli.
 Tugasmu memberi second opinion (bukan memprediksi harga):
 - verdict: "MASUK" (setup layak dicoba), "TUNGGU" (belum matang), atau "TOLAK" (risiko lebih besar dari peluang).
 - keyakinan: 1 sampai 5.
@@ -257,13 +295,15 @@ DATA:
 """ + "\n".join(json.dumps(s, ensure_ascii=False, separators=(",", ":")) for s in snaps)
 
 
-def jalankan(k):
-    ap.cek_jatah()
+def jalankan(k, pakai_ai=None):
+    pakai_ai = config.AI_ENABLED if pakai_ai is None else pakai_ai
+    if pakai_ai:
+        ap.cek_jatah()
     token = muat_token()
     if not token:
         raise SystemExit("Tidak ada kandidat daftar_ai yang masih menjadi anggota daftar_40.")
     ex = dp.exchange_publik()
-    print(f"Menghitung {len(token)} token dari candle 5m...")
+    print(f"Menghitung {len(token)} token dari candle 30m...")
     print(
         f"Aturan: TP {config.TP_MODE} | SL {_teks_sl()} | "
         f"RR min {config.RR_MIN} | risk ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]\n"
@@ -272,9 +312,8 @@ def jalankan(k):
     galat_data = 0
     for t in token:
         try:
-            c = dp.ambil_candle(ex, t["simbol"], "5m", 300)[:-1]
-            c30 = dp.ambil_candle(ex, t["simbol"], "30m", 200)[:-1]  # [FASE B] tren + MACD timeframe 30 menit
-            a = ik.analisis(c, t["arah"], config.NEAR_SR_PERCENT, config.SCORE_MIN, config.NEAR_MODE, config.NEAR_ATR_MULT, c30=c30)
+            c = dp.ambil_candle(ex, t["simbol"], "30m", 300)[:-1]
+            a = ik.analisis(c, t["arah"], config.NEAR_SR_PERCENT, config.SCORE_MIN, config.NEAR_MODE, config.NEAR_ATR_MULT, c30=c)
             hasil.append((t, a))
         except Exception as e:
             print(f"  lewati {t['nama']}: {type(e).__name__}: {e}")
@@ -301,16 +340,23 @@ def jalankan(k):
     terpilih = hasil[:k]
     snaps = [snapshot(t, a) for t, a in terpilih]
 
-    try:
-        teks, jumlah_token = ap.panggil_ai(buat_prompt(snaps))
-    except Exception as e:
-        raise SystemExit(f"\nAI gagal: {type(e).__name__}: {str(e)[:200]}")
-    ap.catat_pakai(jumlah_token)
-    jawaban = ap.ambil_json(teks)
+    if pakai_ai:
+        try:
+            teks, jumlah_token = ap.panggil_ai(buat_prompt(snaps))
+        except Exception as e:
+            raise SystemExit(f"\nAI gagal: {type(e).__name__}: {str(e)[:200]}")
+        ap.catat_pakai(jumlah_token)
+        jawaban = ap.ambil_json(teks)
+    else:
+        jumlah_token = 0
+        jawaban = {"ringkasan": "AI dinonaktifkan; hasil hanya berisi analisis bot.", "hasil": []}
     peta = {str(h.get("simbol", "")).upper(): h for h in jawaban.get("hasil", [])}
 
-    print(f"\nRingkasan AI: {jawaban.get('ringkasan')}")
-    print(f"\n{'Simbol':9} {'Arah':8} {'SkorBot':>7} {'BotLayak':9} {'AI':7} {'Yakin':>5}  Alasan | Risiko")
+    print(f"\nRingkasan {'AI' if pakai_ai else 'bot'}: {jawaban.get('ringkasan')}")
+    print(
+        f"\n{'Simbol':9} {'Arah':8} {'SkorBot':>7} {'BotLayak':9} "
+        f"{'AI' if pakai_ai else 'AI off':7} {'Yakin':>5}  Alasan | Risiko"
+    )
     silang = {("ya", "MASUK"): 0, ("ya", "lain"): 0, ("tdk", "MASUK"): 0, ("tdk", "lain"): 0}
     log = []
     for (t, a), s in zip(terpilih, snaps):
@@ -328,40 +374,56 @@ def jalankan(k):
               f"SL salah sisi: {n_salah} | "
               f"VWAP ok: {s.get('vwap_ok')} | tren30m: {s.get('tren_30m', {}).get('ok')} | "
               f"layak AI: {h.get('titik_layak')}")
-        log.append({
-            "waktu": datetime.now(timezone.utc).isoformat(),
-            "simbol": t["nama"],
-            "arah": s["arah"],
-            "harga": s["harga"],
-            "skor_bot": a["mentah"],
-            "layak_bot": s["layak_bot_final"],
-            "titik_valid": n_valid,
-            "rr_terbaik": s["rr_terbaik"],
-            "risk_atr_min_valid": s.get("risk_atr_min_valid"),
-            "verdict": v,
-            "keyakinan": h.get("keyakinan"),
-            "alasan": h.get("alasan"),
-        })
+        if pakai_ai:
+            log.append({
+                "waktu": datetime.now(timezone.utc).isoformat(),
+                "simbol": t["nama"],
+                "arah": s["arah"],
+                "harga": s["harga"],
+                "skor_bot": a["mentah"],
+                "layak_bot": s["layak_bot_final"],
+                "titik_valid": n_valid,
+                "rr_terbaik": s["rr_terbaik"],
+                "risk_atr_min_valid": s.get("risk_atr_min_valid"),
+                "verdict": v,
+                "keyakinan": h.get("keyakinan"),
+                "alasan": h.get("alasan"),
+            })
 
-    print("\nPERBANDINGAN BOT vs AI")
-    print(f"  Bot layak,  AI MASUK        : {silang[('ya', 'MASUK')]}")
-    print(f"  Bot layak,  AI TUNGGU/TOLAK : {silang[('ya', 'lain')]}")
-    print(f"  Bot tidak,  AI MASUK        : {silang[('tdk', 'MASUK')]}")
-    print(f"  Bot tidak,  AI TUNGGU/TOLAK : {silang[('tdk', 'lain')]}")
+    if pakai_ai:
+        print("\nPERBANDINGAN BOT vs AI")
+        print(f"  Bot layak,  AI MASUK        : {silang[('ya', 'MASUK')]}")
+        print(f"  Bot layak,  AI TUNGGU/TOLAK : {silang[('ya', 'lain')]}")
+        print(f"  Bot tidak,  AI MASUK        : {silang[('tdk', 'MASUK')]}")
+        print(f"  Bot tidak,  AI TUNGGU/TOLAK : {silang[('tdk', 'lain')]}")
+    else:
+        print("\nPerbandingan AI dilewati karena AI dinonaktifkan.")
     if jumlah_token:
         print(f"Token panggilan ini: {jumlah_token}")
-    pakai = ap._baca_pakai()
-    print(f"Pemakaian hari ini: {pakai['token']} token, {pakai['jumlah']} panggilan")
+    if pakai_ai:
+        pakai = ap._baca_pakai()
+        print(f"Pemakaian hari ini: {pakai['token']} token, {pakai['jumlah']} panggilan")
     with open(FILE_HASIL, "w", encoding="utf-8") as f:
-        json.dump({"snapshot": snaps, "jawaban": jawaban, "token": jumlah_token}, f, indent=2, ensure_ascii=False)
-    with open(FILE_LOG, "a", encoding="utf-8") as f:
-        for baris in log:
-            f.write(json.dumps(baris, ensure_ascii=False) + "\n")
-    print(f"Tersimpan di {FILE_HASIL} dan ditambahkan ke {FILE_LOG}")
+        json.dump({
+            "snapshot": snaps, "jawaban": jawaban, "token": jumlah_token,
+            "ai_enabled": pakai_ai,
+        }, f, indent=2, ensure_ascii=False)
+    if pakai_ai:
+        with open(FILE_LOG, "a", encoding="utf-8") as f:
+            for baris in log:
+                f.write(json.dumps(baris, ensure_ascii=False) + "\n")
+        print(f"Tersimpan di {FILE_HASIL} dan ditambahkan ke {FILE_LOG}")
+    else:
+        print(f"Tersimpan di {FILE_HASIL}; AI tidak dipanggil dan log AI tidak diubah.")
 
 
 if __name__ == "__main__":
     jumlah = 8
     if "--jumlah" in sys.argv:
         jumlah = int(sys.argv[sys.argv.index("--jumlah") + 1])
-    jalankan(jumlah)
+    pakai_ai = config.AI_ENABLED
+    if "--pakai-ai" in sys.argv:
+        pakai_ai = True
+    if "--tanpa-ai" in sys.argv:
+        pakai_ai = False
+    jalankan(jumlah, pakai_ai=pakai_ai)

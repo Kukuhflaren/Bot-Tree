@@ -3,8 +3,12 @@ dan tampilkan titik grid (harus tidak kembar). Tidak membuat order."""
 import config
 import data_pasar as dp
 import indikator as ik
+import universe as uni
 
-SIMBOL = ["BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT:USDT", "XRP/USDT:USDT", "DOGE/USDT:USDT"]
+daftar = uni.muat_data_daftar_40()
+SIMBOL = list(dict.fromkeys(
+    item["simbol"] for sisi in ("bullish", "bearish") for item in daftar[sisi]
+))
 ex = dp.exchange_publik()
 terbaik = {}
 n_persen = n_atr = 0

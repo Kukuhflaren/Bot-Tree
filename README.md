@@ -63,6 +63,13 @@ python penyaring.py          # daftar bullish/bearish -> daftar_40.json
 python ai_pemilih.py         # (opsional) AI memilih 20+20 -> daftar_ai.json
 python penilai_ai.py --jumlah 8   # (opsional) hitung rencana + second opinion AI
 python tes_indikator.py      # tabel skor dan syarat masuk beberapa token
+python paper.py               # coba buka / update
+# atau
+   python paper.py --status   # Lihat status
+   python paper.py            # Satu siklus (cek sinyal + update posisi yang ada)
+   python paper.py --loop      # Loop terus (setiap 60 detik)
+   python paper.py --no-buka   # Hanya update posisi, jangan buka baru
+   python paper.py --reset      # Reset state (hati-hati)
 ```
 
 ## Struktur file

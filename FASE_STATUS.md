@@ -6,34 +6,24 @@ Diperbarui: 2026-11-18
 |------|-----|--------|
 | **A** | Risk gate, universe, watchlist, blacklist | ✅ Siap (`cek_fase_a.py`) |
 | **B** | Entry/SL/TP tertulis, konfirmasi 30m, grid validasi | ✅ Ada di `indikator.py` + `penilai_ai.py` |
-| **C** | Scanner continuous | ✅ `scanner.py` |
+| **C** | Scanner continuous | ✅ `scanner.py` (siklus paper) |
 | **D** | Paper engine (fill, partial, slippage, fee, state) | ✅ `paper.py` + `state.py` + unit test |
-| **E** | Order nyata ke Bitget (limit + TP/SL bursa) | ❌ Belum — berikutnya |
+| **E** | Bitget UTA v3 order placement + exchange-side TP/SL | 🟡 Sizing/preflight groundwork only; submission deliberately disabled |
+| **5** | Formula-only signal pipeline, AI off | ✅ `signal_engine.py` (reads `daftar_ai.json`, outputs `signal.json`) |
+| **6** | Paper performance metrics and safety validation | 🟡 `paper_metrics.py` reports available history; append-only multi-week journal and full stop validation remain |
+| **7** | Bitget Demo UTA v3 order verification | ⬜ Blocked on Phase E adapter verification and Demo API Key |
+| **8** | Real-money safeguards | ⬜ Not implemented; live order submission is not enabled |
+| **9** | Phased real-capital rollout | ⬜ Requires written thresholds and successful demo/paper evidence |
+| **10** | Dashboard, rTokens, optional AI second opinion | ⬜ Later work |
 
-## Temuan dari uji demo (2026-11-18)
+## Current safety gate
 
-1. **Koneksi demo OK** — saldo terbaca; `DRY_RUN=on`.
-2. **Tidak ada setup layak** pada sesi uji — `tren_30m` / MACD / dekat S/R sering gagal (pasar sideways). Idle = perilaku yang diinginkan.
-3. **SL_POINTS=50** sering membuat buffer SL > `RISK_ATR_MAX` (ATR 5m kecil). Default baru disarankan **40**, atau `SL_BUFFER_ATR=0.8`.
-4. **Modal demo 25 USDT @ 5%** → margin 1.25; BTC min order ~1.29 margin → sedikit kurang. SPCX cukup. Naikkan sedikit `RISK_PER_SETUP_PCT` atau modal jika ingin trade BTC.
-5. Simbol AI aneh (mis. `ANTHROPIC`) di-skip otomatis (`BadSymbol`).
+`bitget_orders.py` can only build and validate offline sizing plans. It does **not** send orders. Do not change `DRY_RUN` to `off` as a way to enable trading: order submission is intentionally not wired until UTA v3 fields, quantity units, demo headers, exchange-side TP/SL behavior on resting/partial fills, cancellation and restart reconciliation have passed dedicated Demo tests.
 
-## Perintah rutin
+## Run local checks
 
 ```bash
-python cek_koneksi.py
-python cek_fase_a.py
-python cek_kelayakan.py
-python penyaring.py
-python ai_pemilih.py          # opsional
-python penilai_ai.py --jumlah 8
-python paper.py --status
-python scanner.py --sekali
-python scanner.py --loop      # atau default loop
+python tes_bitget_orders.py
+python signal_engine.py
+python paper_metrics.py
 ```
-
-## Sebelum Fase E
-
-- Paper berjalan beberapa sesi dengan hasil bersih setelah fee (bukan hanya unit test).
-- Parameter SL / RISK_ATR / SCORE_MIN disetel dari data nyata.
-- Tetap `DRY_RUN=on` sampai siap demo order.

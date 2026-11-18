@@ -60,7 +60,7 @@ def _id_posisi(simbol: str) -> str:
 
 def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     """Ambil token yang layak_bot_final=True dari penilai_ai.json.
-    Jika file belum ada, coba bangun ulang dari daftar_ai.json (tanpa AI).
+    Jika tidak ada yang layak / file belum ada, bangun ulang dari daftar_ai.json.
     """
     # Prioritas 1: hasil penilai_ai
     try:
@@ -69,19 +69,24 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
         snaps = data.get("snapshot") or []
         layak = [s for s in snaps if s.get("layak_bot_final")]
         if layak:
+            print(f"  Sinyal: {len(layak)} layak dari {len(snaps)} snapshot (penilai_ai.json)")
             return layak[:maks]
+        if snaps:
+            print(f"  Sinyal: 0 layak dari {len(snaps)} snapshot penilai — coba daftar_ai...")
     except FileNotFoundError:
-        pass
+        print("  Sinyal: penilai_ai.json belum ada — coba daftar_ai...")
 
     # Prioritas 2: bangun dari daftar_ai + analisis ulang
     try:
         with open(FILE_DAFTAR, encoding="utf-8") as f:
             d = json.load(f)
     except FileNotFoundError:
+        print("  Sinyal: daftar_ai.json juga belum ada. Jalankan ai_pemilih.py atau penilai_ai.py.")
         return []
 
     ex = dp.exchange_publik()
     hasil = []
+    gagal_simbol = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
         for k in d.get(kunci, []):
             simbol = k["simbol"]
@@ -105,11 +110,15 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
                     )
                     hasil.append(snap)
             except Exception:
+                gagal_simbol += 1
                 continue
             if len(hasil) >= maks:
                 break
         if len(hasil) >= maks:
             break
+    if gagal_simbol:
+        print(f"  Sinyal: {gagal_simbol} simbol dilewati (BadSymbol/error pasar)")
+    print(f"  Sinyal: {len(hasil)} layak setelah analisis ulang daftar_ai")
     return hasil
 
 
@@ -511,11 +520,15 @@ def satu_siklus(state: dict[str, Any], buka_baru: bool = True) -> None:
     if buka_baru and not state.get("open_positions"):
         sinyal_list = muat_sinyal_layak(maks=3)
         if not sinyal_list:
-            st.tambah_log(state, "Tidak ada sinyal layak saat ini", "info")
+            st.tambah_log(state, "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)", "info")
+            print("  Tidak ada posisi dibuka: belum ada setup yang lolos syarat bot.")
+            print("  Penyebab umum: tren_30m/MACD/dekat_SR gagal, atau SL risk_atr di luar batas.")
+            print("  Cek: python tes_indikator.py  dan  python cek_kelayakan.py")
         else:
-            # Ambil yang skor tertinggi
             terbaik = max(sinyal_list, key=lambda s: s.get("skor_bot") or 0)
             buka_posisi(state, terbaik)
+    elif state.get("open_positions"):
+        print(f"  Lewati buka baru: sudah ada {len(state['open_positions'])} posisi terbuka.")
 
     st.simpan(state)
 

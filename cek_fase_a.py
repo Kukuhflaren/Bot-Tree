@@ -115,7 +115,11 @@ def main():
 
     print("\n=== Hasil ===")
     if masalah == 0:
-        print("Fase A SIAP. Lanjut penyaring dengan watchlist, lalu Fase B (entry/exit tertulis).")
+        print(
+            "Fase A SIAP (risk + universe).\n"
+            "Urutan lanjut: penyaring → (opsional AI) → penilai_ai → paper/scanner.\n"
+            "Cek juga: python cek_kelayakan.py  (order min bursa + jarak SL vs ATR)"
+        )
     else:
         print(f"Ada {masalah} item perlu diperbaiki sebelum menganggap Fase A selesai.")
     return masalah

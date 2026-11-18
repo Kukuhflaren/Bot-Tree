@@ -80,6 +80,14 @@ def satu_putaran(
     else:
         print("  Risk gate: OK")
 
+    if config.SL_BUFFER_ATR > 0:
+        print(f"  SL: {config.SL_BUFFER_ATR}×ATR | RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}] | TP={config.TP_MODE}")
+    else:
+        print(
+            f"  SL: {config.SL_POINTS:.0f} poin | "
+            f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}] | TP={config.TP_MODE}"
+        )
+
     paper.satu_siklus(state, buka_baru=buka_baru and boleh)
     paper.tampil_status(state)
 

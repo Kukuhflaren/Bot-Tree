@@ -41,7 +41,7 @@ MODAL_USDT = MODAL_LIVE_USDT if MODE == "live" else MODAL_DEMO_USDT
 LEVERAGE = _f("LEVERAGE", 5)
 RISK_PER_SETUP_PCT = _f("RISK_PER_SETUP_PCT", 5.0)
 TP_PERCENT = _f("TP_PERCENT", 0.25)
-SL_POINTS = _f("SL_POINTS", 50)
+SL_POINTS = _f("SL_POINTS", 40)
 # [FASE B] SL_BUFFER_ATR > 0: jarak SL di luar HL/HH = nilai ini x ATR (menggantikan SL_POINTS). 0 = pakai SL_POINTS
 SL_BUFFER_ATR = _f("SL_BUFFER_ATR", 0)
 # [FASE B] sr_lawan = TP di S/R lawan terdekat (grid klasik) | struktur = TP di HH/HL | persen = TP_PERCENT dari entry

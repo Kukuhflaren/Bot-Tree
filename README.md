@@ -64,12 +64,20 @@ python penyaring.py          # daftar bullish/bearish -> daftar_40.json
 python ai_pemilih.py         # (opsional) AI memilih 20+20 -> daftar_ai.json
 python penilai_ai.py --jumlah 8   # (opsional) hitung rencana + second opinion AI
 python tes_indikator.py      # tabel skor dan syarat masuk beberapa token
+python tes_paper_partial.py
+python tes_paper_slippage.py
 
 # Paper trading
 python paper.py --status     # lihat state saat ini
 python paper.py              # satu siklus (cek sinyal + update posisi)
 python paper.py --loop       # loop terus setiap 60 detik
 python paper.py --reset      # reset state.json (hati-hati)
+
+# Scanner Trading
+python scanner.py --sekali    # Satu putaran (cek state + update paper)
+python scanner.py             # Loop tiap 5 menit (default 300s)
+python scanner.py --interval 60 --no-buka # Loop tiap 60 detik, tanpa buka posisi baru
+python scanner.py --refresh-sinyal --interval 300  # Tiap putaran refresh sinyal lewat penilai_ai (butuh API key AI)
 ```
 
 ## Struktur file

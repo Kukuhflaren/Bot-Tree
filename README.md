@@ -18,13 +18,14 @@ Trading **tanpa melibatkan perasaan**: semua entry, exit, dan risiko ditentukan 
 - AI penilai (second opinion MASUK/TUNGGU/TOLAK)
 - Modul risk (batas rugi harian, rugi beruntun, maksimal token terbuka, kill switch)
 - Skrip cek: koneksi, indikator, fondasi risk, kelayakan ukuran order
+- **State management** (`state.py` + `state.json`)
+- **Paper trading engine** (`paper.py`) — simulasi grid + TP/SL + PnL setelah fee
 - Eksperimen: berita RSS, CoinMarketCap keyless, pencarian Google Gemini (tidak tersedia di tier gratis)
 
 ## Yang belum ada
-- Pemindai yang mencatat tiap candle (Fase C)
-- Mesin paper trading (Fase D)
+- Pemindai continuous yang mencatat tiap candle (Fase C — scanner loop terpisah)
 - Modul order ke Bitget: TP/SL di sisi bursa, ukuran order sesuai minimum (Fase E)
-- Penyimpanan state (`state.json`) dan dashboard lokal yang membacanya
+- Dashboard lokal yang membaca `state.json`
 
 ## Persyaratan
 - Python 3.10+ (diuji di 3.14), Windows 10
@@ -63,13 +64,12 @@ python penyaring.py          # daftar bullish/bearish -> daftar_40.json
 python ai_pemilih.py         # (opsional) AI memilih 20+20 -> daftar_ai.json
 python penilai_ai.py --jumlah 8   # (opsional) hitung rencana + second opinion AI
 python tes_indikator.py      # tabel skor dan syarat masuk beberapa token
-python paper.py               # coba buka / update
-# atau
-   python paper.py --status   # Lihat status
-   python paper.py            # Satu siklus (cek sinyal + update posisi yang ada)
-   python paper.py --loop      # Loop terus (setiap 60 detik)
-   python paper.py --no-buka   # Hanya update posisi, jangan buka baru
-   python paper.py --reset      # Reset state (hati-hati)
+
+# Paper trading
+python paper.py --status     # lihat state saat ini
+python paper.py              # satu siklus (cek sinyal + update posisi)
+python paper.py --loop       # loop terus setiap 60 detik
+python paper.py --reset      # reset state.json (hati-hati)
 ```
 
 ## Struktur file
@@ -82,11 +82,12 @@ python paper.py               # coba buka / update
 | `risk.py` | Ukuran posisi dan pengaman order baru |
 | `ai_pemilih.py` | AI memilih token, dengan jatah harian dan cadangan rumus |
 | `penilai_ai.py` | Rencana grid (TP/SL) dan penilaian AI |
+| `state.py` | Muat/simpan `state.json` (posisi, PnL, consecutive losses) |
+| `paper.py` | Paper trading engine (simulasi grid + TP/SL + fee) |
 | `cek_koneksi.py`, `cek_fase_a.py`, `cek_kelayakan.py`, `tes_*.py`, `lihat_aset.py` | Skrip uji dan pemeriksaan |
 | `berita.py`, `eksperimen_*.py` | Eksperimen berita dan pencarian |
-| `SISTEMATIKA.md`, `PENGEMBANGAN.md` | Dokumentasi rancangan dan catatan pengembangan |
 
-Berkas keluaran (tidak di-commit): `daftar_40.json`, `daftar_ai.json`, `penilai_ai.json`, `log_penilai.jsonl`, `ai_pemakaian.json`, `berita_cache.json`, `eksperimen_*.json`, `cmc_contoh.json`.
+Berkas keluaran (tidak di-commit): `state.json`, `daftar_40.json`, `daftar_ai.json`, `penilai_ai.json`, `log_penilai.jsonl`, `ai_pemakaian.json`, `berita_cache.json`, `eksperimen_*.json`, `cmc_contoh.json`.
 
 ## Keamanan
 - API key hanya di `.env`; `.env` ada di `.gitignore`. Periksa dengan `git ls-files` dan `git log --all --oneline -- .env` (harus kosong).

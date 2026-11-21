@@ -24,7 +24,7 @@ Trading tanpa melibatkan perasaan: entry, exit, dan risiko ditentukan rumus. Set
 | 7 | Preflight dan adapter Bitget Demo UTA v3 | Fondasi ada; Demo API dan uji skema/TP/SL wajib |
 | 8 | Safeguard modal asli | Belum diimplementasikan |
 | 9 | Modal riil bertahap dan kriteria stop/scale | Belum diimplementasikan |
-| 10 | Dashboard lokal, rTokens, AI second opinion terukur | Belum diimplementasikan |
+| 10 | Dashboard lokal, rTokens, AI second opinion terukur | Dashboard baca-saja tersedia; rTokens dan evaluasi AI belum |
 
 Detail status terbaru tersedia di `FASE_STATUS.md`.
 
@@ -48,7 +48,7 @@ Detail status terbaru tersedia di `FASE_STATUS.md`.
 - Verifikasi lapangan skema UTA v3 dan respons TP/SL Bitget
 - Eksekusi Demo yang terverifikasi end-to-end
 - Safeguard khusus modal asli dan roll-out bertahap
-- Dashboard lokal dan dukungan rToken/jam pasar
+- Dukungan rToken/jam pasar dan bukti empiris edge AI
 - Bukti empiris bahwa AI veto memberikan edge tambahan
 
 ## Persyaratan
@@ -129,6 +129,17 @@ python demo_phase7.py BTC LONG 65000 63000 68000 10 --send
 
 Contoh Demo di atas tidak boleh dianggap format final untuk semua token. Nilai entry/SL/TP, contract size, minimum notional, dan harga harus dibuat dari setup bot serta market metadata bursa.
 
+## Dashboard lokal
+
+Dashboard hanya membaca file bot dan tidak mengirim order atau mengakses exchange:
+
+```bash
+python dashboard_server.py --buka
+```
+
+Buka `http://127.0.0.1:8765` jika browser tidak terbuka otomatis. 
+Halaman memperbarui data setiap 3 detik melalui server lokal, menggunakan `signal.json`, `penilai_ai.json`, `state.json`, dan bila tersedia `paper_trades.jsonl`. Default server hanya mendengarkan `127.0.0.1`; jangan ubah `--host` ke alamat publik. Untuk port berbeda, gunakan `--port 9000`.
+
 ## Struktur file
 
 | File | Fungsi |
@@ -142,6 +153,7 @@ Contoh Demo di atas tidak boleh dianggap format final untuk semua token. Nilai e
 | `state.py` | State paper/demo/live |
 | `paper.py` | Paper engine grid, fill, fee, dan PnL |
 | `signal_engine.py` | Pipeline sinyal Phase 5, output `signal.json` |
+| `dashboard_server.py` / `bot-tree-dashboard.html` | Dashboard lokal baca-saja dan endpoint data live |
 | `paper_journal.py` / `paper_phase6.py` | Journal tahan lama dan runner Phase 6 |
 | `paper_metrics.py` | Win rate, R, expectancy, DD, trades/day, idle dan segment |
 | `bitget_orders.py` | Sizing dan preflight order minimum |

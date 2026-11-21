@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bot-Tree · Command Deck</title>
+<style>
+:root{--bg:#f4f1ff;--card:#fff;--tx:#1d1740;--mut:#6b6591;--ln:#e3dcff;--a:#7c3aed;--b:#06b6d4;--c:#f43f5e;--d:#f59e0b;--e:#10b981;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0a0720;--card:#15103a;--tx:#f0ecff;--mut:#9d95cf;--ln:#2a2260}}
+:root[data-theme=dark]{--bg:#0a0720;--card:#15103a;--tx:#f0ecff;--mut:#9d95cf;--ln:#2a2260}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,sans-serif;overflow-x:hidden}
+.aur{position:fixed;inset:0;z-index:-1;background:radial-gradient(600px 400px at 15% 10%,#7c3aed55,transparent),radial-gradient(500px 400px at 85% 20%,#06b6d444,transparent),radial-gradient(600px 500px at 50% 95%,#f43f5e33,transparent);animation:dr 14s ease-in-out infinite alternate}
+@keyframes dr{to{transform:scale(1.15) rotate(3deg)}}
+.w{max-width:1100px;margin:auto;padding:0 16px}
+header{padding:48px 0 24px}
+h1{font-size:clamp(36px,8vw,68px);margin:0;line-height:1;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--d));background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 8s linear infinite}
+@keyframes sh{to{background-position:300%}}
+.sub{color:var(--mut);max-width:640px;margin:10px 0 16px}
+.bd{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;margin:0 6px 6px 0;color:#fff}
+.sec{margin:34px 0 12px;font-size:20px;font-weight:800;display:flex;gap:10px;align-items:center}
+.sec i{width:10px;height:26px;border-radius:5px;background:linear-gradient(var(--a),var(--b))}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:16px;position:relative;overflow:hidden}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.kpi b{font-size:30px;display:block}.kpi span{color:var(--mut);font-size:12px}
+.sc{overflow-x:auto;padding-bottom:8px}
+.pipe{display:flex;gap:6px;align-items:stretch;min-width:max-content}
+.nd{width:122px;border-radius:18px;padding:12px;color:#fff;font-size:12px;position:relative;animation:fl 4s ease-in-out infinite}
+.nd b{display:block;font-size:14px}.nd em{font-style:normal;opacity:.85}
+.nd:nth-child(2n){animation-delay:-2s}
+@keyframes fl{50%{transform:translateY(-5px)}}
+.ar{align-self:center;color:var(--mut)}
+.bar{display:grid;grid-template-columns:130px 1fr 34px;gap:8px;align-items:center;font-size:12px;margin:5px 0}
+.bar div{height:12px;border-radius:9px;background:var(--ln);overflow:hidden}
+.bar div i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--b),var(--a),var(--c));transition:width 1s}
+.tk{display:flex;gap:12px;align-items:center}
+.ring{--p:0;--k:var(--a);width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--k) calc(var(--p)*1%),var(--ln) 0);display:grid;place-items:center;flex:none}
+.ring span{width:48px;height:48px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:800}
+.ch{display:inline-block;font-size:10px;padding:2px 7px;border-radius:9px;margin:2px 2px 0 0;font-weight:700}
+.ok{background:#10b98133;color:var(--e)}.no{background:#f43f5e22;color:var(--c)}
+.mini{display:flex;gap:3px;height:30px;align-items:flex-end;margin-top:8px}
+.mini i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(var(--b),var(--a))}
+.fm{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-bottom:12px}
+label{font-size:11px;color:var(--mut);display:block}
+input,select{width:100%;padding:8px 10px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit}
+.ph{display:flex;gap:10px;align-items:flex-start;margin:7px 0;font-size:13px}
+.dot{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;color:#fff;font-size:12px}
+.dz{border:2px dashed var(--a);border-radius:20px;padding:22px;text-align:center;cursor:pointer;background:linear-gradient(135deg,#7c3aed14,#06b6d414)}
+.dz.on{background:#7c3aed33}
+svg{max-width:100%}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+footer{margin:40px 0;color:var(--mut);font-size:12px}
+</style></head><body><div class="aur"></div>
+<div class="w">
+<header>
+<span class="bd" style="background:var(--a)">MODE PAPER / DEMO</span><span class="bd" style="background:var(--c)">LIVE TERKUNCI</span><span class="bd" style="background:var(--e)">AI OFF</span><span class="bd" style="background:var(--d)">Bitget UTA · USDT Futures</span>
+<h1>Bot-Tree</h1>
+<p class="sub">Command deck visual untuk bot grid scalping: dari 40 token hasil saringan sampai gate risiko. Semua keputusan bot terlihat sebagai bentuk, bukan baris kode.</p>
+<div class="grid" id="kpi"></div>
+<div class="note" id="live-status" role="status">Menghubungkan ke server dashboard lokal…</div>
+</header>
+
+<div class="sec"><i></i>Jalur Data Bot</div>
+<div class="card sc"><div class="pipe" id="pipe"></div></div>
+
+<div class="sec"><i></i>Corong Gate: kenapa sinyal ditolak</div>
+<div class="card" id="gates"></div>
+<div class="note" id="gnote"></div>
+
+<div class="sec"><i></i>Sinyal bot <span style="font-size:12px;color:var(--mut);font-weight:400">signal.json</span></div>
+<div class="grid" id="signals"></div>
+
+<div class="sec"><i></i>Radar Token <span style="font-size:12px;color:var(--mut);font-weight:400" id="rt"></span></div>
+<div class="grid" id="radar"></div>
+
+<div class="sec"><i></i>Grid Lab: simulasi entry, SL, TP, sizing</div>
+<div class="two"><div class="card">
+<div class="fm">
+<div><label>Arah</label><select id="gd"><option value="L">LONG</option><option value="S">SHORT</option></select></div>
+<div><label>Entry</label><input id="ge" type="number" value="65000"></div>
+<div><label>SL</label><input id="gs" type="number" value="63000"></div>
+<div><label>TP</label><input id="gt" type="number" value="68000"></div>
+<div><label>Level grid</label><input id="gn" type="number" value="3" min="1" max="6"></div>
+<div><label>Modal USDT</label><input id="gm" type="number" value="30"></div>
+<div><label>Risk %/setup</label><input id="gr" type="number" value="5"></div>
+<div><label>Leverage</label><input id="gl" type="number" value="5"></div>
+</div><div id="gsum" class="note"></div></div>
+<div class="card"><svg id="lad" viewBox="0 0 400 260"></svg></div></div>
+
+<div class="sec"><i></i>Paper Lab: tarik file hasil bot ke sini</div>
+<div class="dz" id="dz"><b>Letakkan state.json, signal.json, atau paper_trades.jsonl</b><div class="note">Dibaca langsung di browser Anda. Tidak ada yang dikirim ke mana pun.</div><input id="fi" type="file" multiple hidden></div>
+<div class="two" style="margin-top:12px"><div class="card"><div style="font-weight:700">Kurva equity</div><svg id="eq" viewBox="0 0 400 160"></svg><div id="met" class="grid" style="margin-top:8px"></div></div>
+<div class="card"><div style="font-weight:700;margin-bottom:6px">Gate Phase 6 dan pengaman</div><div id="gate6"></div></div></div>
+
+<div class="sec"><i></i>Peta Fase A sampai 10</div>
+<div class="card" id="phs"></div>
+
+<footer>Dibuat dari repo Kukuhflaren/Bot-Tree. Bukan nasihat keuangan. Hasil paper atau demo tidak menjamin profit live.</footer>
+</div>
+<script>
+const $=i=>document.getElementById(i),fmt=(n,d=2)=>Number(n).toLocaleString('id-ID',{maximumFractionDigits:d});
+const COL=['#7c3aed','#06b6d4','#f43f5e','#f59e0b','#10b981'];
+function kpi(a){$('kpi').innerHTML=a.map((k,i)=>`<div class="card kpi"><span>${k[0]}</span><b style="color:${COL[i%5]}">${k[1]}</b><span>${k[2]||''}</span></div>`).join('')}
+let S={},J=[];
+const P=[['Bitget','ticker 24j','#7c3aed','Siap'],['Penyaring','volume · blacklist','#6366f1','Siap'],['Analisis 30m','EMA RSI MACD SAR','#06b6d4','Siap'],['Grid','entry SL TP','#0ea5a4','Siap'],['Signal Engine','skor 0–100, AI off','#10b981','Siap'],['Risk Gate','kill · rugi harian','#f59e0b','Siap'],['Paper','fee + slippage','#f97316','Fase 6'],['Demo','preflight UTA v3','#f43f5e','Fase 7'],['Live','belum aktif','#64748b','Terkunci']];
+$('pipe').innerHTML=P.map((p,i)=>`<div class="nd" style="background:linear-gradient(135deg,${p[2]},${p[2]}aa)"><b>${p[0]}</b>${p[1]}<br><em>${p[3]}</em></div>${i<8?'<span class="ar">➜</span>':''}`).join('');
+const GN={trend_structure:'Struktur tren',ema:'EMA jelas',macd:'MACD searah',near_sr:'Dekat S/R',vwap:'VWAP',trend_30m:'Tren 30m',extreme_candle:'Lonjakan ekstrem',minimum_score:'Skor minimum',grid_available:'Grid tersedia',valid_risk_reward_grid:'RR grid valid',data_or_runtime_error:'Error data'};
+function gates(r,n){const mx=Math.max(n,1);$('gates').innerHTML=Object.keys(GN).map(k=>`<div class="bar"><span>${GN[k]}</span><div><i style="width:${(r[k]||0)/mx*100}%"></i></div><b>${r[k]||0}</b></div>`).join('');
+const top=Object.entries(r).sort((a,b)=>b[1]-a[1])[0];$('gnote').textContent=top?`Penolak terbesar: ${GN[top[0]]||top[0]} (${top[1]} dari ${n} token). Skor tinggi saja tidak cukup, gate teknikal tetap memveto.`:'Belum ada data gate dari signal.json.'}
+const ZC={Eksekusi:'#f43f5e',Persiapan:'#f59e0b',Pantau:'#06b6d4',Abaikan:'#64748b'};
+const SY=['Tren','EMA','MACD','S/R','VWAP','30m'],KP=['RSI','EMA','MACD','SAR','Candle'];
+function renderRadar(rows){$('rt').textContent=rows.length?'· 10 skor tertinggi':'· belum ada snapshot';
+$('radar').innerHTML=rows.length?rows.map(r=>{const z=ZC[r[4]]||'#7c3aed';return `<div class="card"><div class="tk"><div class="ring" style="--p:${r[3]};--k:${z}"><span>${r[3]}</span></div><div><b style="font-size:18px">${r[0]}</b> <span class="ch" style="background:${r[1]=='U'?'#10b98133':'#f43f5e22'};color:${r[1]=='U'?'var(--e)':'var(--c)'}">${r[1]=='U'?'BULLISH':'BEARISH'}</span><div class="note" style="margin:0">${fmt(r[2],4)} · RSI ${r[7]} · ATR ${r[8]}%</div><span class="ch" style="background:${z}33;color:${z}">${r[4]}</span></div></div>
+<div class="mini">${r[5].map((v,i)=>`<i title="${KP[i]} ${v}/20" style="height:${v/20*100+3}%"></i>`).join('')}</div><div class="note" style="margin:2px 0 6px">${KP.join(' · ')}</div>${r[6].map((v,i)=>`<span class="ch ${v?'ok':'no'}">${SY[i]}</span>`).join('')}</div>`}).join('')
+:'<div class="card note">Belum ada data penilai_ai.json. Jalankan penilai_ai.py atau scanner dengan --refresh-sinyal.</div>'}
+function renderSignals(signal){const items=signal&&Array.isArray(signal.signals)?signal.signals:[];
+$('signals').innerHTML=items.length?items.map(s=>`<div class="card"><div class="tk"><div class="ring" style="--p:${s.score||0};--k:var(--e)"><span>${s.score||0}</span></div><div><b style="font-size:18px">${s.symbol||'?'}</b><span class="ch ok">${s.direction||'?'}</span><div class="note">${s.zone||'—'} · RR ${fmt(s.rr||0)} · ATR ${fmt(s.risk_atr||0)}</div></div></div><div class="note">Entry, SL, TP:</div>${(s.entry_levels||[]).map(e=>`<span class="ch">${e.level||'entry'} ${fmt(e.price,6)} · TP ${fmt(e.tp,6)} · SL ${fmt(e.sl,6)} · RR ${fmt(e.rr)}</span>`).join('')}</div>`).join(''):'<div class="card note">Tidak ada sinyal yang lolos semua gate saat ini.</div>'}
+let lastData=null;
+function updateDashboard(data){lastData=data;const sig=data.signal||{},state=data.state||{};
+S=state;J=Array.isArray(data.journal)?data.journal:[];
+const stamp=sig.generated_at?String(sig.generated_at).slice(0,16).replace('T',' '):'belum tersedia';
+kpi([['Token dianalisis',sig.source_count??'—','signal.json'],['Sinyal siap bot',sig.bot_ready_count??'—','lolos semua gate'],['Mode bot',state.mode||'—',state.diperbarui?'state '+String(state.diperbarui).slice(0,16).replace('T',' '):'state.json'],['Modal saat ini',state.modal_saat_ini==null?'—':fmt(state.modal_saat_ini)+' USDT','snapshot '+stamp+' UTC']]);
+gates(sig.rejection_counts||{},sig.source_count||0);renderSignals(sig);renderRadar(Array.isArray(data.rows)?data.rows:[]);paper();
+$('live-status').textContent=`● LIVE · diperbarui ${new Date(data.updated).toLocaleTimeString('id-ID')} · signal.json ${data.files&&data.files['signal.json']?'tersedia':'belum ada'} · penilai_ai.json ${data.files&&data.files['penilai_ai.json']?'tersedia':'belum ada'}`}
+function lad(){const L=$('gd').value=='L',e=+$('ge').value,s=+$('gs').value,t=+$('gt').value,n=Math.max(1,Math.min(6,+$('gn').value)),m=+$('gm').value,rp=+$('gr').value,lv=+$('gl').value;
+const ok=L?(s<e&&e<t):(s>e&&e>t);const svg=$('lad');
+if(!ok){svg.innerHTML='<text x="20" y="130" fill="#f43f5e" font-size="14">Geometri salah: SL harus di luar sisi entry, TP di sisi lawan.</text>';$('gsum').textContent='';return}
+const half=e+(s-e)*0.5,lv_=[...Array(n)].map((_,i)=>n==1?e:e+(half-e)*i/(n-1));
+const hi=Math.max(e,s,t),lo=Math.min(e,s,t),y=p=>20+(hi-p)/(hi-lo)*220;
+let o=`<rect x="60" y="${Math.min(y(e),y(s))}" width="320" height="${Math.abs(y(e)-y(s))}" fill="#f43f5e18"/><rect x="60" y="${Math.min(y(e),y(t))}" width="320" height="${Math.abs(y(e)-y(t))}" fill="#10b98118"/>`;
+const ln=(p,c,l)=>`<line x1="60" x2="380" y1="${y(p)}" y2="${y(p)}" stroke="${c}" stroke-width="2" stroke-dasharray="${l=='TP'||l=='SL'?'6 4':''}"/><text x="4" y="${y(p)+4}" font-size="11" fill="${c}">${l}</text><text x="384" y="${y(p)+4}" font-size="9" fill="#9d95cf" text-anchor="end"></text>`;
+o+=ln(t,'#10b981','TP')+ln(s,'#f43f5e','SL');let rows=[];
+lv_.forEach((p,i)=>{const rr=Math.abs(t-p)/Math.abs(p-s);rows.push(rr);o+=`<circle cx="${100+i*50}" cy="${y(p)}" r="9" fill="${rr>=1?'#7c3aed':'#64748b'}"/><text x="${100+i*50}" y="${y(p)+4}" font-size="10" fill="#fff" text-anchor="middle">${i+1}</text><text x="${100+i*50}" y="${y(p)-14}" font-size="9" fill="#9d95cf" text-anchor="middle">${fmt(p,2)}</text>`});
+svg.innerHTML=o;const mg=m*rp/100,nt=mg*lv;$('gsum').innerHTML=`Margin/setup <b>${fmt(mg)} USDT</b> · notional <b>${fmt(nt)} USDT</b> · notional per level <b>${fmt(nt/n)}</b><br>RR per level: ${rows.map((r,i)=>`L${i+1} <b style="color:${r>=1?'var(--e)':'var(--c)'}">${fmt(r)}</b>`).join(' · ')} (RR_MIN bot = 1,0; abu-abu = ditolak)`}
+['gd','ge','gs','gt','gn','gm','gr','gl'].forEach(i=>$(i).oninput=lad);lad();
+function paper(){const cl=J.filter(e=>e.event=='closed').sort((a,b)=>String(a.timestamp).localeCompare(b.timestamp));const cap=+S.modal_awal||30;let eq=cap,pk=cap,dd=0,pts=[cap];
+cl.forEach(c=>{eq+=+c.net_pnl_usdt||0;pts.push(eq);pk=Math.max(pk,eq);dd=Math.max(dd,pk-eq)});
+const n=cl.length||S.total_trades||0,w=cl.length?cl.filter(c=>c.net_pnl_usdt>0).length:(S.total_wins||0),net=eq-cap,ex=cl.length?net/cl.length:0;
+const days=cl.length>1?(new Date(cl.at(-1).timestamp)-new Date(cl[0].timestamp))/864e5:0;
+const mn=Math.min(...pts),mx=Math.max(...pts),sp=(mx-mn)||1,sx=i=>10+i/(Math.max(pts.length-1,1))*380,sy=v=>140-(v-mn)/sp*120;
+$('eq').innerHTML=pts.length>1?`<polyline fill="none" stroke="url(#g)" stroke-width="3" points="${pts.map((v,i)=>sx(i)+','+sy(v)).join(' ')}"/><defs><linearGradient id="g"><stop offset="0" stop-color="#06b6d4"/><stop offset="1" stop-color="#f43f5e"/></linearGradient></defs>`:'<text x="20" y="80" fill="#9d95cf" font-size="13">Belum ada trade tertutup untuk digambar.</text>';
+$('met').innerHTML=[['Trade',n],['Win rate',n?fmt(w/n*100,0)+'%':'-'],['Net PnL',fmt(net)+' USDT'],['Expectancy',cl.length?fmt(ex,3):'-'],['Max DD',fmt(dd)+' USDT']].map((k,i)=>`<div class="card kpi" style="padding:10px"><span>${k[0]}</span><b style="font-size:20px;color:${COL[i]}">${k[1]}</b></div>`).join('');
+const ck=(t,v,h)=>`<div class="ph"><div class="dot" style="background:${v===null?'#64748b':v?'#10b981':'#f43f5e'}">${v===null?'?':v?'✓':'✗'}</div><div><b>${t}</b><div class="note" style="margin:0">${h}</div></div></div>`;
+const hasJ=cl.length>0;
+$('gate6').innerHTML=ck('Minimal 30 trade tertutup',hasJ?n>=30:null,`${n} tercatat`)+ck('Minimal 7 hari observasi',hasJ?days>=7:null,`${fmt(days,1)} hari`)+ck('Expectancy positif setelah fee',hasJ?ex>0:null,hasJ?fmt(ex,3)+' USDT/trade (belum termasuk haircut slippage)':'butuh paper_trades.jsonl')+ck('Drawdown ≤ 25% modal',hasJ?dd<=cap*.25:null,`${fmt(dd/cap*100,1)}% dari ${fmt(cap)} USDT`)+(S.modal_awal?ck('Rugi harian (batas 2 USDT bawaan)',S.daily_pnl_usdt>-2,`PnL hari ini ${fmt(S.daily_pnl_usdt||0)} USDT`)+ck('Rugi beruntun (batas 3 bawaan)',(S.consecutive_losses||0)<3,`${S.consecutive_losses||0} beruntun`):'')}
+async function load(fs){for(const f of fs){const t=await f.text();try{if(/\.jsonl$/.test(f.name))J=t.split('\n').filter(Boolean).map(l=>JSON.parse(l));else{const j=JSON.parse(t);if(j.signals||j.rejection_counts){const sig=j;updateDashboard({...lastData,signal:sig,state:S,journal:J})}else S=j}}catch(e){alert('Gagal membaca '+f.name)}}paper()}
+const dz=$('dz');dz.onclick=()=>$('fi').click();$('fi').onchange=e=>load(e.target.files);
+dz.ondragover=e=>{e.preventDefault();dz.classList.add('on')};dz.ondragleave=()=>dz.classList.remove('on');dz.ondrop=e=>{e.preventDefault();dz.classList.remove('on');load(e.dataTransfer.files)};
+async function refreshLive(){try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);updateDashboard(await response.json())}catch(error){$('live-status').textContent=`○ OFFLINE · server dashboard lokal tidak terjangkau (${error.message}). Jalankan python dashboard_server.py.`}}
+refreshLive();setInterval(refreshLive,3000);
+const F=[['A','Risk gate, universe, watchlist','#10b981','Siap'],['B','Entry/SL/TP tertulis + konfirmasi 30m','#10b981','Siap'],['C','Scanner continuous','#10b981','Siap'],['D','Paper engine','#10b981','Siap'],['E','Sizing Bitget UTA v3','#f59e0b','Fondasi; submit sengaja nonaktif'],['5','Signal engine, AI off','#10b981','Siap'],['6','Evaluasi paper 1–2 minggu','#f59e0b','Butuh run nyata'],['7','Adapter Demo UTA v3','#f59e0b','Preflight siap; skema dan TP/SL wajib diverifikasi'],['8','Safeguard modal asli','#64748b','Belum dibuat'],['9','Modal riil bertahap','#64748b','Belum dibuat'],['10','Dashboard, rTokens, AI terukur','#8b5cf6','Dashboard ini langkah awalnya']];
+$('phs').innerHTML=F.map(f=>`<div class="ph"><div class="dot" style="background:${f[2]}">${f[0]}</div><div><b>${f[1]}</b><div class="note" style="margin:0">${f[3]}</div></div></div>`).join('');
+</script></body></html>

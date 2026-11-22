@@ -88,16 +88,17 @@ Isi `.env`, jangan pernah meng-commit API key atau rahasia.
 ## Perintah utama
 
 ```bash
-# Verifikasi fondasi
 python cek_koneksi.py
-python cek_fase_a.py
-python cek_kelayakan.py          # semua token daftar_40.json; watchlist di urutan pertama
-python cek_kelayakan.py BTC ETH  # hanya token yang ditentukan
 
 # Sinyal dan analisis
 python penyaring.py
 python tes_indikator.py
 python signal_engine.py          # membaca langsung daftar_40.json, menulis signal.json
+
+# Verifikasi fondasi
+python cek_fase_a.py
+python cek_kelayakan.py          # semua token daftar_40.json; watchlist di urutan pertama
+python cek_kelayakan.py BTC ETH  # hanya token yang ditentukan
 
 # Tambahkan --pakai-ai atau set USE_AI=on hanya bila ingin memakai token
 python ai_pemilih.py             # tanpa AI secara default

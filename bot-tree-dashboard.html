@@ -48,6 +48,8 @@ input,select{width:100%;padding:8px 10px;border-radius:12px;border:1px solid var
 svg{max-width:100%}
 .two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 .note{font-size:12px;color:var(--mut);margin-top:6px}
+.candidate-list{display:grid;gap:8px}.candidate-row{display:grid;grid-template-columns:minmax(70px,1.2fr) minmax(90px,.9fr) minmax(95px,.9fr) minmax(70px,.7fr) 18px;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--ln);border-radius:12px;font-size:12px}.score-dot{width:14px;height:14px;border-radius:50%;box-shadow:0 0 10px currentColor}.score-purple{background:#7c3aed;color:#7c3aed}.score-green{background:#10b981;color:#10b981}.score-yellow{background:#f59e0b;color:#f59e0b}.score-red{background:#ef4444;color:#ef4444}.score-none{background:#64748b;color:#64748b}.positive{color:var(--e)}.negative{color:var(--c)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px}.ctl button{border:0;border-radius:12px;padding:9px 12px;font:700 12px "Segoe UI",system-ui,sans-serif;color:#fff;background:var(--a);cursor:pointer}.ctl button.danger{background:var(--c)}.ctl button.warn{background:var(--d);color:#241900}.ctl button.stop{background:#64748b}.ctl input{max-width:360px}
 footer{margin:40px 0;color:var(--mut);font-size:12px}
 </style></head><body><div class="aur"></div>
 <div class="w">
@@ -59,12 +61,43 @@ footer{margin:40px 0;color:var(--mut);font-size:12px}
 <div class="note" id="live-status" role="status">Menghubungkan ke server dashboard lokal…</div>
 </header>
 
+<div class="sec"><i></i>Kontrol Bot</div>
+<div class="card">
+<div class="fm">
+<div><label>Token kontrol</label><input id="botToken" type="password" autocomplete="off" placeholder="BOT_CONTROL_TOKEN"></div>
+<div><label>Candle analisis</label><select id="candleTimeframe"><option value="5m">5 menit</option><option value="15m">15 menit</option><option value="30m">30 menit</option></select></div>
+<div><label>Metode TP</label><select id="tpMethod"><option value="sr">Support/Resistance</option><option value="atr">Persentase ATR</option></select></div>
+<div><label>TP (% ATR)</label><input id="tpAtrPercent" type="number" min="1" max="500" step="1" value="100"></div>
+<div><label>Metode SL</label><select id="slMethod"><option value="sr">Support/Resistance</option><option value="atr">Persentase ATR</option></select></div>
+<div><label>SL (% ATR)</label><input id="slAtrPercent" type="number" min="1" max="500" step="1" value="50"></div>
+</div>
+<div class="ctl">
+<button data-action="apply_strategy">Terapkan TP/SL</button>
+<button data-action="scan_once">Scanner sekali</button>
+<button data-action="scanner_start">Mulai scanner demo/paper</button>
+<button data-action="paper_cycle">Satu siklus paper</button>
+<button data-action="paper_status">Status paper</button>
+<button data-action="refresh_filter">Refresh penyaring</button>
+<button data-action="refresh_signal">Buat signal.json</button>
+<button data-action="refresh_radar">Refresh penilai AI</button>
+<button data-action="cek_kelayakan">Cek kelayakan</button>
+<button data-action="cek_fase_a">Cek fase A</button>
+<button class="stop" data-action="stop_scanner">Stop scanner</button>
+<button class="warn" data-action="live_scan_once">Live: scan sekali</button>
+<button class="danger" data-action="live_scanner_start">Live: mulai scanner</button>
+</div>
+<div class="note" id="control-status">Aksi demo/paper memakai daftar perintah aman. Aksi live memerlukan persetujuan Telegram.</div>
+</div>
+
 <div class="sec"><i></i>Jalur Data Bot</div>
 <div class="card sc"><div class="pipe" id="pipe"></div></div>
 
 <div class="sec"><i></i>Corong Gate: kenapa sinyal ditolak</div>
 <div class="card" id="gates"></div>
 <div class="note" id="gnote"></div>
+
+<div class="sec"><i></i>Token Masuk Penyaringan <span style="font-size:12px;color:var(--mut);font-weight:400" id="candidate-count"></span></div>
+<div class="card"><div class="candidate-list" id="candidate-list"></div></div>
 
 <div class="sec"><i></i>Sinyal bot <span style="font-size:12px;color:var(--mut);font-weight:400">signal.json</span></div>
 <div class="grid" id="signals"></div>
@@ -114,12 +147,20 @@ $('radar').innerHTML=rows.length?rows.map(r=>{const z=ZC[r[4]]||'#7c3aed';return
 :'<div class="card note">Belum ada data penilai_ai.json. Jalankan penilai_ai.py atau scanner dengan --refresh-sinyal.</div>'}
 function renderSignals(signal){const items=signal&&Array.isArray(signal.signals)?signal.signals:[];
 $('signals').innerHTML=items.length?items.map(s=>`<div class="card"><div class="tk"><div class="ring" style="--p:${s.score||0};--k:var(--e)"><span>${s.score||0}</span></div><div><b style="font-size:18px">${s.symbol||'?'}</b><span class="ch ok">${s.direction||'?'}</span><div class="note">${s.zone||'—'} · RR ${fmt(s.rr||0)} · ATR ${fmt(s.risk_atr||0)}</div></div></div><div class="note">Entry, SL, TP:</div>${(s.entry_levels||[]).map(e=>`<span class="ch">${e.level||'entry'} ${fmt(e.price,6)} · TP ${fmt(e.tp,6)} · SL ${fmt(e.sl,6)} · RR ${fmt(e.rr)}</span>`).join('')}</div>`).join(''):'<div class="card note">Tidak ada sinyal yang lolos semua gate saat ini.</div>'}
+function scoreDot(score){if(score==null)return '<span class="score-dot score-none" title="Belum dinilai"></span>';const n=Number(score);const cls=n>=86?'score-purple':n>=60?'score-green':n>=40?'score-yellow':'score-red';return `<span class="score-dot ${cls}" title="Skor bot ${n}"></span>`}
+function renderCandidates(rows,timeframe){$('candidate-count').textContent=`· ${rows.length||0} token · candle ${timeframe||'30m'}`;
+$('candidate-list').innerHTML=rows.length?rows.map(r=>{const change=Number(r.ubah_24j);const changeClass=change>=0?'positive':'negative';return `<div class="candidate-row"><b>${r.simbol}${r.prioritas_watchlist?' <span title="Watchlist">★</span>':''}</b><span>${fmt(r.harga,6)}</span><span class="${changeClass}">${change>=0?'▲':'▼'} ${fmt(Math.abs(change),2)}%</span><span>${r.skor_bot==null?'Belum dinilai':`Skor ${r.skor_bot}`}</span>${scoreDot(r.skor_bot)}</div>`}).join(''):'<div class="note">Belum ada daftar_40.json atau penyaring belum dijalankan.</div>'}
 let lastData=null;
 function updateDashboard(data){lastData=data;const sig=data.signal||{},state=data.state||{};
 S=state;J=Array.isArray(data.journal)?data.journal:[];
+if(data.timeframe)$('candleTimeframe').value=data.timeframe;
+if(data.tp_method)$('tpMethod').value=data.tp_method;
+if(data.tp_atr_percent!=null)$('tpAtrPercent').value=data.tp_atr_percent;
+if(data.sl_method)$('slMethod').value=data.sl_method;
+if(data.sl_atr_percent!=null)$('slAtrPercent').value=data.sl_atr_percent;
 const stamp=sig.generated_at?String(sig.generated_at).slice(0,16).replace('T',' '):'belum tersedia';
 kpi([['Token dianalisis',sig.source_count??'—','signal.json'],['Sinyal siap bot',sig.bot_ready_count??'—','lolos semua gate'],['Mode bot',state.mode||'—',state.diperbarui?'state '+String(state.diperbarui).slice(0,16).replace('T',' '):'state.json'],['Modal saat ini',state.modal_saat_ini==null?'—':fmt(state.modal_saat_ini)+' USDT','snapshot '+stamp+' UTC']]);
-gates(sig.rejection_counts||{},sig.source_count||0);renderSignals(sig);renderRadar(Array.isArray(data.rows)?data.rows:[]);paper();
+gates(sig.rejection_counts||{},sig.source_count||0);renderSignals(sig);renderRadar(Array.isArray(data.rows)?data.rows:[]);renderCandidates(Array.isArray(data.candidates)?data.candidates:[],data.timeframe||'30m');paper();
 $('live-status').textContent=`● LIVE · diperbarui ${new Date(data.updated).toLocaleTimeString('id-ID')} · signal.json ${data.files&&data.files['signal.json']?'tersedia':'belum ada'} · penilai_ai.json ${data.files&&data.files['penilai_ai.json']?'tersedia':'belum ada'}`}
 function lad(){const L=$('gd').value=='L',e=+$('ge').value,s=+$('gs').value,t=+$('gt').value,n=Math.max(1,Math.min(6,+$('gn').value)),m=+$('gm').value,rp=+$('gr').value,lv=+$('gl').value;
 const ok=L?(s<e&&e<t):(s>e&&e>t);const svg=$('lad');
@@ -145,8 +186,44 @@ $('gate6').innerHTML=ck('Minimal 30 trade tertutup',hasJ?n>=30:null,`${n} tercat
 async function load(fs){for(const f of fs){const t=await f.text();try{if(/\.jsonl$/.test(f.name))J=t.split('\n').filter(Boolean).map(l=>JSON.parse(l));else{const j=JSON.parse(t);if(j.signals||j.rejection_counts){const sig=j;updateDashboard({...lastData,signal:sig,state:S,journal:J})}else S=j}}catch(e){alert('Gagal membaca '+f.name)}}paper()}
 const dz=$('dz');dz.onclick=()=>$('fi').click();$('fi').onchange=e=>load(e.target.files);
 dz.ondragover=e=>{e.preventDefault();dz.classList.add('on')};dz.ondragleave=()=>dz.classList.remove('on');dz.ondrop=e=>{e.preventDefault();dz.classList.remove('on');load(e.dataTransfer.files)};
-async function refreshLive(){try{const response=await fetch('/api/data',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);updateDashboard(await response.json())}catch(error){$('live-status').textContent=`○ OFFLINE · server dashboard lokal tidak terjangkau (${error.message}). Jalankan python dashboard_server.py.`}}
+function apiBaseUrl(){
+const parameter=new URLSearchParams(location.search).get('api');
+const tersimpan=localStorage.getItem('bot_tree_api');
+const dasar=(parameter||tersimpan||location.origin).replace(/\/+$/,'');
+return dasar==='null'?'':dasar;
+}
+function controlApiUrl(path){const base=apiBaseUrl();return `${base?base:''}${path}`}
+async function refreshControl(){
+const token=$('botToken').value||localStorage.getItem('bot_tree_token')||'';
+if(!token){$('control-status').textContent='Masukkan BOT_CONTROL_TOKEN untuk mengaktifkan tombol kendali.';return}
+try{const response=await fetch(controlApiUrl('/api/control/status'),{headers:{'X-Bot-Token':token},cache:'no-store'});const data=await response.json();if(!response.ok)throw new Error(data.error||'HTTP '+response.status);const waiting=(data.pending||[]).filter(p=>p.status==='pending').length;const telegram=data.telegram_configured?'Telegram siap':'Telegram belum dikonfigurasi';if(data.timeframe)$('candleTimeframe').value=data.timeframe;if(data.tp_method)$('tpMethod').value=data.tp_method;if(data.tp_atr_percent!=null)$('tpAtrPercent').value=data.tp_atr_percent;if(data.sl_method)$('slMethod').value=data.sl_method;if(data.sl_atr_percent!=null)$('slAtrPercent').value=data.sl_atr_percent;$('control-status').textContent=`Mode ${data.mode||'—'} · candle ${data.timeframe||'30m'} · TP ${data.tp_method||'sr'} · SL ${data.sl_method||'atr'} · scanner ${data.scanner?'berjalan':'berhenti'} · ${telegram} · persetujuan menunggu ${waiting}`}catch(error){$('control-status').textContent=`Kontrol tidak tersedia: ${error.message}`}
+}
+document.querySelectorAll('[data-action]').forEach(button=>button.onclick=async()=>{
+const token=$('botToken').value||localStorage.getItem('bot_tree_token')||'';
+if(!token){$('control-status').textContent='Masukkan BOT_CONTROL_TOKEN terlebih dahulu.';$('botToken').focus();return}
+localStorage.setItem('bot_tree_token',token);
+$('control-status').textContent=`Menjalankan: ${button.textContent}…`;
+try{
+const payload={action:button.dataset.action};
+if(button.dataset.action==='apply_strategy'){payload.action='set_strategy';payload.tp_method=$('tpMethod').value;payload.tp_atr_percent=Number($('tpAtrPercent').value);payload.sl_method=$('slMethod').value;payload.sl_atr_percent=Number($('slAtrPercent').value)}
+const response=await fetch(controlApiUrl('/api/control'),{method:'POST',headers:{'Content-Type':'application/json','X-Bot-Token':token},body:JSON.stringify(payload)});const data=await response.json();if(!response.ok)throw new Error(data.error||'HTTP '+response.status);$('control-status').textContent=data.message+(data.status?' · '+data.status:'');await refreshControl()}catch(error){$('control-status').textContent=`Gagal: ${error.message}`}
+});
+$('botToken').value=localStorage.getItem('bot_tree_token')||'';
+$('botToken').onchange=()=>{localStorage.setItem('bot_tree_token',$('botToken').value);refreshControl()};
+$('candleTimeframe').onchange=async()=>{
+const token=$('botToken').value||localStorage.getItem('bot_tree_token')||'';if(!token){$('control-status').textContent='Masukkan BOT_CONTROL_TOKEN untuk mengubah candle.';return}
+const timeframe=$('candleTimeframe').value;
+try{const response=await fetch(controlApiUrl('/api/control'),{method:'POST',headers:{'Content-Type':'application/json','X-Bot-Token':token},body:JSON.stringify({action:`set_timeframe_${timeframe}`})});const data=await response.json();if(!response.ok)throw new Error(data.error||'HTTP '+response.status);$('control-status').textContent=data.message;await refreshControl()}catch(error){$('control-status').textContent=`Gagal mengubah candle: ${error.message}`}
+};
+function apiDashboardUrl(){
+const parameter= new URLSearchParams(location.search).get('api');
+const tersimpan=localStorage.getItem('bot_tree_api');
+const dasar=(parameter||tersimpan||location.origin).replace(/\/+$/,'');
+return dasar === 'null' ? '/api/data' : (dasar.endsWith('/api/data') ? dasar : dasar+'/api/data');
+}
+async function refreshLive(){try{const parameter=new URLSearchParams(location.search).get('api');if(parameter)localStorage.setItem('bot_tree_api',parameter.replace(/\/+$/,''));const url=apiDashboardUrl();const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);updateDashboard(await response.json())}catch(error){$('live-status').textContent=`○ OFFLINE · server dashboard tidak terjangkau (${error.message}). Periksa API tunnel dan CORS.`}}
 refreshLive();setInterval(refreshLive,3000);
+refreshControl();setInterval(refreshControl,5000);
 const F=[['A','Risk gate, universe, watchlist','#10b981','Siap'],['B','Entry/SL/TP tertulis + konfirmasi 30m','#10b981','Siap'],['C','Scanner continuous','#10b981','Siap'],['D','Paper engine','#10b981','Siap'],['E','Sizing Bitget UTA v3','#f59e0b','Fondasi; submit sengaja nonaktif'],['5','Signal engine, AI off','#10b981','Siap'],['6','Evaluasi paper 1–2 minggu','#f59e0b','Butuh run nyata'],['7','Adapter Demo UTA v3','#f59e0b','Preflight siap; skema dan TP/SL wajib diverifikasi'],['8','Safeguard modal asli','#64748b','Belum dibuat'],['9','Modal riil bertahap','#64748b','Belum dibuat'],['10','Dashboard, rTokens, AI terukur','#8b5cf6','Dashboard ini langkah awalnya']];
 $('phs').innerHTML=F.map(f=>`<div class="ph"><div class="dot" style="background:${f[2]}">${f[0]}</div><div><b>${f[1]}</b><div class="note" style="margin:0">${f[3]}</div></div></div>`).join('');
 </script></body></html>

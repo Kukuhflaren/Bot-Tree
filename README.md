@@ -80,7 +80,8 @@ Isi `.env`, jangan pernah meng-commit API key atau rahasia.
 | Demo | `DEMO_API=on`, `DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM`, `DRY_RUN=off` hanya untuk uji Demo |
 | AI | `USE_AI=off` default; `--pakai-ai` untuk mengaktifkan satu kali jalan, `--tanpa-ai` untuk menonaktifkan |
 | Modal | `MODAL_DEMO_USDT`, `MODAL_LIVE_USDT`, `LEVERAGE`, `RISK_PER_SETUP_PCT` |
-| Strategi | `TP_MODE`, `TP_PERCENT`, `SL_POINTS`, `SL_BUFFER_ATR`, `RR_MIN`, `RISK_ATR_MIN`, `RISK_ATR_MAX` |
+| Candle | `CANDLE_TIMEFRAME=5m|15m|30m` untuk analisis dan pemantauan bot |
+| Strategi | `TP_MODE`, `TP_PERCENT`, `TP_METHOD=sr|atr`, `TP_ATR_PERCENT`, `SL_METHOD=sr|atr`, `SL_ATR_PERCENT`, `SL_POINTS`, `SL_BUFFER_ATR`, `RR_MIN`, `RISK_ATR_MIN`, `RISK_ATR_MAX` |
 | Sinyal | `SCORE_MIN`, `NEAR_MODE`, `NEAR_ATR_MULT`, `NEAR_SR_PERCENT` |
 | Pengaman | `DRY_RUN`, `KILL_SWITCH`, `MAX_OPEN_TOKENS`, `MAX_DAILY_LOSS_USDT`, `MAX_CONSECUTIVE_LOSSES` |
 | Universe | `WATCHLIST_MODE`, `WATCHLIST_FILE`, `TOKEN_BLACKLIST`, batas volume dan jumlah per sisi |
@@ -127,7 +128,7 @@ python demo_phase7.py BTC LONG 65000 63000 68000 10
 python demo_phase7.py BTC LONG 65000 63000 68000 10 --send
 ```
 
-`ai_pemilih.py` menampilkan kolom penyaring (`Ubah24j`, volume, `RasioVol`, `Skor`, `W`) tanpa alasan AI. AI tidak dipanggil kecuali diaktifkan melalui `USE_AI=on` atau `--pakai-ai`. Paper trading, signal engine, dan tes indikator mengambil universe langsung dari daftar bullish/bearish di `daftar_40.json`; output `daftar_ai.json` dan `penilai_ai.json` bukan sumber kandidat paper.
+`ai_pemilih.py` menampilkan kolom penyaring (`Ubah24j`, volume, `RasioVol`, `Skor`, `W`). AI tidak dipanggil kecuali diaktifkan melalui `USE_AI=on` atau `--pakai-ai`. Paper trading, signal engine, dan tes indikator mengambil universe langsung dari daftar bullish/bearish di `daftar_40.json`; output `daftar_ai.json` dan `penilai_ai.json` bukan sumber kandidat paper.
 
 Contoh Demo di atas tidak boleh dianggap format final untuk semua token. Nilai entry/SL/TP, contract size, minimum notional, dan harga harus dibuat dari setup bot serta market metadata bursa.
 
@@ -141,6 +142,72 @@ python dashboard_server.py --buka
 
 Buka `http://127.0.0.1:8765` jika browser tidak terbuka otomatis. 
 Halaman memperbarui data setiap 3 detik melalui server lokal, menggunakan `signal.json`, `penilai_ai.json`, `state.json`, dan bila tersedia `paper_trades.jsonl`. Default server hanya mendengarkan `127.0.0.1`; jangan ubah `--host` ke alamat publik. Untuk port berbeda, gunakan `--port 9000`.
+
+### Menampilkan dashboard dari GitHub Pages
+
+GitHub Pages hanya menyimpan file statis dan tidak dapat membuka file atau port tablet secara langsung. Jalankan server dashboard di Termux, lalu buat tunnel HTTPS dari tablet ke port 8765.
+
+```bash
+# Di Termux
+pkg update
+pkg install python
+termux-wake-lock
+python dashboard_server.py --host 0.0.0.0 --port 8765 \
+  --cors-origin https://Kukuhflaren.github.io
+```
+
+Jalankan tunnel di sesi Termux kedua. Contoh dengan Cloudflare Tunnel:
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:8765
+```
+
+Salin URL `https://...trycloudflare.com` yang dicetak Cloudflare, lalu buka halaman GitHub Pages dengan parameter API:
+
+```text
+https://kukuhflaren.github.io/REPO/bot-tree-dashboard.html?api=https://...trycloudflare.com
+```
+
+Gunakan origin GitHub Pages tepat seperti `https://kukuhflaren.github.io`; `/REPO` tidak termasuk origin. Parameter `api` disimpan di browser. URL tunnel biasanya berubah setelah tunnel direstart.
+
+Server tetap hanya membaca `state.json`, `signal.json`, `penilai_ai.json`, dan jurnal. Server tidak melayani `.env`, tidak mengirim order, dan tidak mengakses exchange. Jangan gunakan `--allow-all-cors` untuk penggunaan publik. Hentikan tunnel ketika tidak digunakan.
+
+### Menjalankan bot dari dashboard
+
+Server kontrol hanya menerima daftar aksi yang ditentukan. Perintah shell bebas tidak diterima.
+
+```bash
+# Generate token otomatis dan tampilkan di terminal
+python dashboard_server.py --host 0.0.0.0 --port 8765 \
+  --cors-origin https://Kukuhflaren.github.io
+
+# Atau gunakan nilai rahasia dari .env
+# BOT_CONTROL_TOKEN, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+```
+
+Masukkan `BOT_CONTROL_TOKEN` pada panel Kontrol Bot di dashboard. Tombol aman dapat menjalankan satu putaran, scanner, paper engine, pembaruan penyaring, pembuatan `signal.json`, refresh penilai, dan pemeriksaan kelayakan.
+
+Pilihan candle 5 menit, 15 menit, atau 30 menit tersedia di panel Kontrol Bot. Pilihan disimpan lokal sebagai `dashboard_config.json`, dikirim sebagai variabel proses `CANDLE_TIMEFRAME`, dan dipakai oleh penyaringan sinyal, penilai AI, signal engine, serta pemantauan paper. Scanner yang sedang berjalan perlu dihentikan dan dimulai ulang agar memakai candle baru.
+
+TP dan SL dapat dipilih terpisah:
+
+- **TP Support/Resistance** memakai level S/R lawan atau mode struktur yang sudah dikonfigurasi.
+- **TP Persentase ATR** memakai jarak `TP_ATR_PERCENT / 100 × ATR` dari entry.
+- **SL Support/Resistance** memakai garis HH untuk bearish atau HL untuk bullish.
+- **SL Persentase ATR** memakai jarak `SL_ATR_PERCENT / 100 × ATR` di luar HL/HH.
+
+Contoh: TP 100% ATR berarti jarak target satu ATR; SL 50% ATR berarti setengah ATR. Aturan RR dan batas risk ATR tetap memvalidasi setiap titik grid.
+
+Dashboard menampilkan token dari `daftar_40.json`, beserta harga terakhir, perubahan 24 jam, arah bullish/bearish, dan skor bot dari `penilai_ai.json`. Titik skor memakai warna: ungu 100–86, hijau 85–60, kuning 59–40, dan merah 39–0. Token watchlist ditandai `★`.
+
+Untuk live:
+
+1. Pastikan `MODE=live`, `LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA`, dan konfirmasi lanjutan yang berlaku sudah terpenuhi.
+2. Isi `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID`.
+3. Klik tombol Live di dashboard. Tombol hanya membuat permintaan persetujuan.
+4. Bot Telegram mengirim tombol **SETUJUI LIVE** atau **TOLAK**. Scanner live hanya dapat dimulai setelah tombol setuju.
+
+Persetujuan live berakhir setelah 5 menit. Tombol stop dapat menghentikan scanner. Simpan token, Telegram bot token, API Bitget, dan `.env` hanya di tablet; jangan menaruhnya di GitHub Pages atau file yang dikirim ke GitHub.
 
 ## Struktur file
 

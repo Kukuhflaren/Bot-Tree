@@ -79,6 +79,11 @@ def muat_token():
 # [FASE B] TP sesuai TP_MODE; SL bisa berbasis poin atau ATR
 def tp_untuk(a, arah, h):
     """Harga TP untuk titik masuk h. None = tidak ada level nyata (titik ditolak)."""
+    if getattr(config, "TP_METHOD", "sr") == "atr":
+        atr = a.get("atr") or 0.0
+        persen_atr = getattr(config, "TP_ATR_PERCENT", 100.0) / 100.0
+        jarak = atr * persen_atr
+        return h + arah * jarak if jarak > 0 else None
     if config.TP_MODE == "persen":
         return h * (1 + arah * config.TP_PERCENT / 100)
     if config.TP_MODE == "struktur":
@@ -91,6 +96,9 @@ def tp_untuk(a, arah, h):
 
 def tp_levels_untuk(a, arah, h):
     """Target bertahap; tiap level berikutnya dapat merealisasikan 25% notional."""
+    if getattr(config, "TP_METHOD", "sr") == "atr":
+        target = tp_untuk(a, arah, h)
+        return [target] if target is not None else []
     if config.TP_MODE == "persen":
         target = tp_untuk(a, arah, h)
         return [target] if target is not None else []
@@ -104,6 +112,11 @@ def tp_levels_untuk(a, arah, h):
 
 def buffer_sl(a):
     """Jarak SL di luar HL/HH dalam satuan harga."""
+    if getattr(config, "SL_METHOD", "atr") == "sr":
+        return 0.0
+    if getattr(config, "SL_METHOD", "atr") == "atr":
+        atr_persen = getattr(config, "SL_ATR_PERCENT", 50.0) / 100.0
+        return (a.get("atr") or 0.0) * atr_persen
     if config.SL_BUFFER_ATR > 0:
         return config.SL_BUFFER_ATR * (a.get("atr") or 0.0)
     return config.SL_POINTS * a["harga"] * 1e-4  # 1 poin = 0,01% harga
@@ -219,7 +232,7 @@ def snapshot(t, a):
     risk_atrs = [g["risk_atr"] for g in valid_grid if g.get("risk_atr") is not None]
     return {
         "simbol": t["nama"],
-        "candle_timeframe": "30m",
+        "candle_timeframe": config.CANDLE_TIMEFRAME,
         "candle_timestamp": a.get("candle_timestamp"),
         "arah": "BULLISH" if t["arah"] > 0 else "BEARISH",
         "harga": r(a["harga"]),
@@ -244,6 +257,10 @@ def snapshot(t, a):
         "jarak_ke_sr_persen": r(a["jarak_sr"], 3),
         "jarak_ke_sr_atr": r(a["jarak_atr"], 3),
         "tp_mode": config.TP_MODE,
+        "tp_method": getattr(config, "TP_METHOD", "sr"),
+        "tp_atr_percent": getattr(config, "TP_ATR_PERCENT", 100.0),
+        "sl_method": getattr(config, "SL_METHOD", "atr"),
+        "sl_atr_percent": getattr(config, "SL_ATR_PERCENT", 50.0),
         "tp_fraction_per_level": 0.25,
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
@@ -303,7 +320,7 @@ def jalankan(k, pakai_ai=None):
     if not token:
         raise SystemExit("Tidak ada kandidat daftar_ai yang masih menjadi anggota daftar_40.")
     ex = dp.exchange_publik()
-    print(f"Menghitung {len(token)} token dari candle 30m...")
+    print(f"Menghitung {len(token)} token dari candle {config.CANDLE_TIMEFRAME}...")
     print(
         f"Aturan: TP {config.TP_MODE} | SL {_teks_sl()} | "
         f"RR min {config.RR_MIN} | risk ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]\n"
@@ -312,7 +329,7 @@ def jalankan(k, pakai_ai=None):
     galat_data = 0
     for t in token:
         try:
-            c = dp.ambil_candle(ex, t["simbol"], "30m", 300)[:-1]
+            c = dp.ambil_candle(ex, t["simbol"], config.CANDLE_TIMEFRAME, 300)[:-1]
             a = ik.analisis(c, t["arah"], config.NEAR_SR_PERCENT, config.SCORE_MIN, config.NEAR_MODE, config.NEAR_ATR_MULT, c30=c)
             hasil.append((t, a))
         except Exception as e:

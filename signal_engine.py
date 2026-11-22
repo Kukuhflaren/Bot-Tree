@@ -57,7 +57,7 @@ def _read_candidates(path: str) -> list[tuple[str, int, dict[str, Any]]]:
 def build_signal(
     symbol: str, direction: int, candidate: dict[str, Any], exchange: Any,
 ) -> tuple[dict[str, Any] | None, list[str]]:
-    candles = dp.ambil_candle(exchange, symbol, "30m", 300)[:-1]
+    candles = dp.ambil_candle(exchange, symbol, config.CANDLE_TIMEFRAME, 300)[:-1]
     analysis = ik.analisis(
         candles, direction,
         config.NEAR_SR_PERCENT, config.SCORE_MIN,
@@ -89,7 +89,7 @@ def build_signal(
         "risk_atr": best["risk_atr"],
         "rr": best["rr"],
         "score": analysis["mentah"],
-        "candle_timeframe": "30m",
+        "candle_timeframe": config.CANDLE_TIMEFRAME,
         "candle_timestamp": analysis.get("candle_timestamp"),
         "score_components": {name: score for name, score in analysis["rincian"]},
         "zone": analysis["zona"],

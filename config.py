@@ -18,6 +18,10 @@ if MODE not in ("paper", "demo", "live"):
 if MODE == "live" and os.getenv("LIVE_CONFIRM", "") != "SAYA_PAHAM_RISIKONYA":
     raise SystemExit("MODE=live butuh LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA di .env.")
 
+CANDLE_TIMEFRAME = os.getenv("CANDLE_TIMEFRAME", "30m").strip().lower()
+if CANDLE_TIMEFRAME not in ("5m", "15m", "30m"):
+    raise SystemExit("CANDLE_TIMEFRAME di .env harus 5m, 15m, atau 30m.")
+
 BITGET_API_KEY = os.getenv("BITGET_API_KEY", "")
 BITGET_SECRET_KEY = os.getenv("BITGET_SECRET_KEY", "")
 BITGET_PASSPHRASE = os.getenv("BITGET_PASSPHRASE", "")
@@ -49,6 +53,15 @@ SL_BUFFER_ATR = _f("SL_BUFFER_ATR", 0)
 TP_MODE = os.getenv("TP_MODE", "sr_lawan").strip().lower()
 if TP_MODE not in ("sr_lawan", "struktur", "persen"):
     raise SystemExit("TP_MODE di .env harus sr_lawan, struktur, atau persen.")
+TP_METHOD = os.getenv("TP_METHOD", "sr").strip().lower()
+if TP_METHOD not in ("sr", "atr"):
+    raise SystemExit("TP_METHOD di .env harus sr atau atr.")
+TP_ATR_PERCENT = _f("TP_ATR_PERCENT", 100.0)
+
+SL_METHOD = os.getenv("SL_METHOD", "atr").strip().lower()
+if SL_METHOD not in ("sr", "atr"):
+    raise SystemExit("SL_METHOD di .env harus sr atau atr.")
+SL_ATR_PERCENT = _f("SL_ATR_PERCENT", 50.0)
 SCORE_MIN = _f("SCORE_MIN", 50)
 RR_MIN = _f("RR_MIN", 1.0)
 RISK_ATR_MIN = _f("RISK_ATR_MIN", 1.0)

@@ -78,7 +78,7 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
             if not uni.ada_di_daftar_40(simbol, arah, daftar_40):
                 continue
             try:
-                c = dp.ambil_candle(ex, simbol, "30m", 300)[:-1]
+                c = dp.ambil_candle(ex, simbol, config.CANDLE_TIMEFRAME, 300)[:-1]
                 a = ik.analisis(
                     c, arah,
                     config.NEAR_SR_PERCENT, config.SCORE_MIN,
@@ -175,7 +175,7 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
         "tp_fraction_per_level": sinyal.get("tp_fraction_per_level", 0.25 if ladder_dari_sinyal else 1.0),
         "sl": sl,
         "tp": tp,
-        "candle_timeframe": sinyal.get("candle_timeframe", "30m"),
+        "candle_timeframe": sinyal.get("candle_timeframe", config.CANDLE_TIMEFRAME),
         "entry_avg": None,
         "ukuran_terisi": 0.0,       # notional yang sudah terisi
         "ukuran_masuk_total": 0.0,
@@ -600,7 +600,7 @@ def satu_siklus(state: dict[str, Any], buka_baru: bool = True) -> None:
     # --- Update posisi yang sudah terbuka ---
     for pos in list(state.get("open_positions") or []):
         try:
-            candles = dp.ambil_candle(ex, pos["simbol"], "30m", 5)
+            candles = dp.ambil_candle(ex, pos["simbol"], pos.get("candle_timeframe", config.CANDLE_TIMEFRAME), 5)
             if len(candles) < 2:
                 continue
             candle_tutup = candles[:-1]

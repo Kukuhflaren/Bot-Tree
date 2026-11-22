@@ -80,13 +80,15 @@ def satu_putaran(
     else:
         print("  Risk gate: OK")
 
-    if config.SL_BUFFER_ATR > 0:
-        print(f"  SL: {config.SL_BUFFER_ATR}×ATR | RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}] | TP={config.TP_MODE}")
+    tp_teks = "S/R" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
+    if getattr(config, "SL_METHOD", "atr") == "sr":
+        sl_teks = "S/R HH/HL"
     else:
-        print(
-            f"  SL: {config.SL_POINTS:.0f} poin | "
-            f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}] | TP={config.TP_MODE}"
-        )
+        sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+    print(
+        f"  TP: {tp_teks} | SL: {sl_teks} | "
+        f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]"
+    )
 
     paper.satu_siklus(state, buka_baru=buka_baru and boleh)
     paper.tampil_status(state)

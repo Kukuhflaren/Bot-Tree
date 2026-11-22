@@ -84,9 +84,12 @@ def main():
     print(f"Mode {config.MODE}: modal dibaca dari {sumber} = {config.MODAL_USDT} USDT")
     print(f"Alokasi {config.RISK_PER_SETUP_PCT}% -> margin per setup {margin:.3f} USDT "
           f"-> notional {notional:.3f} USDT @ {config.LEVERAGE:.0f}x")
-    sl_teks = (f"{config.SL_BUFFER_ATR} x ATR" if config.SL_BUFFER_ATR > 0
-               else f"{config.SL_POINTS:.0f} poin (1 poin = 0,01% harga)")
-    print(f"SL di luar HL/HH: {sl_teks} | RISK_ATR boleh {config.RISK_ATR_MIN} - {config.RISK_ATR_MAX} | TP mode {config.TP_MODE}\n")
+    tp_teks = "Support/Resistance" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
+    if getattr(config, "SL_METHOD", "atr") == "sr":
+        sl_teks = "HH/HL Support/Resistance"
+    else:
+        sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+    print(f"TP: {tp_teks} | SL: {sl_teks} | RISK_ATR boleh {config.RISK_ATR_MIN} - {config.RISK_ATR_MAX}\n")
 
     baris = []
     for n in nama:
@@ -97,7 +100,10 @@ def main():
             print(f"{n:8} gagal ambil candle: {type(e).__name__}")
             continue
         p, atr = c[-1]["c"], ik.atr(c)
-        buffer = config.SL_BUFFER_ATR * atr if config.SL_BUFFER_ATR > 0 else config.SL_POINTS * p * 1e-4
+        if getattr(config, "SL_METHOD", "atr") == "sr":
+            buffer = 0.0
+        else:
+            buffer = atr * getattr(config, "SL_ATR_PERCENT", 50.0) / 100.0
         buffer_atr = buffer / atr if atr > 0 else float("inf")
         mn = min_notional((getattr(ex, "markets", None) or {}).get(sim), p)
         perlu = mn / config.LEVERAGE if mn else None

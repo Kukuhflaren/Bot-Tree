@@ -1,6 +1,6 @@
-"""Verifikasi risk + universe.
+"""Verifikasi konfigurasi risk + universe terbaru.
 
-Jalankan: python cek_fase_a.py
+Jalankan: python cek_risk_universe.py
 """
 import config
 import risk
@@ -31,7 +31,13 @@ def main():
         gagal(f"RISK_PER_SETUP_PCT={config.RISK_PER_SETUP_PCT}% terlalu besar")
         masalah += 1
     ok(f"RISK_ATR_MIN={config.RISK_ATR_MIN} | RISK_ATR_MAX={config.RISK_ATR_MAX}")
-    ok(f"RR_MIN={config.RR_MIN} | SL_POINTS={config.SL_POINTS}")
+    ok(f"RR_MIN={config.RR_MIN} | Candle={config.CANDLE_TIMEFRAME}")
+    tp_teks = "S/R" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
+    if getattr(config, "SL_METHOD", "atr") == "sr":
+        sl_teks = "S/R HH/HL"
+    else:
+        sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+    ok(f"TP={tp_teks} | SL={sl_teks}")
     ok(f"MAX_DAILY_LOSS={config.MAX_DAILY_LOSS_USDT} | MAX_CONSECUTIVE={config.MAX_CONSECUTIVE_LOSSES}")
     ok(f"KILL_SWITCH={config.KILL_SWITCH} | DRY_RUN={config.DRY_RUN} | MODE={config.MODE}")
 
@@ -118,7 +124,7 @@ def main():
         print(
             "Fase A SIAP (risk + universe).\n"
             "Urutan lanjut: penyaring → (opsional AI) → penilai_ai → paper/scanner.\n"
-            "Cek juga: python cek_kelayakan.py  (order min bursa + jarak SL vs ATR)"
+            "Cek: python cek_kelayakan.py atau python ai_kelayakan.py --pakai-ai"
         )
     else:
         print(f"Ada {masalah} item perlu diperbaiki sebelum menganggap Fase A selesai.")

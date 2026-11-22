@@ -22,6 +22,9 @@ CANDLE_TIMEFRAME = os.getenv("CANDLE_TIMEFRAME", "30m").strip().lower()
 if CANDLE_TIMEFRAME not in ("5m", "15m", "30m"):
     raise SystemExit("CANDLE_TIMEFRAME di .env harus 5m, 15m, atau 30m.")
 
+DEMO_API = os.getenv("DEMO_API", "off").strip().lower() == "on"
+DEMO_CONFIRM = os.getenv("DEMO_CONFIRM", "").strip()
+
 BITGET_API_KEY = os.getenv("BITGET_API_KEY", "")
 BITGET_SECRET_KEY = os.getenv("BITGET_SECRET_KEY", "")
 BITGET_PASSPHRASE = os.getenv("BITGET_PASSPHRASE", "")

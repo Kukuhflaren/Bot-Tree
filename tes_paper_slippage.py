@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import paper
 import state as st
+import config
+import penilai_ai
 
 
 def _pos(arah: int = 1, notional: float = 7.5) -> dict:
@@ -55,7 +57,7 @@ def test_limit_fill_normal_tanpa_gap():
     filled = paper._cek_fill(pos, _c(100.5, 100.5, 99.5, 100.0))
     assert len(filled) == 1
     assert filled[0]["harga_fill"] == 100.0
-    print("  [OK] limit fill normal → harga_fill = limit")
+    print("  [OK] limit fill normal -> harga_fill = limit")
 
 
 def test_limit_fill_gap_through_long():
@@ -67,7 +69,7 @@ def test_limit_fill_gap_through_long():
     s1 = next(t for t in pos["titik_grid"] if t["nama"] == "S1")
     assert s1["status"] == "filled"
     assert s1["harga_fill"] == 98.5  # open, lebih baik dari 100
-    print(f"  [OK] gap-through long limit → fill @ open {s1['harga_fill']} (lebih baik)")
+    print(f"  [OK] gap-through long limit -> fill @ open {s1['harga_fill']} (lebih baik)")
 
 
 def test_limit_fill_gap_through_short():
@@ -77,7 +79,7 @@ def test_limit_fill_gap_through_short():
     r1 = next(t for t in pos["titik_grid"] if t["nama"] == "R1")
     assert r1["status"] == "filled"
     assert r1["harga_fill"] == 101.5  # open > limit 100
-    print(f"  [OK] gap-through short limit → fill @ open {r1['harga_fill']} (lebih baik)")
+    print(f"  [OK] gap-through short limit -> fill @ open {r1['harga_fill']} (lebih baik)")
 
 
 def test_entry_avg_pakai_harga_fill():
@@ -95,14 +97,14 @@ def test_sl_slippage_long_adverse():
     """Long SL: candle low di bawah SL → exit di low (lebih buruk)."""
     harga = paper._harga_exit_sl(97.0, 1, _c(99, 99, 95.0, 96))
     assert harga == 95.0
-    print("  [OK] long SL slippage → exit @ low 95 (bukan 97)")
+    print("  [OK] long SL slippage -> exit @ low 95 (bukan 97)")
 
 
 def test_sl_slippage_short_adverse():
     """Short SL: candle high di atas SL → exit di high (lebih buruk)."""
     harga = paper._harga_exit_sl(103.0, -1, _c(101, 106.0, 101, 105))
     assert harga == 106.0
-    print("  [OK] short SL slippage → exit @ high 106 (bukan 103)")
+    print("  [OK] short SL slippage -> exit @ high 106 (bukan 103)")
 
 
 def test_sl_tanpa_slippage_flag():
@@ -112,7 +114,7 @@ def test_sl_tanpa_slippage_flag():
     try:
         harga = paper._harga_exit_sl(97.0, 1, _c(99, 99, 95.0, 96))
         assert harga == 97.0
-        print("  [OK] SLIPPAGE_SL=False → exit tepat @ 97")
+        print("  [OK] SLIPPAGE_SL=False -> exit tepat @ 97")
     finally:
         paper.SLIPPAGE_SL = old
 
@@ -169,6 +171,32 @@ def test_integrasi_tp_tanpa_slippage_ekstra():
     print(f"  [OK] TP exit tepat @ {hasil['harga_keluar']} | slip={hasil.get('slippage_pct', 0):+.3f}%")
 
 
+def test_konfigurasi_candle_terbaru():
+    assert config.CANDLE_TIMEFRAME in ("5m", "15m", "30m")
+    print(f"  [OK] candle config terbaru = {config.CANDLE_TIMEFRAME}")
+
+
+def test_metode_tp_sl_terbaru():
+    old = (
+        config.TP_METHOD, config.TP_ATR_PERCENT,
+        config.SL_METHOD, config.SL_ATR_PERCENT,
+    )
+    try:
+        config.TP_METHOD = "atr"
+        config.TP_ATR_PERCENT = 100
+        config.SL_METHOD = "atr"
+        config.SL_ATR_PERCENT = 50
+        data = {"atr": 10}
+        assert penilai_ai.tp_untuk(data, 1, 100) == 110
+        assert penilai_ai.buffer_sl(data) == 5
+    finally:
+        (
+            config.TP_METHOD, config.TP_ATR_PERCENT,
+            config.SL_METHOD, config.SL_ATR_PERCENT,
+        ) = old
+    print("  [OK] TP/SL ATR mengikuti konfigurasi terbaru")
+
+
 def test_slippage_membuat_loss_lebih_dalam():
     """Bandingkan PnL SL dengan vs tanpa slippage — dengan slippage harus lebih buruk."""
     # Dengan slippage
@@ -213,6 +241,8 @@ def main():
         test_tp_tidak_ambil_slippage_positif,
         test_integrasi_sl_gap_partial,
         test_integrasi_tp_tanpa_slippage_ekstra,
+        test_konfigurasi_candle_terbaru,
+        test_metode_tp_sl_terbaru,
         test_slippage_membuat_loss_lebih_dalam,
     ]
     gagal = 0

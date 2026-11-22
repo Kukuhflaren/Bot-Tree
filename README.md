@@ -97,13 +97,18 @@ python tes_indikator.py
 python signal_engine.py          # membaca langsung daftar_40.json, menulis signal.json
 
 # Verifikasi fondasi
-python cek_fase_a.py
+python cek_risk_universe.py
+python ai_kelayakan.py
+python ai_kelayakan.py --pakai-ai
 python cek_kelayakan.py          # semua token daftar_40.json; watchlist di urutan pertama
 python cek_kelayakan.py BTC ETH  # hanya token yang ditentukan
 
 # Tambahkan --pakai-ai atau set USE_AI=on hanya bila ingin memakai token
 python ai_pemilih.py             # tanpa AI secara default
 python penilai_ai.py --jumlah 8  # analisis bot tanpa AI secara default
+python ai_kelayakan.py           # cek kelayakan formula objektif untuk semua token
+python ai_kelayakan.py BTC ETH  # cek kelayakan token pilihan
+python ai_kelayakan.py --pakai-ai # tambah pendapat AI; formula tetap menentukan layak/tolak
 
 # Paper trading
 python tes_paper_partial.py
@@ -198,6 +203,18 @@ TP dan SL dapat dipilih terpisah:
 
 Contoh: TP 100% ATR berarti jarak target satu ATR; SL 50% ATR berarti setengah ATR. Aturan RR dan batas risk ATR tetap memvalidasi setiap titik grid.
 
+## Uji terpadu Paper / Phase 6 / Demo
+
+Alur uji aman digabung untuk mengurangi proses terpisah:
+
+```bash
+python uji_paper_demo.py --once
+python uji_paper_demo.py --once --demo-preflight
+python paper_metrics.py --journal paper_trades.jsonl --capital 25
+```
+
+`uji_paper_demo.py --once` menjalankan satu siklus paper, memperbarui `paper_trades.jsonl`, dan menampilkan gate Phase 6. Tambah `--demo-preflight` untuk membuat rencana preflight dari sinyal layak; runner ini tidak mengirim order Demo atau Live.
+
 Dashboard menampilkan token dari `daftar_40.json`, beserta harga terakhir, perubahan 24 jam, arah bullish/bearish, dan skor bot dari `penilai_ai.json`. Titik skor memakai warna: ungu 100–86, hijau 85–60, kuning 59–40, dan merah 39–0. Token watchlist ditandai `★`.
 
 Untuk live:
@@ -214,6 +231,9 @@ Persetujuan live berakhir setelah 5 menit. Tombol stop dapat menghentikan scanne
 | File | Fungsi |
 |---|---|
 | `config.py` / `phase7_config.py` | Konfigurasi mode, risk, AI, dan demo |
+| `cek_risk_universe.py` | Verifikasi risk dan universe dengan konfigurasi candle, TP, dan SL terbaru |
+| `ai_kelayakan.py` | Cek kelayakan objektif independen; AI opsional tidak mengubah hasil formula |
+| `uji_paper_demo.py` | Jalur terpadu aman Paper/Phase 6/preflight Phase 7 |
 | `data_pasar.py` | Candle dan data pasar publik |
 | `indikator.py` | Indikator, skor lima komponen, zona, dan syarat masuk |
 | `penyaring.py` / `universe.py` / `watchlist.json` | Universe dan penyaring |

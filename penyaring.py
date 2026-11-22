@@ -111,11 +111,11 @@ def susun_daftar(kandidat, jumlah, watchlist):
 
 def cetak(judul, daftar):
     print(f"\n{judul} ({len(daftar)})")
-    print(f"  {'No':>2} {'Simbol':16} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}  W")
+    print(f"  {'No':>2} {'Simbol':16} {'Harga':>14} {'Ubah24j':>9} {'Vol24j(Juta)':>13} {'RasioVol':>9} {'Skor':>7}  W")
     for i, k in enumerate(daftar, 1):
         tanda = " !" if abs(k["ubah_24j"]) >= 30 else ""
         w = "*" if k.get("prioritas_watchlist") else " "
-        print(f"  {i:>2} {k['simbol']:16} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>13.1f} "
+        print(f"  {i:>2} {k['simbol']:16} {k['harga']:>14.6g} {k['ubah_24j']:>8.2f}% {k['vol_24j_usdt'] / 1e6:>13.1f} "
               f"{k['rasio_vol']:>8.2f}x {k['skor']:>7.2f}{tanda}  {w}")
 
 

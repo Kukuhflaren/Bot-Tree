@@ -4,7 +4,7 @@ Diperbarui: 2026-11-18
 
 | Fase | Isi | Status |
 |------|-----|--------|
-| **A** | Risk gate, universe, watchlist, blacklist | ✅ Siap (`cek_fase_a.py`) |
+| **A** | Risk gate, universe, watchlist, blacklist | ✅ Siap (`cek_risk_universe.py`) |
 | **B** | Entry/SL/TP tertulis, konfirmasi 30m, grid validasi | ✅ Ada di `indikator.py` + `penilai_ai.py` |
 | **C** | Scanner continuous | ✅ `scanner.py` (siklus paper) |
 | **D** | Paper engine (fill, partial, slippage, fee, state) | ✅ `paper.py` + `state.py` + unit test |

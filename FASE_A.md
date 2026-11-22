@@ -1,6 +1,6 @@
 # Fase A — Fondasi risk & universe
 
-Status: diimplementasikan di `config.py`, `risk.py`, `universe.py`, `watchlist.json`, `penyaring.py`, `cek_fase_a.py`.
+Status: diimplementasikan di `config.py`, `risk.py`, `universe.py`, `watchlist.json`, `penyaring.py`, `cek_risk_universe.py`.
 
 ## Ceklis
 
@@ -12,14 +12,14 @@ Status: diimplementasikan di `config.py`, `risk.py`, `universe.py`, `watchlist.j
 | MAX_OPEN_TOKENS=1 | Ya |
 | RISK_PER_SETUP_PCT=5 (margin per setup) | Ya |
 | Modul `boleh_order_baru` (kill, daily loss, consecutive, open) | Ya |
-| Skrip verifikasi `cek_fase_a.py` | Ya |
+| Skrip verifikasi `cek_risk_universe.py` | Ya |
 
 ## Perintah
 
 ```bash
 # 1. Samakan .env dengan env.example (tambah baris baru)
 # 2. Verifikasi lokal tanpa order
-python cek_fase_a.py
+python cek_risk_universe.py
 
 # 3. Penyaring hanya watchlist crypto inti
 python penyaring.py

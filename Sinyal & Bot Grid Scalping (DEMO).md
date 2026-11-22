@@ -38,7 +38,7 @@ Harga menyentuh zona entry → pasang grid + SL di luar struktur
 python cek_koneksi.py
 python tes_indikator.py
 python lihat_aset.py
-python cek_fase_a.py
+python cek_risk_universe.py
 python penyaring.py
 python tes_ai.py
 python tes_cmc.py

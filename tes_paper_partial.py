@@ -62,7 +62,7 @@ def test_belum_ada_fill_tidak_bisa_exit():
     # Candle menyentuh SL dan TP, tapi belum ada fill
     c = _candle(100, 104, 96, 100)
     assert paper._cek_exit(pos, c) is None
-    print("  [OK] belum ada fill → exit = None")
+    print("  [OK] belum ada fill -> exit = None")
 
 
 def test_fill_satu_level():
@@ -80,7 +80,7 @@ def test_fill_satu_level():
     pos["entry_avg"] = paper._hitung_entry_avg(pos)
     assert abs(pos["entry_avg"] - 100.0) < 1e-9
     assert abs(pos["ukuran_terisi"] - 2.5) < 1e-9
-    print("  [OK] fill 1 level → entry=100, terisi=2.5/7.5")
+    print("  [OK] fill 1 level -> entry=100, terisi=2.5/7.5")
 
 
 def test_fill_multi_level_satu_candle():
@@ -96,7 +96,7 @@ def test_fill_multi_level_satu_candle():
     pos["entry_avg"] = paper._hitung_entry_avg(pos)
     # rata-rata (100+99+98)/3 = 99
     assert abs(pos["entry_avg"] - 99.0) < 1e-9
-    print("  [OK] fill 3 level sekaligus (gap) → entry=99")
+    print("  [OK] fill 3 level sekaligus (gap) -> entry=99")
 
 
 def test_partial_lalu_tp():
@@ -127,7 +127,7 @@ def test_partial_lalu_tp():
     assert abs(hasil["notional_terisi"] - 2.5) < 1e-9
     assert hasil["pnl_bersih"] > 0
     assert pos["pending_dibatalkan"] == 2  # S2 + HL di-cancel
-    print(f"  [OK] partial 1/3 → TP | PnL={hasil['pnl_bersih']:+.4f} | cancel 2 pending")
+    print(f"  [OK] partial 1/3 -> TP | PnL={hasil['pnl_bersih']:+.4f} | cancel 2 pending")
 
 
 def test_partial_lalu_sl():
@@ -161,7 +161,7 @@ def test_partial_lalu_sl():
     assert abs(hasil["notional_terisi"] - 7.5) < 1e-9
     assert hasil["pnl_bersih"] < 0
     assert pos["pending_dibatalkan"] == 0
-    print(f"  [OK] fill S1 → path ke SL mengisi sisa + tutup | PnL={hasil['pnl_bersih']:+.4f}")
+    print(f"  [OK] fill S1 -> path ke SL mengisi sisa + tutup | PnL={hasil['pnl_bersih']:+.4f}")
 
 
 def test_sl_diprioritaskan_atas_tp():
@@ -210,7 +210,7 @@ def test_short_partial_fill():
     assert pos["alasan_tutup"] == "tp"
     assert pos["hasil"]["pnl_bersih"] > 0
     assert pos["pending_dibatalkan"] == 2
-    print(f"  [OK] short partial 1/3 → TP | PnL={pos['hasil']['pnl_bersih']:+.4f}")
+    print(f"  [OK] short partial 1/3 -> TP | PnL={pos['hasil']['pnl_bersih']:+.4f}")
 
 
 def test_cancel_sisa_pending():
@@ -238,7 +238,7 @@ def test_pnl_hanya_dari_ukuran_terisi():
     # partial harus sekitar 1/3 full
     rasio = hasil_partial["pnl_bersih"] / hasil_full["pnl_bersih"]
     assert 0.30 < rasio < 0.36
-    print(f"  [OK] PnL partial ≈ 1/3 full (rasio={rasio:.3f})")
+    print(f"  [OK] PnL partial ~ 1/3 full (rasio={rasio:.3f})")
 
 
 def test_tp_bertingkat_menutup_25_persen_dan_sisa_ke_sl():
@@ -301,7 +301,7 @@ def test_tp_ladder_short_menutup_25_persen_per_target():
     print("  [OK] short TP ladder realizes 25% at descending S/R targets")
 
 
-def test_paper_memproses_candle_30m_baru_saja():
+def test_paper_memproses_candle_terpilih_baru_saja():
     state = _state()
     pos = _pos_contoh()
     pos["candle_terakhir_diproses"] = 100
@@ -332,9 +332,9 @@ def test_paper_memproses_candle_30m_baru_saja():
             paper.update_posisi,
             paper.st.simpan,
         ) = originals
-    assert candle_calls == ["30m", 200]
+    assert candle_calls == [paper.config.CANDLE_TIMEFRAME, 200]
     assert pos["candle_terakhir_diproses"] == 200
-    print("  [OK] paper monitor uses 30m and processes each closed candle once")
+    print(f"  [OK] paper monitor uses {paper.config.CANDLE_TIMEFRAME} and processes each closed candle once")
 
 
 def test_kandidat_paper_diambil_dari_daftar_40():
@@ -389,7 +389,7 @@ def main():
         test_pnl_hanya_dari_ukuran_terisi,
         test_tp_bertingkat_menutup_25_persen_dan_sisa_ke_sl,
         test_tp_ladder_short_menutup_25_persen_per_target,
-        test_paper_memproses_candle_30m_baru_saja,
+        test_paper_memproses_candle_terpilih_baru_saja,
         test_kandidat_paper_diambil_dari_daftar_40,
     ]
     gagal = 0

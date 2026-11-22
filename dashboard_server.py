@@ -43,7 +43,9 @@ AKSI_SAFE = {
     "refresh_signal": ("signal_engine.py", []),
     "refresh_radar": ("penilai_ai.py", ["--jumlah", "8"]),
     "cek_kelayakan": ("cek_kelayakan.py", []),
-    "cek_fase_a": ("cek_fase_a.py", []),
+    "cek_risk_universe": ("cek_risk_universe.py", []),
+    "ai_kelayakan": ("ai_kelayakan.py", []),
+    "uji_paper_demo": ("uji_paper_demo.py", ["--once"]),
 }
 AKSI_LIVE = {"live_scan_once", "live_scanner_start"}
 

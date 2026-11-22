@@ -215,6 +215,20 @@ python paper_metrics.py --journal paper_trades.jsonl --capital 25
 
 `uji_paper_demo.py --once` menjalankan satu siklus paper, memperbarui `paper_trades.jsonl`, dan menampilkan gate Phase 6. Tambah `--demo-preflight` untuk membuat rencana preflight dari sinyal layak; runner ini tidak mengirim order Demo atau Live.
 
+Untuk uji sesungguhnya pada akun Demo dengan satu perintah:
+
+```bash
+# Preflight dan monitoring, tanpa mengirim order
+python uji_demo_unified.py --once
+
+# Loop Demo/Phase 7 dan Paper/Phase 6; mengirim order Demo setelah semua gate lolos
+python uji_demo_unified.py --days 14 --interval 300 --send-demo --refresh
+```
+
+Perintah Demo menggabungkan scanner paper, refresh penyaring/sinyal, sinkronisasi jurnal paper, perhitungan gate Phase 6, preflight Phase 7, pengiriman limit Demo yang tunduk pada TP/SL, dan pemantauan posisi unrealized/closed PnL. Hasil tersimpan terpisah di `demo_test_trades.jsonl` dan `demo_test_state.json`; hasil paper tetap di `paper_trades.jsonl`.
+
+Pengiriman Demo tetap ditolak bila `MODE` bukan `demo`, `DRY_RUN=on`, `DEMO_API=off`, `DEMO_CONFIRM` salah, atau key Demo belum lengkap. Script tidak pernah mengirim order Live.
+
 Dashboard menampilkan token dari `daftar_40.json`, beserta harga terakhir, perubahan 24 jam, arah bullish/bearish, dan skor bot dari `penilai_ai.json`. Titik skor memakai warna: ungu 100–86, hijau 85–60, kuning 59–40, dan merah 39–0. Token watchlist ditandai `★`.
 
 Untuk live:
@@ -234,6 +248,7 @@ Persetujuan live berakhir setelah 5 menit. Tombol stop dapat menghentikan scanne
 | `cek_risk_universe.py` | Verifikasi risk dan universe dengan konfigurasi candle, TP, dan SL terbaru |
 | `ai_kelayakan.py` | Cek kelayakan objektif independen; AI opsional tidak mengubah hasil formula |
 | `uji_paper_demo.py` | Jalur terpadu aman Paper/Phase 6/preflight Phase 7 |
+| `uji_demo_unified.py` | Jalur satu-perintah: scanner, Paper/Phase 6, dan order/monitoring Demo/Phase 7 |
 | `data_pasar.py` | Candle dan data pasar publik |
 | `indikator.py` | Indikator, skor lima komponen, zona, dan syarat masuk |
 | `penyaring.py` / `universe.py` / `watchlist.json` | Universe dan penyaring |

@@ -46,6 +46,7 @@ AKSI_SAFE = {
     "cek_risk_universe": ("cek_risk_universe.py", []),
     "ai_kelayakan": ("ai_kelayakan.py", []),
     "uji_paper_demo": ("uji_paper_demo.py", ["--once"]),
+    "uji_demo_unified": ("uji_demo_unified.py", ["--once"]),
 }
 AKSI_LIVE = {"live_scan_once", "live_scanner_start"}
 

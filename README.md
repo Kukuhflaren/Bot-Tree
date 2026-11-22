@@ -91,7 +91,8 @@ Isi `.env`, jangan pernah meng-commit API key atau rahasia.
 # Verifikasi fondasi
 python cek_koneksi.py
 python cek_fase_a.py
-python cek_kelayakan.py
+python cek_kelayakan.py          # semua token daftar_40.json; watchlist di urutan pertama
+python cek_kelayakan.py BTC ETH  # hanya token yang ditentukan
 
 # Sinyal dan analisis
 python penyaring.py

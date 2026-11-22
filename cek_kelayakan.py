@@ -7,7 +7,7 @@ Menjawab dua pertanyaan praktis untuk tiap token:
 Di akhir dicetak bagian "YANG PERLU DIPERBAIKI" lengkap dengan angka yang disarankan.
 
 Pakai:
-    python cek_kelayakan.py                 (memakai watchlist.json)
+    python cek_kelayakan.py                 (semua token daftar_40; watchlist lebih dulu)
     python cek_kelayakan.py BTC ETH SOL     (token pilihan sendiri)"""
 import math
 import sys
@@ -20,6 +20,27 @@ import universe as uni
 
 JUMLAH_LEVEL = 3   # rencana jumlah level grid per setup (2-3); ubah sesuai rencanamu
 CADANGAN = 1.2     # cadangan 20%: nilai order minimum (USDT) ikut bergerak mengikuti harga token
+
+
+def susun_token(data: dict, watchlist: list[str]) -> list[str]:
+    """Gabungkan kedua sisi daftar_40 tanpa duplikat, dengan watchlist lebih dulu."""
+    semua = []
+    terlihat = set()
+    for sisi in ("bullish", "bearish"):
+        for item in data[sisi]:
+            nama = uni.base_simbol(item["simbol"])
+            if nama not in terlihat:
+                semua.append(nama)
+                terlihat.add(nama)
+
+    prioritas = []
+    sudah_diprioritaskan = set()
+    for nama in watchlist:
+        nama = nama.strip().upper()
+        if nama in terlihat and nama not in sudah_diprioritaskan:
+            prioritas.append(nama)
+            sudah_diprioritaskan.add(nama)
+    return prioritas + [nama for nama in semua if nama not in sudah_diprioritaskan]
 
 
 def min_notional(m, harga):
@@ -37,7 +58,21 @@ def min_notional(m, harga):
 
 
 def main():
-    nama = [a.upper() for a in sys.argv[1:] if not a.startswith("--")] or uni.muat_watchlist() or ["BTC"]
+    argumen = [a.upper() for a in sys.argv[1:] if not a.startswith("--")]
+    watchlist = uni.muat_watchlist()
+    if argumen:
+        nama = argumen
+        print(f"Memeriksa token pilihan: {', '.join(nama)}")
+    else:
+        daftar = uni.muat_data_daftar_40()
+        nama = susun_token(daftar, watchlist)
+        terpilih_wl = [n for n in nama if n in set(watchlist)]
+        print(f"Memeriksa {len(nama)} token unik dari daftar_40.json "
+              f"({len(terpilih_wl)} token watchlist di urutan teratas).")
+        if terpilih_wl:
+            print("* = token watchlist")
+        if not nama:
+            raise SystemExit("daftar_40.json tidak berisi token bullish atau bearish.")
     ex = dp.exchange_publik()
     try:
         ex.load_markets()
@@ -74,7 +109,8 @@ def main():
             order_txt = "order minimum tidak diketahui"
         else:
             order_txt = f"order min ~{mn:.2f} USDT (margin {perlu:.2f}) -> {'CUKUP' if order_ok else 'TIDAK CUKUP'}"
-        print(f"{n:8} harga {p:<10.6g} ATR5m {atr / p * 100:.3f}% | buffer SL {buffer / p * 100:.3f}% = {buffer_atr:.1f} ATR "
+        tanda = "*" if n in watchlist else " "
+        print(f"{tanda}{n:7} harga {p:<10.6g} ATR5m {atr / p * 100:.3f}% | buffer SL {buffer / p * 100:.3f}% = {buffer_atr:.1f} ATR "
               f"({'ok' if sl_ok else 'MELEBIHI RISK_ATR_MAX'}) | {order_txt}")
         if mn is not None:
             m1 = mn / config.LEVERAGE

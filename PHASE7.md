@@ -19,6 +19,7 @@ MODE=demo
 DRY_RUN=off
 DEMO_API=on
 DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM
+DEMO_LOOP_EXECUTION_VERIFIED=off
 BITGET_API_KEY=<DEMO API key>
 BITGET_SECRET_KEY=<DEMO secret>
 BITGET_PASSPHRASE=<DEMO passphrase>
@@ -37,6 +38,14 @@ Only after reviewing the preflight and exchange's exact returned market schema m
 ```bash
 python demo_phase7.py BTC LONG 65000 63000 68000 10 --send
 ```
+
+The continuous runner is stricter: `uji_demo_unified.py --send-demo` also
+requires `DEMO_LOOP_EXECUTION_VERIFIED=on`. Keep it `off` until the complete
+loop has passed the order, partial-fill, cancellation, TP/SL, and restart tests
+below. The runner refreshes the initial pipeline at startup and after six idle
+hours; it will not restart while a Demo position or tracked pending order is
+still active. API/reconciliation errors stop new entries instead of being
+treated as an empty account.
 
 ## Required demo test cases
 

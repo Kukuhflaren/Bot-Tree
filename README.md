@@ -77,7 +77,7 @@ Isi `.env`, jangan pernah meng-commit API key atau rahasia.
 |---|---|
 | Mode | `MODE=paper`, `demo`, atau `live`; live wajib `LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA` |
 | Bitget | `BITGET_API_KEY`, `BITGET_SECRET_KEY`, `BITGET_PASSPHRASE`, `BITGET_UTA=on` |
-| Demo | `DEMO_API=on`, `DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM`, `DRY_RUN=off` hanya untuk uji Demo |
+| Demo | `DEMO_API=on`, `DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM`, `DRY_RUN=off`; loop otomatis juga memerlukan `DEMO_LOOP_EXECUTION_VERIFIED=on` setelah validasi manual |
 | AI | `USE_AI=off` default; `--pakai-ai` untuk mengaktifkan satu kali jalan, `--tanpa-ai` untuk menonaktifkan |
 | Modal | `MODAL_DEMO_USDT`, `MODAL_LIVE_USDT`, `LEVERAGE`, `RISK_PER_SETUP_PCT` |
 | Candle | `CANDLE_TIMEFRAME=5m|15m|30m` untuk analisis dan pemantauan bot |
@@ -103,12 +103,9 @@ python ai_kelayakan.py --pakai-ai
 python cek_kelayakan.py          # semua token daftar_40.json; watchlist di urutan pertama
 python cek_kelayakan.py BTC ETH  # hanya token yang ditentukan
 
-# Tambahkan --pakai-ai atau set USE_AI=on hanya bila ingin memakai token
+# AI opsional; formula tetap menjadi penentu kelayakan
 python ai_pemilih.py             # tanpa AI secara default
 python penilai_ai.py --jumlah 8  # analisis bot tanpa AI secara default
-python ai_kelayakan.py           # cek kelayakan formula objektif untuk semua token
-python ai_kelayakan.py BTC ETH  # cek kelayakan token pilihan
-python ai_kelayakan.py --pakai-ai # tambah pendapat AI; formula tetap menentukan layak/tolak
 
 # Paper trading
 python tes_paper_partial.py
@@ -117,7 +114,7 @@ python paper.py --status
 python paper.py
 python paper.py --loop
 python scanner.py --sekali
-python scanner.py --interval 300
+python scanner.py --interval 300 # scanner paper saja; bukan loop order Demo
 
 # Phase 6 paper evaluation
 python tes_phase6.py
@@ -125,17 +122,12 @@ python paper_phase6.py --once
 python paper_phase6.py --days 14 --interval 300
 python paper_metrics.py --journal paper_trades.jsonl --capital 30 --min-trades 30 --min-days 7 --max-dd-pct 25
 
-# Phase 7 demo preflight (tidak mengirim order)
-python tes_demo_phase7.py
-python demo_phase7.py BTC LONG 65000 63000 68000 10
-
-# Hanya setelah Demo API, review payload, dan uji manual:
-python demo_phase7.py BTC LONG 65000 63000 68000 10 --send
+# Untuk urutan uji Demo Phase 7, ikuti bagian "Langkah uji Demo" di bawah
 ```
 
-`ai_pemilih.py` menampilkan kolom penyaring (`Ubah24j`, volume, `RasioVol`, `Skor`, `W`). AI tidak dipanggil kecuali diaktifkan melalui `USE_AI=on` atau `--pakai-ai`. Paper trading, signal engine, dan tes indikator mengambil universe langsung dari daftar bullish/bearish di `daftar_40.json`; output `daftar_ai.json` dan `penilai_ai.json` bukan sumber kandidat paper.
+`ai_pemilih.py` menampilkan kolom penyaring (`Ubah24j`, volume, `RasioVol`, `Skor`, `W`). AI tidak dipanggil kecuali diaktifkan. Paper trading, signal engine, dan tes indikator mengambil universe langsung dari daftar bullish/bearish di `daftar_40.json`; output `daftar_ai.json` dan `penilai_ai.json` bukan sumber kandidat paper.
 
-Contoh Demo di atas tidak boleh dianggap format final untuk semua token. Nilai entry/SL/TP, contract size, minimum notional, dan harga harus dibuat dari setup bot serta market metadata bursa.
+Nilai entry/SL/TP, contract size, minimum notional, dan harga harus berasal dari setup bot serta market metadata bursa. Contoh pada langkah uji Demo di bawah hanya menunjukkan format perintah.
 
 ## Dashboard lokal
 
@@ -194,6 +186,10 @@ Masukkan `BOT_CONTROL_TOKEN` pada panel Kontrol Bot di dashboard. Tombol aman da
 
 Pilihan candle 5 menit, 15 menit, atau 30 menit tersedia di panel Kontrol Bot. Pilihan disimpan lokal sebagai `dashboard_config.json`, dikirim sebagai variabel proses `CANDLE_TIMEFRAME`, dan dipakai oleh penyaringan sinyal, penilai AI, signal engine, serta pemantauan paper. Scanner yang sedang berjalan perlu dihentikan dan dimulai ulang agar memakai candle baru.
 
+Dashboard menampilkan token dari `daftar_40.json`, beserta harga terakhir, perubahan 24 jam, arah bullish/bearish, dan skor bot dari `penilai_ai.json`. Titik skor memakai warna: ungu 100–86, hijau 85–60, kuning 59–40, dan merah 39–0. Token watchlist ditandai `★`.
+
+Eksekusi Live belum tersedia. Jangan gunakan tombol Live dashboard sebagai pengiriman order; fase safeguard dan rollout Live belum diimplementasikan.
+
 TP dan SL dapat dipilih terpisah:
 
 - **TP Support/Resistance** memakai level S/R lawan atau mode struktur yang sudah dikonfigurasi.
@@ -203,42 +199,91 @@ TP dan SL dapat dipilih terpisah:
 
 Contoh: TP 100% ATR berarti jarak target satu ATR; SL 50% ATR berarti setengah ATR. Aturan RR dan batas risk ATR tetap memvalidasi setiap titik grid.
 
-## Uji terpadu Paper / Phase 6 / Demo
+## Langkah uji Demo (Phase 7)
 
-Alur uji aman digabung untuk mengurangi proses terpisah:
+Ikuti urutan ini. Gunakan akun dan API key **Bitget Demo khusus**, bukan API key Live. Fase 7 belum membuktikan bahwa skema UTA v3 dan TP/SL bekerja di akun Anda.
+
+### 1. Pastikan paper siap dan siapkan konfigurasi Demo
+
+Selesaikan pengamatan paper terlebih dahulu (disarankan 1–2 minggu), tinjau metrik dan batas risikonya. Salin `env.example` menjadi `.env`, lalu isi konfigurasi berikut menggunakan kredensial Demo:
+
+```dotenv
+MODE=demo
+DRY_RUN=off
+DEMO_API=on
+DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM
+DEMO_LOOP_EXECUTION_VERIFIED=off
+BITGET_API_KEY=<Demo API key>
+BITGET_SECRET_KEY=<Demo secret>
+BITGET_PASSPHRASE=<Demo passphrase>
+```
+
+Jangan isi `DEMO_LOOP_EXECUTION_VERIFIED=on` dulu. API key cukup memiliki izin baca dan trade; jangan aktifkan izin withdraw.
+
+### 2. Jalankan pemeriksaan lokal tanpa order
+
+Dari folder `Bot Tree`, jalankan:
 
 ```bash
-python uji_paper_demo.py --once
+python tes_demo_phase7.py
+python tes_uji_demo_unified.py
+python tes_paper_partial.py
+python tes_paper_slippage.py
+```
+
+Tes ini tidak mengirim order. Jika ada yang gagal, perbaiki dulu sebelum melanjutkan.
+
+### 3. Verifikasi koneksi dan buat sinyal terbaru
+
+```bash
+python cek_koneksi.py
+python penyaring.py
+python cek_risk_universe.py
+python cek_kelayakan.py
+python signal_engine.py
+```
+
+Pastikan koneksi/saldo terbaca, periksa hasil kelayakan, lalu tinjau `signal.json`. AI kelayakan bersifat opsional:
+
+```bash
+python ai_kelayakan.py --pakai-ai
+```
+
+AI hanya memberi pendapat; gate formula tetap menentukan kelayakan.
+
+### 4. Periksa preflight tanpa mengirim
+
+Jalankan satu siklus paper dan preflight Demo:
+
+```bash
 python uji_paper_demo.py --once --demo-preflight
-python paper_metrics.py --journal paper_trades.jsonl --capital 25
 ```
 
-`uji_paper_demo.py --once` menjalankan satu siklus paper, memperbarui `paper_trades.jsonl`, dan menampilkan gate Phase 6. Tambah `--demo-preflight` untuk membuat rencana preflight dari sinyal layak; runner ini tidak mengirim order Demo atau Live.
-
-Untuk uji sesungguhnya pada akun Demo dengan satu perintah:
+Perintah ini tidak mengirim order. Untuk melihat payload satu simbol, gunakan nilai entry, SL, TP, dan notional dari setup yang benar-benar sedang ditinjau:
 
 ```bash
-# Preflight dan monitoring, tanpa mengirim order
-python uji_demo_unified.py --once
-
-# Loop Demo/Phase 7 dan Paper/Phase 6; mengirim order Demo setelah semua gate lolos
-python uji_demo_unified.py --days 14 --interval 300 --send-demo --refresh
+python demo_phase7.py BTC LONG 65000 63000 68000 10
 ```
 
-Perintah Demo menggabungkan scanner paper, refresh penyaring/sinyal, sinkronisasi jurnal paper, perhitungan gate Phase 6, preflight Phase 7, pengiriman limit Demo yang tunduk pada TP/SL, dan pemantauan posisi unrealized/closed PnL. Hasil tersimpan terpisah di `demo_test_trades.jsonl` dan `demo_test_state.json`; hasil paper tetap di `paper_trades.jsonl`.
+Angka di atas hanya contoh format—jangan menyalinnya sebagai harga trading. Preflight harus lolos batas minimum, presisi, dan geometri TP/SL.
 
-Pengiriman Demo tetap ditolak bila `MODE` bukan `demo`, `DRY_RUN=on`, `DEMO_API=off`, `DEMO_CONFIRM` salah, atau key Demo belum lengkap. Script tidak pernah mengirim order Live.
+### 5. Uji satu order Demo secara manual
 
-Dashboard menampilkan token dari `daftar_40.json`, beserta harga terakhir, perubahan 24 jam, arah bullish/bearish, dan skor bot dari `penilai_ai.json`. Titik skor memakai warna: ungu 100–86, hijau 85–60, kuning 59–40, dan merah 39–0. Token watchlist ditandai `★`.
+Lanjutkan hanya setelah memeriksa dokumentasi resmi Bitget UTA v3 dan payload preflight. Jalankan perintah `demo_phase7.py` yang sama dengan langkah sebelumnya, tambahkan `--send`, lalu periksa hasil order di akun Demo. Uji satu order kecil terlebih dahulu; jangan lanjut jika status, jumlah kontrak, TP, atau SL tidak sesuai.
 
-Untuk live:
+Sebelum mengaktifkan loop otomatis, validasi juga partial/full fill, pembatalan order pending, pemicu TP dan SL, serta rekonsiliasi setelah proses dimulai ulang. Checklist lengkap ada di `PHASE7.md`.
 
-1. Pastikan `MODE=live`, `LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA`, dan konfirmasi lanjutan yang berlaku sudah terpenuhi.
-2. Isi `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID`.
-3. Klik tombol Live di dashboard. Tombol hanya membuat permintaan persetujuan.
-4. Bot Telegram mengirim tombol **SETUJUI LIVE** atau **TOLAK**. Scanner live hanya dapat dimulai setelah tombol setuju.
+### 6. Jalankan loop Demo setelah semua pemeriksaan lulus
 
-Persetujuan live berakhir setelah 5 menit. Tombol stop dapat menghentikan scanner. Simpan token, Telegram bot token, API Bitget, dan `.env` hanya di tablet; jangan menaruhnya di GitHub Pages atau file yang dikirim ke GitHub.
+Hanya setelah seluruh validasi manual selesai, ubah `DEMO_LOOP_EXECUTION_VERIFIED=on` di `.env`, lalu mulai loop:
+
+```bash
+python uji_demo_unified.py --days 14 --interval 300 --send-demo
+```
+
+Runner mengulang pemeriksaan dan pipeline saat mulai, lalu memindai tiap 5 menit. Jika belum ada posisi terisi selama 6 jam, runner membatalkan order entry pending yang terlacak dan mengulang pipeline. Jika posisi sudah terisi, runner menunggu posisi selesai, membatalkan sisa order entry yang terlacak, lalu mencari setup berikutnya. Opsi `--refresh` menyegarkan penyaring dan sinyal pada setiap scan; tanpa opsi itu, pipeline penuh diulang saat mulai dan setelah periode idle.
+
+Pantau `demo_test_state.json`, `demo_test_trades.jsonl`, dan jurnal paper. Jika koneksi atau rekonsiliasi gagal, runner menahan entry baru. **Ctrl+C hanya menghentikan proses; itu bukan bukti bahwa posisi atau order di exchange sudah ditutup/dibatalkan.** Periksa akun Demo sebelum menghentikan atau memulai ulang runner. Jangan gunakan mode Live.
 
 ## Struktur file
 
@@ -322,7 +367,7 @@ Demo hanya diperbolehkan bila semuanya terpenuhi:
 - `DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM`
 - Key, secret, dan passphrase berasal dari **Demo API Key**
 
-Live ditolak oleh adapter Demo. Sebelum mengirim Demo, verifikasi skema UTA v3 terbaru dari dokumentasi resmi Bitget, minimum order, contract size, payload TP/SL, partial fill, cancel, restart/reconciliation, dan timeout/duplikasi client ID.
+Untuk loop otomatis, `DEMO_LOOP_EXECUTION_VERIFIED=on` juga wajib; biarkan `off` sampai pengujian manual pada langkah uji Demo lulus. Live ditolak oleh adapter Demo. Sebelum mengirim Demo, verifikasi skema UTA v3 terbaru dari dokumentasi resmi Bitget, minimum order, contract size, payload TP/SL, partial fill, cancel, restart/reconciliation, dan timeout/duplikasi client ID.
 
 Bandingkan hasil Demo terhadap paper: perbedaan yang wajar adalah slippage dan eksekusi aktual. Demo yang positive tidak menjamin live profit.
 

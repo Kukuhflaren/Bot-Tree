@@ -24,6 +24,7 @@ if CANDLE_TIMEFRAME not in ("5m", "15m", "30m"):
 
 DEMO_API = os.getenv("DEMO_API", "off").strip().lower() == "on"
 DEMO_CONFIRM = os.getenv("DEMO_CONFIRM", "").strip()
+DEMO_LOOP_EXECUTION_VERIFIED = os.getenv("DEMO_LOOP_EXECUTION_VERIFIED", "off").strip().lower() == "on"
 
 BITGET_API_KEY = os.getenv("BITGET_API_KEY", "")
 BITGET_SECRET_KEY = os.getenv("BITGET_SECRET_KEY", "")

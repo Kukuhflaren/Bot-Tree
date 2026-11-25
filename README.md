@@ -84,16 +84,47 @@ Jika `py -3.12` tidak tersedia, gunakan `python -m venv venv` setelah memastikan
 Pasang Termux dari sumber resmi yang Anda gunakan, lalu siapkan Python dan editor. Letakkan salinan project di `~/bot-tree` (melalui Git atau transfer file); jalankan bot dari direktori home Termux, bukan langsung dari penyimpanan bersama.
 
 ```bash
-pkg update
-pkg upgrade
-pkg install python git nano
-cd ~/bot-tree
-python -m venv venv
+# 1. Update repositori Termux
+pkg update && pkg upgrade -y
+
+# 2. Instal Python, Git, dan Editor
+pkg install python git nano -y
+
+# 3. PENTING: Instal cryptography versi Termux (mencegah error PyLong_Type)
+pkg install python-cryptography -y
+
+# 4. Masuk ke folder home (jika belum)
+cd ~
+
+# 5. Clone repositori (jika belum punya) atau masuk ke foldernya
+# git clone https://github.com/Kukuhflaren/Bot-Tree.git
+cd Bot-Tree
+
+# 6. Buat Virtual Environment DENGAN akses sistem (--system-site-packages)
+# Ini wajib agar venv bisa melihat python-cryptography yang tadi diinstal
+python -m venv --system-site-packages venv
+
+# 7. Aktifkan venv
 source venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+
+# 8. Instal ccxt tanpa dependensi bawaan (mencegah error orjson)
+pip install --no-deps ccxt
+
+# 9. Instal dependensi pendukung secara manual
+pip install python-dotenv certifi requests aiohttp yarl typing_extensions
+
+# 10. Verifikasi instalasi (Pastikan tidak ada error)
+python -c "import ccxt; print('CCXT Siap, versi:', ccxt.__version__)"
+
+# 11. Salin file contoh
 cp env.example .env
+
+# 12. Buka file .env dengan editor nano
 nano .env
+
+# 13. Kunci CPU (wajib untuk Android)
+termux-wake-lock
+
 ```
 
 Apabila pemasangan `pandas` atau paket lain gagal pada versi Termux/Python Anda, jangan lanjut ke Demo. Selesaikan kompatibilitas dependensi terlebih dahulu. Verifikasi paket:

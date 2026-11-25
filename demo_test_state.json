@@ -1,8 +1,8 @@
 {
   "active": {},
-  "started": "2026-11-25T13:06:28.407423+00:00",
+  "started": "2026-11-25T13:34:11.267551+00:00",
   "send_attempts": 0,
   "opened_orders": 0,
-  "cycle_started_at": null,
+  "cycle_started_at": "2026-11-25T15:10:14.986204+00:00",
   "pipeline_ready": false
 }

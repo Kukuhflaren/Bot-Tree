@@ -50,17 +50,23 @@ def now_iso() -> str:
 
 
 def run_command(script: str, args: list[str] | None = None) -> tuple[bool, str]:
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["PYTHONUTF8"] = "1"
     try:
         result = subprocess.run(
             [sys.executable, str(BASE_DIR / script), *(args or [])],
             cwd=str(BASE_DIR),
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=env,
             timeout=300,
         )
     except subprocess.TimeoutExpired as exc:
         return False, f"{script} timeout setelah 300 detik: {exc}"
-    output = (result.stdout + "\n" + result.stderr).strip()
+    output = ((result.stdout or "") + "\n" + (result.stderr or "")).strip()
     return result.returncode == 0, output[-6000:]
 
 

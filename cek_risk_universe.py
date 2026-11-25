@@ -44,35 +44,36 @@ def main():
     size = risk.ringkasan_size()
     print("\n2. Ukuran posisi (satu setup)")
     ok(
-        f"Modal {size['modal_usdt']} → margin {size['margin_usdt']} USDT "
-        f"({size['risk_pct']}%) → notional ≈ {size['notional_usdt']} USDT @ {size['leverage']}x"
+        f"Modal {size['modal_usdt']} -> margin {size['margin_usdt']} USDT "
+        f"({size['risk_pct']}% alokasi margin, bukan rugi di SL) -> "
+        f"notional ~= {size['notional_usdt']} USDT @ {size['leverage']}x"
     )
 
     print("\n3. boleh_order_baru()")
     b, alasan = risk.boleh_order_baru({})
     if b:
-        ok(f"state kosong → {alasan}")
+        ok(f"state kosong -> {alasan}")
     else:
         gagal(f"state kosong ditolak: {alasan}")
         masalah += 1
 
     b2, a2 = risk.boleh_order_baru({"open_tokens": ["BTC"]})
     if not b2 and config.MAX_OPEN_TOKENS <= 1:
-        ok(f"1 token terbuka → ditolak ({a2})")
+        ok(f"1 token terbuka -> ditolak ({a2})")
     else:
         gagal(f"1 token terbuka: boleh={b2} alasan={a2}")
         masalah += 1
 
     b3, a3 = risk.boleh_order_baru({"daily_pnl_usdt": -abs(config.MAX_DAILY_LOSS_USDT)})
     if not b3:
-        ok(f"daily loss limit → ditolak ({a3})")
+        ok(f"daily loss limit -> ditolak ({a3})")
     else:
         gagal("daily loss limit tidak menolak")
         masalah += 1
 
     b4, a4 = risk.boleh_order_baru({"consecutive_losses": config.MAX_CONSECUTIVE_LOSSES})
     if not b4:
-        ok(f"consecutive losses → ditolak ({a4})")
+        ok(f"consecutive losses -> ditolak ({a4})")
     else:
         gagal("consecutive losses tidak menolak")
         masalah += 1
@@ -91,6 +92,11 @@ def main():
         ok("TOKEN_BLACKLIST kosong (eksperimen — tidak ada yang ditolak blacklist)")
     else:
         ok(f"TOKEN_BLACKLIST aktif: {len(config.TOKEN_BLACKLIST)} pola")
+
+    if config.EXCLUDE_RWA:
+        ok("EXCLUDE_RWA=on (saham/ETF/komoditas sesi dibuang, watchlist tetap lolos)")
+    else:
+        ok("EXCLUDE_RWA=off (saham/ETF boleh masuk daftar)")
 
     # Uji prioritas prefer
     if mode == "prefer" and wl:
@@ -123,7 +129,7 @@ def main():
     if masalah == 0:
         print(
             "risk + universe Aman.\n"
-            "Urutan lanjut: penyaring → (opsional AI) → penilai_ai → paper/scanner.\n"
+            "Urutan lanjut: penyaring -> (opsional AI) -> penilai_ai -> paper/scanner.\n"
             "Cek: python cek_kelayakan.py atau python ai_kelayakan.py --pakai-ai"
         )
     else:

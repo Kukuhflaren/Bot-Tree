@@ -55,6 +55,32 @@ class MockExchange:
         return {"id": "exit-order", "status": "closed"}
 
 
+def test_run_command_uses_utf8_pipe():
+    captured = {}
+
+    class Result:
+        returncode = 0
+        stdout = "Modal 25 \u2192 margin"
+        stderr = ""
+
+    def fake_run(*_args, **kwargs):
+        captured.update(kwargs)
+        return Result()
+
+    original = unified.subprocess.run
+    unified.subprocess.run = fake_run
+    try:
+        ok, output = unified.run_command("scanner.py", ["--sekali"])
+    finally:
+        unified.subprocess.run = original
+    assert ok
+    assert "\u2192" in output
+    assert captured["encoding"] == "utf-8"
+    assert captured["errors"] == "replace"
+    assert captured["env"]["PYTHONIOENCODING"] == "utf-8"
+    print("[OK] pipeline subprocess reads UTF-8 instead of the Windows pipe code page")
+
+
 def test_active_positions_only_counts_nonzero_contracts():
     exchange = MockExchange([
         {"symbol": "BTC/USDT:USDT", "contracts": 1},
@@ -377,6 +403,7 @@ def test_risk_notional_uses_latest_config():
 
 
 def main():
+    test_run_command_uses_utf8_pipe()
     test_active_positions_only_counts_nonzero_contracts()
     test_position_lookup_failure_is_not_treated_as_empty()
     test_position_without_contract_size_fails_closed()

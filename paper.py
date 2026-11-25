@@ -14,7 +14,8 @@ Pakai:
   python paper.py                  # satu siklus (cek sinyal + update posisi)
   python paper.py --loop           # loop terus (setiap ~60 detik)
   python paper.py --status         # tampilkan ringkasan state saja
-  python paper.py --reset          # reset state (hati-hati)
+  python paper.py --reset          # reset state hanya jika tidak ada posisi terbuka
+  python paper.py --reset --ya     # buang posisi terbuka (eksperimen dianggap batal)
 """
 from __future__ import annotations
 
@@ -58,6 +59,68 @@ def _id_posisi(simbol: str) -> str:
 # Analisis kandidat dari universe yang ditampilkan
 # ---------------------------------------------------------------------------
 
+def _alasan_tolak(a: dict[str, Any], grid: list[dict[str, Any]]) -> list[str]:
+    """Nama pintu yang gagal, singkat, untuk log scanner. Bukan keputusan baru."""
+    valid = [g for g in grid if g.get("valid")]
+    label = {
+        "trend_structure": "tren",
+        "ema": "ema",
+        "macd": "macd",
+        "near_sr": "dekat_sr",
+        "vwap": "vwap",
+        "trend_30m": "tren_30m",
+        "extreme_candle": "ekstrem",
+        "minimum_score": "skor",
+        "grid_available": "grid",
+    }
+    alasan: list[str] = []
+    for nama in pa.kegagalan_gate(a, valid):
+        if nama == "valid_risk_reward_grid":
+            continue
+        teks = label.get(nama, nama)
+        if teks not in alasan:
+            alasan.append(teks)
+    if not valid:
+        spesifik: list[str] = []
+        for titik in grid:
+            for tolak in titik.get("tolak") or []:
+                if str(tolak).startswith("risk_atr"):
+                    kunci = "risk_atr"
+                elif str(tolak).startswith("RR"):
+                    kunci = "rr"
+                elif tolak == "tanpa TP nyata":
+                    kunci = "tanpa_tp"
+                else:
+                    kunci = "grid"
+                if kunci not in spesifik:
+                    spesifik.append(kunci)
+        if not grid and "grid" not in alasan:
+            alasan.append("grid")
+        for kunci in spesifik:
+            if kunci not in alasan:
+                alasan.append(kunci)
+    return alasan or ["lain"]
+
+
+def _cetak_tolakan(tolakan: list[tuple[str, str, list[str], Any]]) -> None:
+    if not tolakan:
+        return
+    hitung: dict[str, int] = {}
+    for _, _, alasan, _ in tolakan:
+        for nama in alasan:
+            hitung[nama] = hitung.get(nama, 0) + 1
+    ringkas = ", ".join(f"{nama}={jumlah}" for nama, jumlah in sorted(hitung.items(), key=lambda x: -x[1]))
+    print(f"  Tolak: {ringkas}")
+    for nama, sisi, alasan, jarak in tolakan[:12]:
+        jarak_txt = ""
+        if isinstance(jarak, (int, float)):
+            jarak_txt = f" jarak_atr={jarak:.1f}x"
+        print(f"    {nama:8} {sisi:5} [{', '.join(alasan)}]{jarak_txt}")
+    sisa = len(tolakan) - 12
+    if sisa > 0:
+        print(f"    ... {sisa} simbol lain ditolak")
+
+
 def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     """Analisis kandidat bullish/bearish yang tampil di daftar_40.json."""
     try:
@@ -72,6 +135,7 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     }
     ex = dp.exchange_publik()
     hasil = []
+    tolakan: list[tuple[str, str, list[str], Any]] = []
     gagal_simbol = 0
     for kunci, arah in (("bullish", 1), ("bearish", -1)):
         for k in data[kunci]:
@@ -96,6 +160,13 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
                         a,
                     )
                     hasil.append(snap)
+                else:
+                    tolakan.append((
+                        simbol.split("/")[0],
+                        "LONG" if arah > 0 else "SHORT",
+                        _alasan_tolak(a, grid),
+                        a.get("jarak_atr"),
+                    ))
             except Exception as e:
                 print(f"  Sinyal: gagal menganalisis {simbol}: {type(e).__name__}: {e}")
                 gagal_simbol += 1
@@ -107,6 +178,7 @@ def muat_sinyal_layak(maks: int = 5) -> list[dict[str, Any]]:
     if gagal_simbol:
         print(f"  Sinyal: {gagal_simbol} simbol gagal dianalisis.")
     print(f"  Sinyal: {len(hasil)} layak dari daftar_40.json")
+    _cetak_tolakan(tolakan)
     return hasil
 
 
@@ -683,6 +755,13 @@ def satu_siklus(state: dict[str, Any], buka_baru: bool = True) -> None:
 
 
 def tampil_status(state: dict[str, Any]) -> None:
+    try:
+        _cetak_status(state)
+    except Exception as exc:
+        print(f"  Status paper tidak tercetak utuh: {type(exc).__name__}")
+
+
+def _cetak_status(state: dict[str, Any]) -> None:
     print("=== STATUS PAPER ===")
     print(st.ringkasan(state))
     print()
@@ -706,9 +785,9 @@ def tampil_status(state: dict[str, Any]) -> None:
             )
             # Detail level
             for t in p["titik_grid"]:
-                print(f"      {t['nama']:4} @ {t['harga']} → {t['status']}")
+                print(f"      {t['nama']:4} @ {t['harga']} -> {t['status']}")
             for level in p.get("tp_ladder", []):
-                print(f"      TP  @ {level['harga']} → {level['status']}")
+                print(f"      TP  @ {level['harga']} -> {level['status']}")
     print()
     riwayat = state.get("riwayat") or []
     if riwayat:
@@ -729,11 +808,19 @@ def main():
     parser.add_argument("--loop", action="store_true", help="Jalankan terus setiap ~60 detik")
     parser.add_argument("--status", action="store_true", help="Tampilkan status saja")
     parser.add_argument("--reset", action="store_true", help="Reset state.json ke awal")
+    parser.add_argument("--ya", action="store_true", help="Izinkan reset meski masih ada posisi terbuka")
     parser.add_argument("--no-buka", action="store_true", help="Hanya update posisi, jangan buka baru")
     parser.add_argument("--interval", type=int, default=60, help="Detik antar siklus (default 60)")
     args = parser.parse_args()
 
     if args.reset:
+        lama = st.muat()
+        terbuka = lama.get("open_positions") or []
+        if terbuka and not args.ya:
+            print(f"Reset ditolak: {len(terbuka)} posisi paper masih terbuka.")
+            print("Tunggu SL/TP. Reset paksa membuang eksperimen dan tidak menambah trade tertutup.")
+            print("Pakai: python paper.py --reset --ya")
+            raise SystemExit(1)
         s = st.state_kosong()
         st.simpan(s)
         print("State di-reset.")

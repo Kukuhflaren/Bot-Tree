@@ -120,7 +120,7 @@ Salin dari `env.example`. Baris berikut adalah nilai awal eksperimen, bukan tari
 | Paper fill | `PAPER_FILL_THROUGH_BPS=1`, `PAPER_FILL_PARTICIPATION_PCT=1` | Syarat trade-through dan batas volume candle untuk simulasi. |
 | Risk | `MODAL_DEMO_USDT`, `LEVERAGE`, `RISK_PER_SETUP_PCT`, `MAX_OPEN_TOKENS`, `MAX_DAILY_LOSS_USDT`, `MAX_CONSECUTIVE_LOSSES`, `KILL_SWITCH` | Batas ukuran dan penghentian entry. |
 | TP/SL | `TP_MODE`, `TP_METHOD`, `TP_ATR_PERCENT`, `SL_METHOD`, `SL_ATR_PERCENT`, `SL_BUFFER_ATR`, `RR_MIN`, `RISK_ATR_MIN`, `RISK_ATR_MAX` | Pilihan perhitungan TP/SL dan validasi risk. |
-| Universe | `WATCHLIST_MODE`, `WATCHLIST_FILE`, `TOKEN_BLACKLIST`, `PENYARING_VOL_MIN_USDT`, `PENYARING_TOP_VOLUME`, `JUMLAH_PER_SISI` | Konfigurasi penyaringan token. |
+| Universe | `WATCHLIST_MODE`, `WATCHLIST_FILE`, `TOKEN_BLACKLIST`, `EXCLUDE_RWA`, `UBAH_IDEAL_SKOR`, `PENYARING_VOL_MIN_USDT`, `PENYARING_TOP_VOLUME`, `JUMLAH_PER_SISI` | Konfigurasi penyaringan token. `EXCLUDE_RWA=on` membuang saham/ETF/komoditas sesi kecuali yang ada di watchlist. |
 | AI | `USE_AI=off`, `AI_PROVIDER`, key provider dan batas panggilan | AI opsional; signal engine tetap formula-only. |
 
 Estimasi funding menggunakan funding rate saat ini. Saat trade ditutup, runner meminta funding history aktual; jika data fill, fee, atau funding yang diperlukan tidak tersedia, PnL tidak difinalisasi dan entry berikutnya ditahan.

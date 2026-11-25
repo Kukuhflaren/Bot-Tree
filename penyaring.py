@@ -6,11 +6,14 @@ WATCHLIST_MODE=only:
   Hanya token watchlist.
 WATCHLIST_MODE=off:
   Tidak ada prioritas watchlist.
+
+Skor mengurutkan kandidat pullback ke support/resistance, bukan pengejar gerakan 24 jam
+terbesar. Kontrak isRwa (saham, ETF, komoditas sesi) dibuang kecuali ada di watchlist.
 """
 import json
-from datetime import datetime, timezone
-
 import math
+import urllib.request
+from datetime import datetime, timezone
 
 import ccxt
 
@@ -19,6 +22,7 @@ import universe as uni
 
 FILE_HASIL = "daftar_40.json"
 STABLECOIN = {"USDC", "USDE", "FDUSD", "TUSD", "DAI", "USDD"}
+URL_KONTRAK = "https://api.bitget.com/api/v2/mix/market/contracts?productType=usdt-futures"
 
 
 def buat_exchange():
@@ -45,14 +49,53 @@ def ubah_persen(t):
     return None
 
 
-def saring_likuid(tickers, watchlist):
+def basis_rwa_dari_kontrak(rows) -> set[str]:
+    """Base coin yang Bitget tandai isRwa=YES."""
+    hasil = set()
+    if not isinstance(rows, list):
+        return hasil
+    for row in rows:
+        if not isinstance(row, dict) or str(row.get("isRwa", "")).upper() != "YES":
+            continue
+        base = str(row.get("baseCoin") or "").strip().upper()
+        if base:
+            hasil.add(base)
+    return hasil
+
+
+def ambil_basis_rwa() -> set[str]:
+    """Kontrak saham/ETF/komoditas sesi. Kosong jika fitur mati atau daftar gagal dibaca."""
+    if not config.EXCLUDE_RWA:
+        return set()
+    try:
+        with urllib.request.urlopen(URL_KONTRAK, timeout=20) as resp:
+            payload = json.load(resp)
+        rows = payload.get("data") if isinstance(payload, dict) else None
+        basis = basis_rwa_dari_kontrak(rows)
+    except Exception as exc:
+        print(
+            f"Catatan: daftar kontrak RWA tidak terbaca ({type(exc).__name__}: {exc}). "
+            "Saringan saham/ETF dilewati putaran ini."
+        )
+        return set()
+    if not basis:
+        print("Catatan: respons kontrak tidak berisi isRwa=YES. Saringan saham/ETF dilewati.")
+    return basis
+
+
+def saring_likuid(tickers, watchlist, rwa=None):
     hasil = []
-    dibuang = {"blacklist": 0, "watchlist": 0, "volume": 0, "data": 0}
+    dibuang = {"blacklist": 0, "watchlist": 0, "volume": 0, "data": 0, "rwa": 0}
+    rwa = {str(s).upper() for s in (rwa or set())}
+    wl = {str(s).upper() for s in watchlist}
     for simbol, t in tickers.items():
         if not simbol.endswith(":USDT"):
             continue
         base = simbol.split("/")[0]
         if base in STABLECOIN:
+            continue
+        if base.upper() in rwa and base.upper() not in wl:
+            dibuang["rwa"] += 1
             continue
         ok, alasan = uni.lolos_universe(base, watchlist)
         if not ok:
@@ -89,11 +132,22 @@ def tambah_rasio_volume(ex, kandidat):
 
 
 def hitung_skor(k):
-    ubah = abs(k["ubah_24j"])
-    if config.UBAH_MAKS_SKOR > 0:
-        ubah = min(ubah, config.UBAH_MAKS_SKOR)
-    likuid = math.log10(max(k["vol_24j_usdt"], 1e6) / 1e6) + 1
-    return ubah * min(k["rasio_vol"], 3.0) * likuid
+    """Likuiditas dulu. Gerakan 24j yang sudah jauh dari UBAH_IDEAL_SKOR diturunkan.
+
+    Daftar ini hanya kandidat untuk syarat 'dekat S/R'. Mengejar perubahan 24 jam
+    terbesar mengisi daftar dengan token yang justru gagal di pintu itu.
+    """
+    ubah = abs(float(k.get("ubah_24j") or 0))
+    ideal = config.UBAH_IDEAL_SKOR
+    if ideal <= 0 or ubah <= ideal:
+        faktor = 1.0
+    else:
+        faktor = ideal / ubah
+    if config.UBAH_MAKS_SKOR > 0 and ubah > config.UBAH_MAKS_SKOR:
+        faktor *= 0.25
+    likuid = math.log10(max(float(k.get("vol_24j_usdt") or 0), 1e6) / 1e6) + 1
+    rasio = min(float(k.get("rasio_vol") or 1.0), 3.0)
+    return faktor * rasio * likuid * 100
 
 
 def susun_daftar(kandidat, jumlah, watchlist):
@@ -123,14 +177,15 @@ def jalankan(ex=None):
     ex = ex or buat_exchange()
     wl = uni.muat_watchlist()
     tickers = ambil_semua_ticker(ex)
-    kandidat, dibuang = saring_likuid(tickers, wl)
+    rwa = ambil_basis_rwa()
+    kandidat, dibuang = saring_likuid(tickers, wl, rwa)
     print(
         f"Total ticker: {len(tickers)} | lolos saring: {len(kandidat)} "
         f"| mode watchlist: {config.WATCHLIST_MODE} ({len(wl)} simbol)"
     )
     print(
         f"Dibuang — blacklist: {dibuang['blacklist']} | luar watchlist(only): {dibuang['watchlist']} "
-        f"| volume rendah: {dibuang['volume']} | data kosong: {dibuang['data']}"
+        f"| saham/ETF/RWA: {dibuang['rwa']} | volume rendah: {dibuang['volume']} | data kosong: {dibuang['data']}"
     )
     kandidat, gagal = tambah_rasio_volume(ex, kandidat)
     if gagal:

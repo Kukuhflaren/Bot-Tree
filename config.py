@@ -1,8 +1,25 @@
 """Membaca semua pengaturan dari file .env. Tidak ada API key di dalam kode."""
 import os
+import sys
+
 from dotenv import load_dotenv
 
 load_dotenv()  # membaca file .env di folder yang sama
+
+
+def _siapkan_konsol() -> None:
+    """Windows memakai cp1252 saat stdout di-pipe. UTF-8 mencegah UnicodeEncodeError pada log."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+
+
+_siapkan_konsol()
 
 
 def _f(nama, default):
@@ -96,6 +113,11 @@ PENYARING_VOL_MIN_USDT = _f("PENYARING_VOL_MIN_USDT", 5000000)
 PENYARING_TOP_VOLUME = int(_f("PENYARING_TOP_VOLUME", 60))
 JUMLAH_PER_SISI = int(_f("JUMLAH_PER_SISI", 20))
 UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 0)
+# Gerakan 24j di sekitar nilai ini tidak dihukum. Yang jauh lebih besar diturunkan:
+# strategi masuk butuh harga dekat S/R, bukan token yang sudah lari puluhan persen.
+UBAH_IDEAL_SKOR = _f("UBAH_IDEAL_SKOR", 4)
+# on = buang kontrak Bitget isRwa (saham, ETF, komoditas sesi). Isi watchlist tetap lolos.
+EXCLUDE_RWA = os.getenv("EXCLUDE_RWA", "on").strip().lower() != "off"
 # off    = tidak pakai watchlist (hanya blacklist + volume)
 # prefer = token di watchlist diutamakan masuk daftar_40 (token lain tetap boleh)
 # only   = HANYA token di watchlist yang boleh lolos

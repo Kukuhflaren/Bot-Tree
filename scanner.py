@@ -91,12 +91,15 @@ def satu_putaran(
     )
 
     paper.satu_siklus(state, buka_baru=buka_baru and boleh)
-    paper.tampil_status(state)
+    try:
+        paper.tampil_status(state)
+    except Exception as exc:
+        print(f"  Status paper tidak tercetak utuh: {type(exc).__name__}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scanner continuous Bot-Tree (Fase C)")
-    parser.add_argument("--interval", type=int, default=300, help="Detik antar putaran (default 300 ≈ 5m)")
+    parser.add_argument("--interval", type=int, default=300, help="Detik antar putaran (default 300, sekitar 5m)")
     parser.add_argument("--sekali", action="store_true", help="Satu putaran lalu keluar")
     parser.add_argument("--refresh-sinyal", action="store_true", help="Jalankan penilai_ai tiap putaran")
     parser.add_argument("--jumlah", type=int, default=8, help="Jumlah token ke penilai_ai")

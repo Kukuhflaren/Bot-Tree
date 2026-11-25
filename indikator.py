@@ -224,8 +224,6 @@ def _titik_grid(p, s, kandidat, cadangan, jarak_min, jarak_maks):
 
 
 def zona(skor):
-    if skor >= 100:
-        return "Persiapan tutup"
     if skor >= 90:
         return "Eksekusi"
     if skor >= 70:
@@ -326,13 +324,16 @@ def analisis(c, arah, dekat_sr_persen=0.5, skor_min=50, mode="persen", dekat_atr
         kand = [(f"R{i + 1}", x) for i, x in enumerate(atas[:2])] + ([("HH", HH)] if ph else [])
         cad = [(f"R{i + 3}", x) for i, x in enumerate(atas[2:])]
     grid = _titik_grid(p, s, kand, cad, jarak_min, jarak_maks)
-    skor = 100 if ekstrem else min(mentah, 99)
+    # Candle ekstrem menolak masuk di kedua arah. Jangan jadikan itu skor 100,
+    # karena label itu terlihat seperti sinyal arah padahal vetonya sama untuk long dan short.
+    skor = min(mentah, 99)
+    zona_nama = "Ekstrem" if ekstrem else zona(skor)
 
     layak_inti = all(dasar) and not ekstrem and mentah >= skor_min and len(grid) >= 1
     return {
         "harga": p, "candle_timestamp": L.get("t"),
         "S1": S1, "S2": S2, "R1": R1, "R2": R2, "HL": HL, "HH": HH,
-        "mentah": mentah, "skor": skor, "zona": zona(skor), "ekstrem": ekstrem,
+        "mentah": mentah, "skor": skor, "zona": zona_nama, "ekstrem": ekstrem,
         "syarat": syarat, "jarak_sr": jarak, "jarak_atr": jarak_atr, "dasar": dasar,
         "vwap": vw, "di_atas_vwap": di_atas_vwap, "vwap_ok": vwap_ok,
         "tren_30m": k30,

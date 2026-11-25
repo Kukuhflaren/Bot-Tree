@@ -2,6 +2,7 @@ import unittest
 
 import config
 import penilai_ai
+import dashboard_server
 import tempfile
 from pathlib import Path
 

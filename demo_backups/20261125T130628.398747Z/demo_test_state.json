@@ -1,0 +1,23 @@
+{
+  "active": {
+    "bt-5d3e67b6e13a40b981": {
+      "timestamp": "2026-11-23T11:34:49.551638+00:00",
+      "symbol": "CL/USDT:USDT",
+      "direction": "SHORT",
+      "entry": 83.281,
+      "sl": 84.308,
+      "tp": 81.786,
+      "notional": 5.82967,
+      "fee_usdt": 0,
+      "candle_timeframe": "30m",
+      "client_oid": "bt-5d3e67b6e13a40b981",
+      "order_observed": false,
+      "submission_uncertain": true
+    }
+  },
+  "started": "2026-11-23T02:46:26.654270+00:00",
+  "send_attempts": 1,
+  "opened_orders": 0,
+  "cycle_started_at": "2026-11-23T10:14:12.242131+00:00",
+  "pipeline_ready": true
+}

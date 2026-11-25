@@ -2,11 +2,11 @@
   "versi": 1,
   "mode": "demo",
   "dibuat": "2026-11-21T22:45:07.364016+00:00",
-  "diperbarui": "2026-11-24T18:01:20.663850+00:00",
+  "diperbarui": "2026-11-25T13:15:03.201640+00:00",
   "modal_awal": 25.0,
   "modal_saat_ini": 25.0,
   "daily_pnl_usdt": 0.0,
-  "daily_reset_tanggal": "2026-11-24",
+  "daily_reset_tanggal": "2026-11-25",
   "consecutive_losses": 0,
   "total_trades": 0,
   "total_wins": 0,
@@ -61,7 +61,7 @@
         "pnl_bersih": 0.0,
         "notional": 0.0
       },
-      "candle_terakhir_diproses": 1795541400000,
+      "candle_terakhir_diproses": 1795609800000,
       "status": "open",
       "skor_bot": 100,
       "rr_terbaik": 1.46

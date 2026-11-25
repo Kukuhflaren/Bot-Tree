@@ -1,0 +1,1265 @@
+{
+  "waktu": "2026-11-23T20:58:26.347836+00:00",
+  "watchlist_mode": "prefer",
+  "watchlist": [
+    "BTC",
+    "SPCX"
+  ],
+  "bullish": [
+    {
+      "simbol": "SPCX/USDT:USDT",
+      "harga": 133.76,
+      "ubah_24j": 1.889,
+      "vol_24j_usdt": 51738200.4996,
+      "rasio_vol": 1.1617715408110283,
+      "skor": 5.955693524092819,
+      "prioritas_watchlist": true
+    },
+    {
+      "simbol": "BTC/USDT:USDT",
+      "harga": 61167.0,
+      "ubah_24j": 0.435,
+      "vol_24j_usdt": 4630244201.92493,
+      "rasio_vol": 1.3521547554464661,
+      "skor": 2.7442490456686683,
+      "prioritas_watchlist": true
+    },
+    {
+      "simbol": "NVDA/USDT:USDT",
+      "harga": 164.97,
+      "ubah_24j": 23.916,
+      "vol_24j_usdt": 515282894.2425,
+      "rasio_vol": 3.0568528208142354,
+      "skor": 222.72274353007495,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ELSA/USDT:USDT",
+      "harga": 0.10218,
+      "ubah_24j": 19.035,
+      "vol_24j_usdt": 24508420.68723,
+      "rasio_vol": 8.142504119505611,
+      "skor": 136.44185171361667,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ACE/USDT:USDT",
+      "harga": 0.075,
+      "ubah_24j": 25.839,
+      "vol_24j_usdt": 16350400.998573,
+      "rasio_vol": 3.8226928474963806,
+      "skor": 132.81170449989546,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NVDL/USDT:USDT",
+      "harga": 16.61,
+      "ubah_24j": 45.472,
+      "vol_24j_usdt": 12613701.79286,
+      "rasio_vol": 3.857084516082972,
+      "skor": 126.05055356370192,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SOXL/USDT:USDT",
+      "harga": 43.26,
+      "ubah_24j": 28.254,
+      "vol_24j_usdt": 1225202361.814,
+      "rasio_vol": 1.518066092172747,
+      "skor": 124.12339354752523,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ARIA/USDT:USDT",
+      "harga": 0.30586,
+      "ubah_24j": 16.235,
+      "vol_24j_usdt": 19166481.00302,
+      "rasio_vol": 5.124815654453926,
+      "skor": 111.1712267652939,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZHIPU/USDT:USDT",
+      "harga": 45.65,
+      "ubah_24j": 16.395,
+      "vol_24j_usdt": 27441730.1823,
+      "rasio_vol": 2.67204728227508,
+      "skor": 106.82245527696399,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MU/USDT:USDT",
+      "harga": 704.05,
+      "ubah_24j": 13.641,
+      "vol_24j_usdt": 160989522.3947,
+      "rasio_vol": 2.259849825738499,
+      "skor": 98.85470405636566,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKHYNIX/USDT:USDT",
+      "harga": 876.96,
+      "ubah_24j": 11.116,
+      "vol_24j_usdt": 116142960.2776,
+      "rasio_vol": 2.7229367476660165,
+      "skor": 92.77171020948452,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "KORU/USDT:USDT",
+      "harga": 6.122,
+      "ubah_24j": 15.466,
+      "vol_24j_usdt": 151461375.22416,
+      "rasio_vol": 1.5974768305488292,
+      "skor": 78.57437259384267,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CRWV/USDT:USDT",
+      "harga": 48.53,
+      "ubah_24j": 15.906,
+      "vol_24j_usdt": 15494426.5917,
+      "rasio_vol": 2.2320258309917174,
+      "skor": 77.75693129843914,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SAMSUNG/USDT:USDT",
+      "harga": 143.61,
+      "ubah_24j": 9.945,
+      "vol_24j_usdt": 34274136.4527,
+      "rasio_vol": 3.358360422732267,
+      "skor": 75.63072616649814,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZHIPUHKD/USDT:USDT",
+      "harga": 356.77,
+      "ubah_24j": 15.71,
+      "vol_24j_usdt": 9689301.8671,
+      "rasio_vol": 2.3925755071869546,
+      "skor": 74.65949317157394,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CSOPSK2LHKD/USDT:USDT",
+      "harga": 14.236,
+      "ubah_24j": 21.602,
+      "vol_24j_usdt": 12937629.96043,
+      "rasio_vol": 1.7491363084626708,
+      "skor": 73.87843556707243,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MRVL/USDT:USDT",
+      "harga": 144.5,
+      "ubah_24j": 13.005,
+      "vol_24j_usdt": 24328200.4231,
+      "rasio_vol": 2.3478154310291397,
+      "skor": 72.85590668713672,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKHY/USDT:USDT",
+      "harga": 124.01,
+      "ubah_24j": 12.593,
+      "vol_24j_usdt": 99890384.077,
+      "rasio_vol": 1.894768565278711,
+      "skor": 71.57109631291397,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "INTW/USDT:USDT",
+      "harga": 5.74,
+      "ubah_24j": 20.361,
+      "vol_24j_usdt": 12113448.26233,
+      "rasio_vol": 1.687976523181007,
+      "skor": 70.33014237771259,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "TSM/USDT:USDT",
+      "harga": 364.04,
+      "ubah_24j": 9.766,
+      "vol_24j_usdt": 19889273.5235,
+      "rasio_vol": 3.0158675156454713,
+      "skor": 67.34493712854147,
+      "prioritas_watchlist": false
+    }
+  ],
+  "bearish": [
+    {
+      "simbol": "SOXS/USDT:USDT",
+      "harga": 49.63,
+      "ubah_24j": -34.43,
+      "vol_24j_usdt": 333799758.16179,
+      "rasio_vol": 1.5820298601488274,
+      "skor": 111.4852018362586,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SQQQ/USDT:USDT",
+      "harga": 45.97,
+      "ubah_24j": -13.898,
+      "vol_24j_usdt": 42833874.1164,
+      "rasio_vol": 2.4511513894764443,
+      "skor": 89.6547365407748,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKDD/USDT:USDT",
+      "harga": 9.429,
+      "ubah_24j": -31.014,
+      "vol_24j_usdt": 13326437.22676,
+      "rasio_vol": 1.8370476710293289,
+      "skor": 78.06402023421914,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BLESS/USDT:USDT",
+      "harga": 0.014507,
+      "ubah_24j": -16.822,
+      "vol_24j_usdt": 22645305.260295,
+      "rasio_vol": 1.299442835454866,
+      "skor": 51.478003493311135,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CL/USDT:USDT",
+      "harga": 80.238,
+      "ubah_24j": -4.568,
+      "vol_24j_usdt": 75451289.95002,
+      "rasio_vol": 2.2981311269768137,
+      "skor": 30.209350417156184,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BZ/USDT:USDT",
+      "harga": 86.66,
+      "ubah_24j": -4.127,
+      "vol_24j_usdt": 49034235.1219,
+      "rasio_vol": 2.286022571393848,
+      "skor": 25.38328835516104,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NATGAS/USDT:USDT",
+      "harga": 3.525,
+      "ubah_24j": -5.749,
+      "vol_24j_usdt": 7890640.5881,
+      "rasio_vol": 1.0793601695500896,
+      "skor": 11.772039956573698,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ARB/USDT:USDT",
+      "harga": 0.11195,
+      "ubah_24j": -2.948,
+      "vol_24j_usdt": 9479272.0624524,
+      "rasio_vol": 1.846741607966646,
+      "skor": 10.761947043733391,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AKE/USDT:USDT",
+      "harga": 0.0024772,
+      "ubah_24j": -10.918,
+      "vol_24j_usdt": 8162744.4090214,
+      "rasio_vol": 0.5024155337989332,
+      "skor": 10.487134275486154,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PIEVERSE/USDT:USDT",
+      "harga": 3.55898,
+      "ubah_24j": -3.336,
+      "vol_24j_usdt": 32888147.359,
+      "rasio_vol": 1.1990988073929683,
+      "skor": 10.068644991578202,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ANT/USDT:USDT",
+      "harga": 87.95,
+      "ubah_24j": -2.343,
+      "vol_24j_usdt": 121539379.693,
+      "rasio_vol": 1.073044873134043,
+      "skor": 7.755423201108975,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MMT/USDT:USDT",
+      "harga": 0.1951,
+      "ubah_24j": -10.954,
+      "vol_24j_usdt": 12100340.1198,
+      "rasio_vol": 0.2443287837633932,
+      "skor": 5.574352568641966,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ENA/USDT:USDT",
+      "harga": 0.10017,
+      "ubah_24j": -1.047,
+      "vol_24j_usdt": 37848930.13826,
+      "rasio_vol": 1.8332341754428043,
+      "skor": 4.948306251321854,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "WLD/USDT:USDT",
+      "harga": 0.2362,
+      "ubah_24j": -1.542,
+      "vol_24j_usdt": 15887167.569,
+      "rasio_vol": 1.4392040323531963,
+      "skor": 4.884678154541836,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MSFT/USDT:USDT",
+      "harga": 493.51,
+      "ubah_24j": -1.363,
+      "vol_24j_usdt": 11181054.1003,
+      "rasio_vol": 1.5063905410913474,
+      "skor": 4.205965894674392,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AVGO/USDT:USDT",
+      "harga": 313.29,
+      "ubah_24j": -1.348,
+      "vol_24j_usdt": 11504932.346,
+      "rasio_vol": 1.4716312440613857,
+      "skor": 4.088297149112292,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PUMP/USDT:USDT",
+      "harga": 0.00254,
+      "ubah_24j": -1.244,
+      "vol_24j_usdt": 13659492.4841,
+      "rasio_vol": 1.392102670490192,
+      "skor": 3.6980937332061137,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AAVE/USDT:USDT",
+      "harga": 97.04,
+      "ubah_24j": -1.151,
+      "vol_24j_usdt": 6319773.77,
+      "rasio_vol": 1.3945820362323529,
+      "skor": 2.8904211366015065,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AAPL/USDT:USDT",
+      "harga": 349.6,
+      "ubah_24j": -0.131,
+      "vol_24j_usdt": 12618962.4173,
+      "rasio_vol": 2.114783798704391,
+      "skor": 0.5820606107619287,
+      "prioritas_watchlist": false
+    }
+  ],
+  "kandidat": [
+    {
+      "simbol": "BTC/USDT:USDT",
+      "harga": 61167.0,
+      "ubah_24j": 0.435,
+      "vol_24j_usdt": 4630244201.92493,
+      "rasio_vol": 1.3521547554464661,
+      "skor": 2.7442490456686683,
+      "prioritas_watchlist": true
+    },
+    {
+      "simbol": "ETH/USDT:USDT",
+      "harga": 1722.88,
+      "ubah_24j": 0.174,
+      "vol_24j_usdt": 1772185051.3635,
+      "rasio_vol": 1.1451304185612923,
+      "skor": 0.8465268724895291,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SOXL/USDT:USDT",
+      "harga": 43.26,
+      "ubah_24j": 28.254,
+      "vol_24j_usdt": 1225202361.814,
+      "rasio_vol": 1.518066092172747,
+      "skor": 124.12339354752523,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NVDA/USDT:USDT",
+      "harga": 164.97,
+      "ubah_24j": 23.916,
+      "vol_24j_usdt": 515282894.2425,
+      "rasio_vol": 3.0568528208142354,
+      "skor": 222.72274353007495,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SOXS/USDT:USDT",
+      "harga": 49.63,
+      "ubah_24j": -34.43,
+      "vol_24j_usdt": 333799758.16179,
+      "rasio_vol": 1.5820298601488274,
+      "skor": 111.4852018362586,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "XAU/USDT:USDT",
+      "harga": 3640.21,
+      "ubah_24j": 2.442,
+      "vol_24j_usdt": 296093548.4554,
+      "rasio_vol": 1.3275454060719911,
+      "skor": 11.253907056335189,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SOL/USDT:USDT",
+      "harga": 72.734,
+      "ubah_24j": 3.688,
+      "vol_24j_usdt": 219992857.9865,
+      "rasio_vol": 1.2194979234334038,
+      "skor": 15.032510477704351,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SNDK/USDT:USDT",
+      "harga": 87.62,
+      "ubah_24j": 4.947,
+      "vol_24j_usdt": 175198993.96512,
+      "rasio_vol": 1.5372031544727787,
+      "skor": 24.6655788453363,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "XAG/USDT:USDT",
+      "harga": 43.15,
+      "ubah_24j": 3.801,
+      "vol_24j_usdt": 166049179.296,
+      "rasio_vol": 1.4920081826855696,
+      "skor": 18.262358934077234,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "XRP/USDT:USDT",
+      "harga": 0.9353,
+      "ubah_24j": 0.972,
+      "vol_24j_usdt": 162829283.9174,
+      "rasio_vol": 1.2032134628595714,
+      "skor": 3.756196604335339,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MU/USDT:USDT",
+      "harga": 704.05,
+      "ubah_24j": 13.641,
+      "vol_24j_usdt": 160989522.3947,
+      "rasio_vol": 2.259849825738499,
+      "skor": 98.85470405636566,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "KORU/USDT:USDT",
+      "harga": 6.122,
+      "ubah_24j": 15.466,
+      "vol_24j_usdt": 151461375.22416,
+      "rasio_vol": 1.5974768305488292,
+      "skor": 78.57437259384267,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "QQQ/USDT:USDT",
+      "harga": 651.44,
+      "ubah_24j": 3.822,
+      "vol_24j_usdt": 124414220.6863,
+      "rasio_vol": 3.6902584221634047,
+      "skor": 35.485779689944366,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ANT/USDT:USDT",
+      "harga": 87.95,
+      "ubah_24j": -2.343,
+      "vol_24j_usdt": 121539379.693,
+      "rasio_vol": 1.073044873134043,
+      "skor": 7.755423201108975,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKHYNIX/USDT:USDT",
+      "harga": 876.96,
+      "ubah_24j": 11.116,
+      "vol_24j_usdt": 116142960.2776,
+      "rasio_vol": 2.7229367476660165,
+      "skor": 92.77171020948452,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZEC/USDT:USDT",
+      "harga": 790.48,
+      "ubah_24j": 0.048,
+      "vol_24j_usdt": 107446878.5318,
+      "rasio_vol": 0.9687038646347215,
+      "skor": 0.14094379927782244,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKHY/USDT:USDT",
+      "harga": 124.01,
+      "ubah_24j": 12.593,
+      "vol_24j_usdt": 99890384.077,
+      "rasio_vol": 1.894768565278711,
+      "skor": 71.57109631291397,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CL/USDT:USDT",
+      "harga": 80.238,
+      "ubah_24j": -4.568,
+      "vol_24j_usdt": 75451289.95002,
+      "rasio_vol": 2.2981311269768137,
+      "skor": 30.209350417156184,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SNXX/USDT:USDT",
+      "harga": 2.104,
+      "ubah_24j": 9.072,
+      "vol_24j_usdt": 73169277.95687,
+      "rasio_vol": 1.236942410437243,
+      "skor": 32.142184291314926,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MSTR/USDT:USDT",
+      "harga": 84.47,
+      "ubah_24j": 2.252,
+      "vol_24j_usdt": 60827904.3166,
+      "rasio_vol": 1.592908667201362,
+      "skor": 9.987218168220375,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "HYPE/USDT:USDT",
+      "harga": 64.037,
+      "ubah_24j": 2.114,
+      "vol_24j_usdt": 54724949.8728,
+      "rasio_vol": 1.0602861196550113,
+      "skor": 6.137491520417981,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "OPENAI/USDT:USDT",
+      "harga": 1290.12,
+      "ubah_24j": 6.034,
+      "vol_24j_usdt": 52242275.79288,
+      "rasio_vol": 1.7793455529568238,
+      "skor": 29.182237303290517,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SPCX/USDT:USDT",
+      "harga": 133.76,
+      "ubah_24j": 1.889,
+      "vol_24j_usdt": 51738200.4996,
+      "rasio_vol": 1.1617715408110283,
+      "skor": 5.955693524092819,
+      "prioritas_watchlist": true
+    },
+    {
+      "simbol": "TQQQ/USDT:USDT",
+      "harga": 49.19,
+      "ubah_24j": 11.491,
+      "vol_24j_usdt": 50609953.3273,
+      "rasio_vol": 1.9231345558939483,
+      "skor": 59.76020465335192,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BZ/USDT:USDT",
+      "harga": 86.66,
+      "ubah_24j": -4.127,
+      "vol_24j_usdt": 49034235.1219,
+      "rasio_vol": 2.286022571393848,
+      "skor": 25.38328835516104,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SQQQ/USDT:USDT",
+      "harga": 45.97,
+      "ubah_24j": -13.898,
+      "vol_24j_usdt": 42833874.1164,
+      "rasio_vol": 2.4511513894764443,
+      "skor": 89.6547365407748,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CRCL/USDT:USDT",
+      "harga": 51.39,
+      "ubah_24j": 2.167,
+      "vol_24j_usdt": 41952203.9964,
+      "rasio_vol": 1.9280820540847043,
+      "skor": 10.95827288747267,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "DRAM/USDT:USDT",
+      "harga": 39.55,
+      "ubah_24j": 12.04,
+      "vol_24j_usdt": 41634789.9349,
+      "rasio_vol": 2.0607166687783596,
+      "skor": 64.99140734729649,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "INTC/USDT:USDT",
+      "harga": 59.65,
+      "ubah_24j": 10.504,
+      "vol_24j_usdt": 41428203.3071,
+      "rasio_vol": 1.6917338819842898,
+      "skor": 46.509280215059434,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NEAR/USDT:USDT",
+      "harga": 2.9831,
+      "ubah_24j": 0.39,
+      "vol_24j_usdt": 37935521.8579,
+      "rasio_vol": 0.9074854001740075,
+      "skor": 0.9127741928593739,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "EVAA/USDT:USDT",
+      "harga": 3.0469,
+      "ubah_24j": 25.573,
+      "vol_24j_usdt": 37916005.7915,
+      "rasio_vol": 0.9188920157854032,
+      "skor": 47.39318959490978,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ENA/USDT:USDT",
+      "harga": 0.10017,
+      "ubah_24j": -1.047,
+      "vol_24j_usdt": 37848930.13826,
+      "rasio_vol": 1.8332341754428043,
+      "skor": 4.948306251321854,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NBIS/USDT:USDT",
+      "harga": 98.04,
+      "ubah_24j": 11.599,
+      "vol_24j_usdt": 35796101.3501,
+      "rasio_vol": 2.114842159390199,
+      "skor": 62.645728868447215,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SAMSUNG/USDT:USDT",
+      "harga": 143.61,
+      "ubah_24j": 9.945,
+      "vol_24j_usdt": 34274136.4527,
+      "rasio_vol": 3.358360422732267,
+      "skor": 75.63072616649814,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AMD/USDT:USDT",
+      "harga": 453.57,
+      "ubah_24j": 1.777,
+      "vol_24j_usdt": 33437347.5563,
+      "rasio_vol": 1.4563751952591826,
+      "skor": 6.532658237900721,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PIEVERSE/USDT:USDT",
+      "harga": 3.55898,
+      "ubah_24j": -3.336,
+      "vol_24j_usdt": 32888147.359,
+      "rasio_vol": 1.1990988073929683,
+      "skor": 10.068644991578202,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PEPE/USDT:USDT",
+      "harga": 3.4273e-06,
+      "ubah_24j": 0.522,
+      "vol_24j_usdt": 31392322.8531855,
+      "rasio_vol": 1.5716415318385797,
+      "skor": 2.048386169153146,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "GOOGL/USDT:USDT",
+      "harga": 282.84,
+      "ubah_24j": 2.567,
+      "vol_24j_usdt": 29998259.5276,
+      "rasio_vol": 1.7020388810375562,
+      "skor": 10.822764132044806,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "TSLA/USDT:USDT",
+      "harga": 386.03,
+      "ubah_24j": 7.165,
+      "vol_24j_usdt": 29796153.5057,
+      "rasio_vol": 2.6627164911184056,
+      "skor": 47.202928103762524,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "EWY/USDT:USDT",
+      "harga": 135.58,
+      "ubah_24j": 5.534,
+      "vol_24j_usdt": 28024940.7632,
+      "rasio_vol": 3.984247124078768,
+      "skor": 40.63413716405801,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZHIPU/USDT:USDT",
+      "harga": 45.65,
+      "ubah_24j": 16.395,
+      "vol_24j_usdt": 27441730.1823,
+      "rasio_vol": 2.67204728227508,
+      "skor": 106.82245527696399,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SUI/USDT:USDT",
+      "harga": 0.6723,
+      "ubah_24j": 2.5,
+      "vol_24j_usdt": 25735022.06563,
+      "rasio_vol": 1.4504849062769967,
+      "skor": 8.741073671677915,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ELSA/USDT:USDT",
+      "harga": 0.10218,
+      "ubah_24j": 19.035,
+      "vol_24j_usdt": 24508420.68723,
+      "rasio_vol": 8.142504119505611,
+      "skor": 136.44185171361667,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MRVL/USDT:USDT",
+      "harga": 144.5,
+      "ubah_24j": 13.005,
+      "vol_24j_usdt": 24328200.4231,
+      "rasio_vol": 2.3478154310291397,
+      "skor": 72.85590668713672,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "DOGE/USDT:USDT",
+      "harga": 0.05658,
+      "ubah_24j": 2.444,
+      "vol_24j_usdt": 23131379.65506,
+      "rasio_vol": 1.1591701758803679,
+      "skor": 6.697811110861504,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "COIN/USDT:USDT",
+      "harga": 109.05,
+      "ubah_24j": 2.471,
+      "vol_24j_usdt": 23092438.2174,
+      "rasio_vol": 1.4309833885232863,
+      "skor": 8.357134528951109,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BLESS/USDT:USDT",
+      "harga": 0.014507,
+      "ubah_24j": -16.822,
+      "vol_24j_usdt": 22645305.260295,
+      "rasio_vol": 1.299442835454866,
+      "skor": 51.478003493311135,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "XAUT/USDT:USDT",
+      "harga": 3624.04,
+      "ubah_24j": 2.362,
+      "vol_24j_usdt": 21316777.3057,
+      "rasio_vol": 1.3210064506826622,
+      "skor": 7.266117113701187,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PROM/USDT:USDT",
+      "harga": 5.0023,
+      "ubah_24j": 7.318,
+      "vol_24j_usdt": 20624764.78895,
+      "rasio_vol": 18.078457902044075,
+      "skor": 50.81009620313983,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "TSM/USDT:USDT",
+      "harga": 364.04,
+      "ubah_24j": 9.766,
+      "vol_24j_usdt": 19889273.5235,
+      "rasio_vol": 3.0158675156454713,
+      "skor": 67.34493712854147,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ARIA/USDT:USDT",
+      "harga": 0.30586,
+      "ubah_24j": 16.235,
+      "vol_24j_usdt": 19166481.00302,
+      "rasio_vol": 5.124815654453926,
+      "skor": 111.1712267652939,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZHONGJI/USDT:USDT",
+      "harga": 71.0,
+      "ubah_24j": 18.789,
+      "vol_24j_usdt": 19154049.8944,
+      "rasio_vol": 1.4942632238456675,
+      "skor": 64.07609106287941,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ADA/USDT:USDT",
+      "harga": 0.1474,
+      "ubah_24j": 1.936,
+      "vol_24j_usdt": 16752768.9003,
+      "rasio_vol": 1.2813127870767855,
+      "skor": 5.51711715584575,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ACE/USDT:USDT",
+      "harga": 0.075,
+      "ubah_24j": 25.839,
+      "vol_24j_usdt": 16350400.998573,
+      "rasio_vol": 3.8226928474963806,
+      "skor": 132.81170449989546,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "LITE/USDT:USDT",
+      "harga": 546.94,
+      "ubah_24j": 13.704,
+      "vol_24j_usdt": 15965354.9425,
+      "rasio_vol": 1.4501461058344087,
+      "skor": 43.78333217228155,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "WLD/USDT:USDT",
+      "harga": 0.2362,
+      "ubah_24j": -1.542,
+      "vol_24j_usdt": 15887167.569,
+      "rasio_vol": 1.4392040323531963,
+      "skor": 4.884678154541836,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PAXG/USDT:USDT",
+      "harga": 3625.33,
+      "ubah_24j": 2.392,
+      "vol_24j_usdt": 15863138.78464,
+      "rasio_vol": 1.3054378635681674,
+      "skor": 6.870951294204548,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SPY/USDT:USDT",
+      "harga": 723.61,
+      "ubah_24j": 2.759,
+      "vol_24j_usdt": 15535447.7655,
+      "rasio_vol": 2.6671367048629424,
+      "skor": 16.12514124077363,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CRWV/USDT:USDT",
+      "harga": 48.53,
+      "ubah_24j": 15.906,
+      "vol_24j_usdt": 15494426.5917,
+      "rasio_vol": 2.2320258309917174,
+      "skor": 77.75693129843914,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MINIMAX/USDT:USDT",
+      "harga": 13.809,
+      "ubah_24j": 17.734,
+      "vol_24j_usdt": 15040508.8718,
+      "rasio_vol": 1.6736801517101507,
+      "skor": 64.62342454478633,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AMZN/USDT:USDT",
+      "harga": 255.9,
+      "ubah_24j": 0.306,
+      "vol_24j_usdt": 15020475.3718,
+      "rasio_vol": 1.7879722975188503,
+      "skor": 1.1909061354702242,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PUMP/USDT:USDT",
+      "harga": 0.00254,
+      "ubah_24j": -1.244,
+      "vol_24j_usdt": 13659492.4841,
+      "rasio_vol": 1.392102670490192,
+      "skor": 3.6980937332061137,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "UNI/USDT:USDT",
+      "harga": 4.847,
+      "ubah_24j": 3.303,
+      "vol_24j_usdt": 13349236.261,
+      "rasio_vol": 1.6917054459166498,
+      "skor": 11.876419398213965,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SKDD/USDT:USDT",
+      "harga": 9.429,
+      "ubah_24j": -31.014,
+      "vol_24j_usdt": 13326437.22676,
+      "rasio_vol": 1.8370476710293289,
+      "skor": 78.06402023421914,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CSOPSK2LHKD/USDT:USDT",
+      "harga": 14.236,
+      "ubah_24j": 21.602,
+      "vol_24j_usdt": 12937629.96043,
+      "rasio_vol": 1.7491363084626708,
+      "skor": 73.87843556707243,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AAPL/USDT:USDT",
+      "harga": 349.6,
+      "ubah_24j": -0.131,
+      "vol_24j_usdt": 12618962.4173,
+      "rasio_vol": 2.114783798704391,
+      "skor": 0.5820606107619287,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NVDL/USDT:USDT",
+      "harga": 16.61,
+      "ubah_24j": 45.472,
+      "vol_24j_usdt": 12613701.79286,
+      "rasio_vol": 3.857084516082972,
+      "skor": 126.05055356370192,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AAOI/USDT:USDT",
+      "harga": 38.85,
+      "ubah_24j": 12.316,
+      "vol_24j_usdt": 12114533.5957,
+      "rasio_vol": 1.6859124830525696,
+      "skor": 43.25715142637838,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "INTW/USDT:USDT",
+      "harga": 5.74,
+      "ubah_24j": 20.361,
+      "vol_24j_usdt": 12113448.26233,
+      "rasio_vol": 1.687976523181007,
+      "skor": 70.33014237771259,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MMT/USDT:USDT",
+      "harga": 0.1951,
+      "ubah_24j": -10.954,
+      "vol_24j_usdt": 12100340.1198,
+      "rasio_vol": 0.2443287837633932,
+      "skor": 5.574352568641966,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AVGO/USDT:USDT",
+      "harga": 313.29,
+      "ubah_24j": -1.348,
+      "vol_24j_usdt": 11504932.346,
+      "rasio_vol": 1.4716312440613857,
+      "skor": 4.088297149112292,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MSFT/USDT:USDT",
+      "harga": 493.51,
+      "ubah_24j": -1.363,
+      "vol_24j_usdt": 11181054.1003,
+      "rasio_vol": 1.5063905410913474,
+      "skor": 4.205965894674392,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BNB/USDT:USDT",
+      "harga": 557.02,
+      "ubah_24j": 0.013,
+      "vol_24j_usdt": 10889349.9,
+      "rasio_vol": 1.3989653286379184,
+      "skor": 0.03704603638448859,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MSTU/USDT:USDT",
+      "harga": 10.4799,
+      "ubah_24j": 4.444,
+      "vol_24j_usdt": 10525366.766073,
+      "rasio_vol": 1.1924217365607739,
+      "skor": 10.716082236899995,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "RKLB/USDT:USDT",
+      "harga": 49.76,
+      "ubah_24j": 2.98,
+      "vol_24j_usdt": 10158387.6349,
+      "rasio_vol": 1.8286601314082565,
+      "skor": 10.936005394368346,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ARM/USDT:USDT",
+      "harga": 176.73,
+      "ubah_24j": 11.685,
+      "vol_24j_usdt": 9769437.3729,
+      "rasio_vol": 1.7722061332825532,
+      "skor": 41.20667372573772,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ZHIPUHKD/USDT:USDT",
+      "harga": 356.77,
+      "ubah_24j": 15.71,
+      "vol_24j_usdt": 9689301.8671,
+      "rasio_vol": 2.3925755071869546,
+      "skor": 74.65949317157394,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "HOOD/USDT:USDT",
+      "harga": 67.54,
+      "ubah_24j": 3.557,
+      "vol_24j_usdt": 9576278.4066,
+      "rasio_vol": 2.068011281928624,
+      "skor": 14.573517229855177,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ARB/USDT:USDT",
+      "harga": 0.11195,
+      "ubah_24j": -2.948,
+      "vol_24j_usdt": 9479272.0624524,
+      "rasio_vol": 1.846741607966646,
+      "skor": 10.761947043733391,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "MUU/USDT:USDT",
+      "harga": 13.172,
+      "ubah_24j": 26.399,
+      "vol_24j_usdt": 9140186.90271,
+      "rasio_vol": 1.3421182808777834,
+      "skor": 52.636673122377296,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "LINK/USDT:USDT",
+      "harga": 8.966,
+      "ubah_24j": 1.829,
+      "vol_24j_usdt": 8878783.699,
+      "rasio_vol": 1.0042721080900867,
+      "skor": 3.5787623293416853,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "IREN/USDT:USDT",
+      "harga": 14.636,
+      "ubah_24j": 13.545,
+      "vol_24j_usdt": 8532855.59587,
+      "rasio_vol": 1.345843451111528,
+      "skor": 35.202787859035745,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "TAO/USDT:USDT",
+      "harga": 191.25,
+      "ubah_24j": 0.341,
+      "vol_24j_usdt": 8410747.13265,
+      "rasio_vol": 0.953063779197936,
+      "skor": 0.6255611293934413,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "INJ/USDT:USDT",
+      "harga": 6.443,
+      "ubah_24j": 3.602,
+      "vol_24j_usdt": 8404144.0958,
+      "rasio_vol": 1.0289701810673761,
+      "skor": 7.132847586820464,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CSOPSS2LHKD/USDT:USDT",
+      "harga": 34.87,
+      "ubah_24j": 18.767,
+      "vol_24j_usdt": 8186593.3182,
+      "rasio_vol": 1.5578302850730334,
+      "skor": 55.93110485841104,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "BE/USDT:USDT",
+      "harga": 168.77,
+      "ubah_24j": 13.964,
+      "vol_24j_usdt": 8176232.0359,
+      "rasio_vol": 1.4844814526051762,
+      "skor": 39.645887308941134,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AKE/USDT:USDT",
+      "harga": 0.0024772,
+      "ubah_24j": -10.918,
+      "vol_24j_usdt": 8162744.4090214,
+      "rasio_vol": 0.5024155337989332,
+      "skor": 10.487134275486154,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "NATGAS/USDT:USDT",
+      "harga": 3.525,
+      "ubah_24j": -5.749,
+      "vol_24j_usdt": 7890640.5881,
+      "rasio_vol": 1.0793601695500896,
+      "skor": 11.772039956573698,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "RAM/USDT:USDT",
+      "harga": 4.825,
+      "ubah_24j": 22.993,
+      "vol_24j_usdt": 7727582.93411,
+      "rasio_vol": 1.5042424669753418,
+      "skor": 56.801509499869965,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "SOXX/USDT:USDT",
+      "harga": 140.09,
+      "ubah_24j": 9.866,
+      "vol_24j_usdt": 7591459.4862,
+      "rasio_vol": 2.2825722286370937,
+      "skor": 42.344657531309174,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "UNITREE/USDT:USDT",
+      "harga": 108.26,
+      "ubah_24j": 19.545,
+      "vol_24j_usdt": 7219177.5789,
+      "rasio_vol": 1.3244737426563389,
+      "skor": 48.11037307370986,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AVAX/USDT:USDT",
+      "harga": 6.784,
+      "ubah_24j": 1.679,
+      "vol_24j_usdt": 7021065.5027,
+      "rasio_vol": 1.1736907061677269,
+      "skor": 3.638571091577627,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "APT/USDT:USDT",
+      "harga": 0.3809,
+      "ubah_24j": 0.29,
+      "vol_24j_usdt": 7017870.5864836,
+      "rasio_vol": 1.619647290260191,
+      "skor": 0.8671584352906497,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "ONDO/USDT:USDT",
+      "harga": 0.2875,
+      "ubah_24j": 1.268,
+      "vol_24j_usdt": 6983636.03059,
+      "rasio_vol": 1.3510354821128512,
+      "skor": 3.1591201408040064,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "META/USDT:USDT",
+      "harga": 599.04,
+      "ubah_24j": 4.011,
+      "vol_24j_usdt": 6893891.6467,
+      "rasio_vol": 1.8035537938411041,
+      "skor": 13.299551622525573,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CBRS/USDT:USDT",
+      "harga": 98.32,
+      "ubah_24j": 12.765,
+      "vol_24j_usdt": 6846301.3751,
+      "rasio_vol": 1.2857782335350407,
+      "skor": 30.12526456371116,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "PLTR/USDT:USDT",
+      "harga": 159.86,
+      "ubah_24j": 7.868,
+      "vol_24j_usdt": 6592942.877,
+      "rasio_vol": 1.4745978466817868,
+      "skor": 21.105205324389907,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "COHR/USDT:USDT",
+      "harga": 216.71,
+      "ubah_24j": 10.425,
+      "vol_24j_usdt": 6578199.2494,
+      "rasio_vol": 1.810867935391719,
+      "skor": 34.32276660376104,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "CXMT/USDT:USDT",
+      "harga": 5.681,
+      "ubah_24j": 11.941,
+      "vol_24j_usdt": 6452431.31565,
+      "rasio_vol": 1.153726192774364,
+      "skor": 24.9319157333796,
+      "prioritas_watchlist": false
+    },
+    {
+      "simbol": "AAVE/USDT:USDT",
+      "harga": 97.04,
+      "ubah_24j": -1.151,
+      "vol_24j_usdt": 6319773.77,
+      "rasio_vol": 1.3945820362323529,
+      "skor": 2.8904211366015065,
+      "prioritas_watchlist": false
+    }
+  ]
+}

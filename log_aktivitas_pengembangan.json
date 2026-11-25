@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "project": "Bot-Tree",
+  "created_at": "2026-11-25T19:30:11.544+07:00",
+  "timezone": "Asia/Jakarta",
+  "purpose": "Ringkasan aktivitas pengembangan, pemeriksaan terminal, dan status eksperimen yang tercatat.",
+  "scope": {
+    "type": "retrospective_session_summary",
+    "note": "Bukan rekaman lengkap shell history. Perintah yang tidak tersimpan di riwayat sesi tidak direka; durasi aktif terminal tidak tersedia.",
+    "automatic_future_capture": false
+  },
+  "privacy": {
+    "env_file_read": false,
+    "credentials_recorded": false,
+    "raw_sensitive_output_included": false
+  },
+  "session_windows": [
+    {
+      "start": "2026-11-21T20:14:26.746+07:00",
+      "last_activity": "2026-11-22T23:04:29.117+07:00",
+      "basis": "Metadata sesi lokal; rentang kalender, bukan durasi aktif tanpa jeda."
+    },
+    {
+      "start": "2026-11-23T08:56:54.992+07:00",
+      "last_activity": "2026-11-25T17:11:47.119+07:00",
+      "basis": "Metadata sesi lokal; rentang kalender, bukan durasi aktif tanpa jeda."
+    },
+    {
+      "start": "2026-11-25T17:11:47.119+07:00",
+      "last_activity": null,
+      "basis": "Sesi pengembangan masih aktif ketika log ini dibuat."
+    }
+  ],
+  "development_activities": [
+    {
+      "date": "2026-11-21/22",
+      "topic": "Dashboard dan alur kelayakan",
+      "source": "Riwayat sesi lokal dan daftar file yang diedit",
+      "activities": [
+        "Membuat dashboard web yang membaca signal.json, penilai_ai.json, dan state.json.",
+        "Menambahkan endpoint server lokal dan kontrol bot berbasis aksi yang dibatasi.",
+        "Menambahkan pilihan timeframe, tampilan universe/token, skor, dan konfigurasi TP/SL berbasis S/R atau ATR.",
+        "Memperbarui cek_kelayakan.py, tes terkait, penyaring.py, cek_risk_universe.py, ai_kelayakan.py, signal_engine.py, paper.py, dan scanner.py.",
+        "Membuat jalur uji terpadu scanner, paper, Phase 6, dan Demo/Phase 7."
+      ],
+      "terminal_commands_mentioned": [
+        {
+          "command": "python uji_demo_unified.py --once",
+          "status": "Disebut dalam riwayat sesi; tidak dapat dipastikan dari catatan yang tersedia apakah benar dijalankan."
+        }
+      ],
+      "limitations": [
+        "Tidak semua perintah terminal dari sesi lama tersedia di riwayat lokal.",
+        "Keberadaan server dashboard di Termux berasal dari laporan pengguna, bukan proses yang dijalankan pada sesi ini."
+      ]
+    },
+    {
+      "date": "2026-11-23/25",
+      "topic": "Audit perilaku Bot Tree dan pengamanan Demo",
+      "source": "Laporan pengguna, checkpoint sesi, dan pemeriksaan workspace",
+      "activities": [
+        "Menganalisis laporan uji sekitar dua hari dan menemukan kandidat/sinyal, posisi paper, serta status submit Demo yang perlu direkonsiliasi.",
+        "Menetapkan pendekatan fail-closed untuk order yang tidak pasti; tidak mereset state.",
+        "Menambahkan kontrol estimasi fee/net bps, spread, depth, funding, dan post-only.",
+        "Memperkuat penyimpanan intent, rekonsiliasi ID order/client ID, jumlah fill, harga rata-rata, fee, funding, serta status cancel.",
+        "Menambahkan time-exit reduce-only yang menghitung batas waktu sejak fill pertama dan mencegah retry otomatis setelah timeout jaringan.",
+        "Meningkatkan simulator paper dengan trade-through dan batas partial fill berdasarkan volume candle.",
+        "Membuat reset Demo yang memeriksa posisi/open order, mencadangkan state/jurnal, dan hanya mereset state."
+      ],
+      "observed_test_snapshot": {
+        "user_reported_paper_test_days": 2,
+        "signal_candidates_at_review": 39,
+        "signals_ready_at_review": 0,
+        "paper_position_at_review": "CL short, fill 0/pending",
+        "demo_submission_status": "submission_uncertain",
+        "matching_exchange_order_found_in_prior_read_only_check": false,
+        "interpretation": "Tidak menemukan order pada pemeriksaan baca-saja bukan bukti bahwa order ditolak atau tidak pernah dibuat."
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "topic": "Pemeriksaan terminal untuk lifecycle, biaya, simulator, dan reset",
+      "source": "Output terminal sesi ini",
+      "terminal_commands": [
+        {
+          "command": "python -m py_compile config.py trade_costs.py demo_phase7.py uji_demo_unified.py paper.py reset_demo_data.py tes_demo_phase7.py tes_uji_demo_unified.py tes_paper_partial.py tes_reset_demo_data.py",
+          "result": "Lulus."
+        },
+        {
+          "command": "python tes_demo_phase7.py",
+          "result": "Lulus: validasi order book, estimasi net bps, penolakan setup ber-net rendah, dan parameter post-only."
+        },
+        {
+          "command": "python tes_uji_demo_unified.py",
+          "result": "Lulus: rekonsiliasi order/posisi, fill/fee/funding, time-exit, cancel, dan pencegahan retry duplikat."
+        },
+        {
+          "command": "python tes_paper_partial.py",
+          "result": "Lulus: 16 tes partial fill, trade-through, volume, dan lifecycle paper."
+        },
+        {
+          "command": "python tes_paper_slippage.py",
+          "result": "Lulus: 13 tes slippage paper."
+        },
+        {
+          "command": "python tes_reset_demo_data.py",
+          "result": "Lulus: reset membutuhkan konfirmasi, menolak akun aktif, membuat backup, dan mempertahankan jurnal."
+        },
+        {
+          "command": "python tes_phase6.py",
+          "result": "Lulus: metrik, drawdown, dan safety gate."
+        },
+        {
+          "command": "python tes_bitget_orders.py",
+          "result": "Lulus: sizing dan batas minimum order."
+        },
+        {
+          "command": "python -m pytest --version",
+          "result": "Tidak tersedia: paket pytest tidak terpasang; validasi project dijalankan melalui skrip tes mandiri."
+        },
+        {
+          "command": "Pemeriksaan sumber CCXT Bitget untuk postOnly, fetchMyTrades, dan fetchFundingHistory",
+          "result": "Dukungan pemetaan post-only dan metode rekonsiliasi terkonfirmasi pada versi CCXT lokal; perilaku aktual Bitget Demo belum dibuktikan."
+        }
+      ],
+      "exchange_actions": {
+        "demo_orders_sent": false,
+        "demo_reset_executed": false
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "topic": "README dan pembersihan file legacy",
+      "source": "Perubahan workspace dan konfirmasi pengguna",
+      "activities": [
+        "Menyusun ulang README menurut urutan Phase 1, A-E, 5, 6, dan 7.",
+        "Menambahkan petunjuk instalasi Windows CMD dan Termux, konfigurasi, perintah utama, langkah Demo, serta klasifikasi file JSON.",
+        "Menghapus bagian panduan dashboard dari README sesuai permintaan.",
+        "Menambahkan aturan .gitignore untuk output JSON/state/jurnal runtime tanpa memindahkan file aktif.",
+        "Setelah pengguna memilih penghapusan, menghapus enam skrip eksperimen lama dan tiga JSON di folder tidak_terpakai."
+      ],
+      "files_removed_with_user_confirmation": [
+        "tidak_terpakai/berita.py",
+        "tidak_terpakai/eksperimen_ai.py",
+        "tidak_terpakai/eksperimen_berita.py",
+        "tidak_terpakai/lihat_aset.py",
+        "tidak_terpakai/tes_ai.py",
+        "tidak_terpakai/tes_cmc.py",
+        "tidak_terpakai/eksperimen_berita.json",
+        "tidak_terpakai/cmc_contoh.json",
+        "tidak_terpakai/berita_cache.json"
+      ],
+      "validation": [
+        "Pemeriksaan urutan heading README lulus.",
+        "Pemeriksaan memastikan tiga heading dashboard tidak ada.",
+        "Folder tidak_terpakai terverifikasi kosong setelah file yang dipilih dihapus."
+      ]
+    }
+  ],
+  "current_status": {
+    "demo_state_file": "demo_test_state.json",
+    "uncertain_submission_still_present": true,
+    "demo_trade_journal_created": false,
+    "runtime_state_reset": false,
+    "recommended_next_action": "Rekonsiliasi order/client ID di Bitget Demo secara manual sebelum runner atau reset digunakan."
+  }
+}

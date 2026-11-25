@@ -122,7 +122,7 @@ def main():
     print("\n=== Hasil ===")
     if masalah == 0:
         print(
-            "Fase A SIAP (risk + universe).\n"
+            "risk + universe Aman.\n"
             "Urutan lanjut: penyaring → (opsional AI) → penilai_ai → paper/scanner.\n"
             "Cek: python cek_kelayakan.py atau python ai_kelayakan.py --pakai-ai"
         )

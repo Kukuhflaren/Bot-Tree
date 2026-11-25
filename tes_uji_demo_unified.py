@@ -10,6 +10,8 @@ class MockExchange:
         self.closed = {}
         self.orders = []
         self.cancelled = []
+        self.trades = []
+        self.funding = []
 
     def fetch_positions(self, symbols=None):
         return self.positions
@@ -24,7 +26,33 @@ class MockExchange:
 
     def cancel_order(self, order_id, symbol):
         self.cancelled.append((order_id, symbol))
+        order = next((row for row in self.orders if row.get("id") == order_id), None)
+        if order:
+            self.closed.setdefault(symbol, []).append({
+                **order,
+                "status": "canceled",
+                "timestamp": 1_800_000_000_000,
+            })
         self.orders = [order for order in self.orders if order.get("id") != order_id]
+
+    def fetch_my_trades(self, symbol, since=None, limit=None):
+        return self.trades
+
+    def fetch_funding_history(self, symbol, since=None, limit=None, params=None):
+        return self.funding
+
+    def market(self, symbol):
+        return {"contractSize": 1}
+
+    def load_markets(self):
+        return None
+
+    def create_order(self, *args):
+        self.created = getattr(self, "created", [])
+        self.created.append(args)
+        if getattr(self, "fail_create", False):
+            raise TimeoutError("network timeout")
+        return {"id": "exit-order", "status": "closed"}
 
 
 def test_active_positions_only_counts_nonzero_contracts():
@@ -71,6 +99,25 @@ def test_idle_timeout_is_six_hours():
         state, unified.datetime(2026, 1, 1, 5, 59, tzinfo=unified.timezone.utc)
     )
     print("[OK] idle pipeline refresh triggers at six hours")
+
+
+def test_time_exit_clock_starts_at_first_fill():
+    submitted = {
+        "timestamp": "2026-01-01T00:00:00+00:00",
+        "first_filled_at": "2026-01-01T02:00:00+00:00",
+    }
+    original = unified.config.DEMO_MAX_HOLD_HOURS
+    unified.config.DEMO_MAX_HOLD_HOURS = 5
+    try:
+        assert not unified.demo_time_exit_due(
+            submitted, unified.datetime(2026, 1, 1, 6, 59, tzinfo=unified.timezone.utc)
+        )
+        assert unified.demo_time_exit_due(
+            submitted, unified.datetime(2026, 1, 1, 7, 0, tzinfo=unified.timezone.utc)
+        )
+    finally:
+        unified.config.DEMO_MAX_HOLD_HOURS = original
+    print("[OK] five-hour timeout starts from the actual first fill, not order submission")
 
 
 def test_pending_entry_is_tracked_and_cancelled():
@@ -122,6 +169,7 @@ def test_pending_demo_order_survives_reconciliation():
         "clientOrderId": "bt-client-1",
     }]
     state = {"active": {"bt-client-1": {
+        "timestamp": unified.now_iso(),
         "symbol": "BTC/USDT:USDT",
         "entry": 100,
         "exchange_order_id": "order-1",
@@ -148,6 +196,7 @@ def test_open_position_keeps_pending_order_until_trade_exit():
         "clientOrderId": "bt-client-1",
     }]
     state = {"active": {"bt-client-1": {
+        "timestamp": unified.now_iso(),
         "symbol": "BTC/USDT:USDT",
         "entry": 100,
         "exchange_order_id": "order-1",
@@ -180,6 +229,35 @@ def test_closed_position_cancels_pending_entry_before_restart():
         "client_oid": "bt-client-1",
         "filled": True,
     }}}
+    exchange.closed["BTC/USDT:USDT"] = [{
+        "id": "exit-order",
+        "symbol": "BTC/USDT:USDT",
+        "timestamp": 1_800_000_000_001,
+        "status": "closed",
+        "average": 105,
+        "reduceOnly": True,
+        "type": "market",
+    }]
+    exchange.trades = [
+        {
+            "order": "order-1",
+            "amount": 1,
+            "price": 100,
+            "fee": {"cost": 0.06, "currency": "USDT"},
+        },
+        {
+            "order": "exit-order",
+            "amount": 1,
+            "price": 105,
+            "fee": {"cost": 0.063, "currency": "USDT"},
+        },
+    ]
+    exchange.funding = [{
+        "timestamp": 1_800_000_000_000,
+        "amount": 0.01,
+        "code": "USDT",
+        "info": {"businessType": "contract_settle_fee"},
+    }]
     old_append, old_read, old_exit = (
         unified.paper_journal.append_event,
         unified.paper_journal.read_events,
@@ -188,7 +266,6 @@ def test_closed_position_cancels_pending_entry_before_restart():
     events = []
     unified.paper_journal.append_event = lambda event, _path: events.append(event)
     unified.paper_journal.read_events = lambda _path: events
-    unified.find_closed_exit = lambda *_args, **_kwargs: (105, "limit")
     try:
         positions, closed = unified.reconcile_demo_state(exchange, state, "unused.jsonl")
     finally:
@@ -200,8 +277,11 @@ def test_closed_position_cancels_pending_entry_before_restart():
     assert closed
     assert not state["active"]
     assert exchange.cancelled == [("order-1", "BTC/USDT:USDT")]
-    assert events[0]["event"] == "closed"
-    print("[OK] closed position cancels residual entry before the next cycle")
+    assert [event["event"] for event in events] == ["opened", "closed"]
+    assert events[-1]["actual_fees_usdt"] == 0.123
+    assert events[-1]["net_pnl_usdt"] == 4.887
+    assert events[-1]["funding_cashflow_usdt"] == 0.01
+    print("[OK] close reconciles actual fills, fees, funding and residual cancellation")
 
 
 def test_missing_order_status_is_not_assumed_cancelled():
@@ -258,6 +338,38 @@ def test_find_closed_exit():
     print("[OK] closed Demo exit read from reduce-only order")
 
 
+def test_time_exit_uses_reduce_only_and_does_not_retry_timeout(monkeypatch=None):
+    class TimeoutExchange(MockExchange):
+        fail_create = True
+
+    exchange = TimeoutExchange()
+    item = {
+        "symbol": "BTC/USDT:USDT",
+        "direction": "LONG",
+        "client_oid": "bt-entry-1",
+        "entry": 100,
+    }
+    original_persist = unified._persist_active
+    unified._persist_active = lambda _active: None
+    try:
+        try:
+            unified._submit_time_exit(
+                exchange, item, {"contracts": 0.25}, [],
+            )
+        except RuntimeError as exc:
+            assert "tidak pasti" in str(exc)
+        else:
+            raise AssertionError("network timeout must leave exit status uncertain")
+        unified._submit_time_exit(exchange, item, {"contracts": 0.25}, [])
+    finally:
+        unified._persist_active = original_persist
+    assert len(exchange.created) == 1
+    assert exchange.created[0][1:5] == ("market", "sell", 0.25, None)
+    assert exchange.created[0][5]["reduceOnly"] is True
+    assert item["exit_submission_uncertain"] is True
+    print("[OK] time exit is reduce-only and uncertain submit is never retried")
+
+
 def test_risk_notional_uses_latest_config():
     value = unified.risk_notional()
     assert value > 0
@@ -269,6 +381,7 @@ def main():
     test_position_lookup_failure_is_not_treated_as_empty()
     test_position_without_contract_size_fails_closed()
     test_idle_timeout_is_six_hours()
+    test_time_exit_clock_starts_at_first_fill()
     test_pending_entry_is_tracked_and_cancelled()
     test_unconfirmed_cancel_keeps_order_active()
     test_pending_demo_order_survives_reconciliation()
@@ -278,6 +391,7 @@ def main():
     test_unobserved_submit_is_held_for_manual_reconciliation()
     test_demo_loop_execution_requires_manual_verification()
     test_find_closed_exit()
+    test_time_exit_uses_reduce_only_and_does_not_retry_timeout()
     test_risk_notional_uses_latest_config()
     print("All unified Demo offline tests passed")
 

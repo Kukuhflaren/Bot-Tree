@@ -17,6 +17,7 @@ import os
 import subprocess
 import sys
 import time
+import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -73,7 +74,13 @@ def read_json(path: str) -> dict:
 
 
 def write_json(path: str, value: dict) -> None:
-    Path(path).write_text(json.dumps(value, indent=2, ensure_ascii=False), encoding="utf-8")
+    destination = Path(path)
+    temporary = destination.with_name(destination.name + ".tmp")
+    temporary.write_text(
+        json.dumps(value, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    os.replace(temporary, destination)
 
 
 def demo_gate() -> tuple[bool, str]:
@@ -108,6 +115,11 @@ def active_positions(exchange, symbols: list[str]) -> dict[str, dict]:
         if not math.isfinite(contracts):
             raise RuntimeError("Exchange mengembalikan ukuran posisi yang tidak finite")
         if contracts and symbol:
+            if symbol in found:
+                raise RuntimeError(
+                    f"Exchange mengembalikan beberapa posisi untuk {symbol}; "
+                    "rekonsiliasi satu-posisi tidak aman"
+                )
             found[symbol] = row
         elif contracts:
             raise RuntimeError("Exchange mengembalikan posisi tanpa simbol")
@@ -134,16 +146,24 @@ def _is_reduce_only(order: dict) -> bool:
     value = order.get("reduceOnly")
     if value is None:
         value = (order.get("info") or {}).get("reduceOnly")
-    return value is True or str(value).strip().lower() in ("1", "true")
+    return value is True or str(value).strip().lower() in ("1", "true", "yes")
 
 
 def _tracked_orders(orders: list[dict], active: dict) -> list[dict]:
-    order_id = str(active.get("exchange_order_id") or "")
-    client_oid = str(active.get("client_oid") or "")
+    order_ids = {
+        str(value) for value in (
+            active.get("exchange_order_id"), active.get("exit_order_id"),
+        ) if value
+    }
+    client_oids = {
+        str(value) for value in (
+            active.get("client_oid"), active.get("exit_client_oid"),
+        ) if value
+    }
     return [
         order for order in orders
-        if (order_id and str(order.get("id") or "") == order_id)
-        or (client_oid and _client_order_id(order) == client_oid)
+        if str(order.get("id") or "") in order_ids
+        or _client_order_id(order) in client_oids
     ]
 
 
@@ -167,7 +187,10 @@ def _filled_amount(order: dict) -> float:
 
 def cancel_tracked_orders(exchange, active: dict, orders: list[dict]) -> bool:
     """Cancel only this trade's tracked entry orders; confirm cancellation before continuing."""
-    tracked = _tracked_orders(orders, active)
+    tracked = [
+        order for order in _tracked_orders(orders, active)
+        if not _is_reduce_only(order)
+    ]
     for order in tracked:
         order_id = order.get("id")
         if not order_id:
@@ -175,6 +198,8 @@ def cancel_tracked_orders(exchange, active: dict, orders: list[dict]) -> bool:
                 f"Order pending {active['symbol']} tidak memiliki ID exchange; "
                 "reconciliation manual diperlukan"
             )
+        active["cancel_status"] = "requested"
+        active["cancel_requested_at"] = now_iso()
         try:
             exchange.cancel_order(str(order_id), active["symbol"])
         except Exception as exc:
@@ -182,10 +207,28 @@ def cancel_tracked_orders(exchange, active: dict, orders: list[dict]) -> bool:
                 f"Gagal membatalkan order {order_id}: {type(exc).__name__}: {exc}"
             ) from exc
 
-    remaining = _tracked_orders(open_orders(exchange, [active["symbol"]]), active)
+    remaining = [
+        order for order in _tracked_orders(open_orders(exchange, [active["symbol"]]), active)
+        if not _is_reduce_only(order)
+    ]
     if remaining:
         print(f"  Cancel belum terkonfirmasi untuk {active['symbol']}; entry baru ditahan.")
         return False
+    if tracked or active.get("exchange_order_id"):
+        terminal = find_tracked_closed_order(exchange, active)
+        if not terminal:
+            active["cancel_status"] = "unconfirmed"
+            print(f"  Status cancel belum ditemukan untuk {active['symbol']}; entry baru ditahan.")
+            return False
+        status = str(terminal.get("status") or "").lower()
+        if status in ("closed", "filled") or _filled_amount(terminal) > 0:
+            active["filled"] = True
+            active["cancel_status"] = "filled_during_cancel"
+            return True
+        if status not in ("canceled", "cancelled", "rejected", "expired"):
+            active["cancel_status"] = "unconfirmed"
+            return False
+    active["cancel_status"] = "confirmed"
     return True
 
 
@@ -233,6 +276,20 @@ def idle_timeout(demo_state: dict, now: datetime | None = None) -> bool:
     return (current - started).total_seconds() >= IDLE_RESCAN_SECONDS
 
 
+def demo_time_exit_due(active: dict, now: datetime | None = None) -> bool:
+    opened_at = active.get("first_filled_at") or active.get("timestamp")
+    if not opened_at:
+        raise RuntimeError("Waktu fill posisi Demo tidak tersedia; time-exit tidak aman")
+    try:
+        started = datetime.fromisoformat(opened_at)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("Waktu fill posisi Demo tidak valid") from exc
+    if started.tzinfo is None:
+        raise RuntimeError("Waktu fill posisi Demo harus memiliki timezone")
+    current = now or datetime.now(timezone.utc)
+    return (current - started).total_seconds() >= config.DEMO_MAX_HOLD_HOURS * 3600
+
+
 def find_closed_exit(
     exchange, symbol: str, after_timestamp: str | None = None,
 ) -> tuple[float | None, str]:
@@ -259,17 +316,343 @@ def find_closed_exit(
     return (price if price > 0 else None), reason
 
 
-def close_demo_trade(exchange, active: dict, trade_id: str, journal: str) -> None:
-    symbol = active["symbol"]
-    exit_price, reason = find_closed_exit(exchange, symbol, active.get("timestamp"))
-    if exit_price is None:
+def _fetch_trade_rows(exchange, active: dict) -> list[dict]:
+    method = getattr(exchange, "fetch_my_trades", None)
+    if method is None:
+        raise RuntimeError("Exchange adapter tidak mendukung fetch_my_trades; akuntansi Demo tidak aman")
+    try:
+        since = int(datetime.fromisoformat(active["timestamp"]).timestamp() * 1000)
+        return list(method(active["symbol"], since=since, limit=1000) or [])
+    except Exception as exc:
+        raise RuntimeError(
+            f"Gagal membaca fill/fee aktual {active['symbol']}: {type(exc).__name__}: {exc}"
+        ) from exc
+
+
+def _trade_fee_usdt(trades: list[dict]) -> float | None:
+    total = 0.0
+    for trade in trades:
+        fees = trade.get("fees")
+        if fees is None:
+            fee = trade.get("fee")
+            fees = [fee] if fee else []
+        if not fees:
+            return None
+        for fee in fees:
+            if (
+                not isinstance(fee, dict)
+                or fee.get("cost") is None
+                or str(fee.get("currency") or "").upper() != "USDT"
+            ):
+                return None
+            try:
+                cost = float(fee["cost"])
+            except (TypeError, ValueError) as exc:
+                raise RuntimeError("Exchange mengembalikan fee aktual yang tidak valid") from exc
+            if not math.isfinite(cost):
+                raise RuntimeError("Exchange mengembalikan fee aktual yang tidak valid")
+            total += abs(cost)
+    return total
+
+
+def _trades_for_order(trades: list[dict], order_id: str) -> list[dict]:
+    return [
+        trade for trade in trades
+        if str(trade.get("order") or (trade.get("info") or {}).get("orderId") or "") == order_id
+    ]
+
+
+def _trade_totals(trades: list[dict]) -> tuple[float, float, float]:
+    quantity = 0.0
+    weighted_price = 0.0
+    for trade in trades:
+        try:
+            amount = float(trade.get("amount") or 0)
+            price = float(trade.get("price") or 0)
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("Exchange mengembalikan detail fill yang tidak valid") from exc
+        if not math.isfinite(amount) or not math.isfinite(price) or amount <= 0 or price <= 0:
+            raise RuntimeError("Exchange mengembalikan detail fill yang tidak valid")
+        quantity += amount
+        weighted_price += amount * price
+    if quantity <= 0:
+        return 0.0, 0.0, 0.0
+    return quantity, weighted_price / quantity, quantity * weighted_price / quantity
+
+
+def _funding_cashflow_usdt(exchange, active: dict, until_ms: int) -> float:
+    method = getattr(exchange, "fetch_funding_history", None)
+    if method is None:
+        raise RuntimeError("Exchange adapter tidak mendukung fetch_funding_history")
+    since_ms = int(datetime.fromisoformat(active["timestamp"]).timestamp() * 1000)
+    try:
+        rows = method(
+            active["symbol"],
+            since=since_ms,
+            limit=100,
+            params={"until": until_ms},
+        )
+    except Exception as exc:
+        raise RuntimeError(
+            f"Gagal membaca funding aktual {active['symbol']}: {type(exc).__name__}: {exc}"
+        ) from exc
+    cashflow = 0.0
+    for row in rows or []:
+        details = row.get("info") or {}
+        event_type = str(details.get("businessType") or details.get("type") or "").lower()
+        if event_type not in ("contract_settle_fee", "funding_fee"):
+            continue
+        timestamp = row.get("timestamp")
+        amount = row.get("amount")
+        currency = str(row.get("code") or details.get("coin") or "").upper()
+        if timestamp is None or amount is None or currency != "USDT":
+            raise RuntimeError("Data funding aktual tidak lengkap atau bukan USDT")
+        try:
+            timestamp = int(timestamp)
+            amount = float(amount)
+        except (TypeError, ValueError) as exc:
+            raise RuntimeError("Exchange mengembalikan funding aktual yang tidak valid") from exc
+        if not math.isfinite(amount):
+            raise RuntimeError("Exchange mengembalikan funding aktual yang tidak valid")
+        if since_ms <= timestamp <= until_ms:
+            cashflow += amount
+    return cashflow
+
+
+def _ensure_open_journal(active: dict, trade_id: str, journal: str) -> None:
+    existing = paper_journal.read_events(journal)
+    if any(event.get("event") == "opened" and event.get("trade_id") == trade_id for event in existing):
         return
-    entry = float(active["entry"])
-    notional = float(active["notional"])
+    paper_journal.append_event({
+        "event": "opened",
+        "trade_id": trade_id,
+        "timestamp": active.get("timestamp"),
+        "symbol": active["symbol"],
+        "direction": active["direction"],
+        "entry_average": active.get("entry_average"),
+        "filled_contracts": active.get("filled_contracts"),
+        "filled_notional_usdt": active.get("filled_notional_usdt"),
+        "entry_fee_usdt": active.get("entry_fee_usdt"),
+        "stop_loss": active["sl"],
+        "take_profit": active["tp"],
+        "candle_timeframe": active.get("candle_timeframe"),
+        "mode": "demo",
+    }, journal)
+
+
+def _reconcile_entry_fills(exchange, active: dict, trade_id: str, journal: str) -> None:
+    order_id = str(active.get("exchange_order_id") or "")
+    if not order_id:
+        active["accounting_pending"] = True
+        return
+    trades = _trades_for_order(_fetch_trade_rows(exchange, active), order_id)
+    if not trades:
+        active["accounting_pending"] = True
+        return
+    quantity, average, _ = _trade_totals(trades)
+    try:
+        trade_times = [
+            float(trade["timestamp"]) for trade in trades
+            if trade.get("timestamp") is not None
+        ]
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("Exchange mengembalikan timestamp fill yang tidak valid") from exc
+    if trade_times:
+        first_fill_ms = min(trade_times)
+        if not math.isfinite(first_fill_ms):
+            raise RuntimeError("Exchange mengembalikan timestamp fill yang tidak valid")
+        active["first_filled_at"] = datetime.fromtimestamp(
+            first_fill_ms / 1000, tz=timezone.utc,
+        ).isoformat()
+    else:
+        active.setdefault("first_filled_at", now_iso())
+    fees = _trade_fee_usdt(trades)
+    active["filled_contracts"] = quantity
+    active["entry_average"] = average
+    active["filled"] = quantity > 0
+    if fees is None:
+        active["accounting_pending"] = True
+        return
+    market = exchange.market(active["symbol"])
+    contract_size = float(market.get("contractSize") or 1)
+    active["entry_fee_usdt"] = fees
+    active["filled_notional_usdt"] = quantity * contract_size * average
+    active["accounting_pending"] = False
+    active["open_journaled"] = True
+    _ensure_open_journal(active, trade_id, journal)
+
+
+def _persist_active(active: dict) -> None:
+    state = load_demo_state()
+    trade_id = str(active.get("client_oid") or "")
+    if trade_id:
+        state["active"][trade_id] = active
+    write_json(DEMO_STATE, state)
+
+
+def _refresh_exit_order_status(exchange, active: dict, orders: list[dict]) -> None:
+    if not active.get("exit_order_id") and not active.get("exit_client_oid"):
+        return
+    open_exit = [
+        order for order in _tracked_orders(orders, active)
+        if _is_reduce_only(order)
+    ]
+    if open_exit:
+        latest = max(open_exit, key=lambda order: float(order.get("timestamp") or 0))
+        active["exit_order_id"] = str(latest.get("id") or active.get("exit_order_id") or "")
+        active["exit_order_status"] = str(latest.get("status") or "open").lower()
+        active["exit_submission_uncertain"] = False
+        return
+    try:
+        closed = exchange.fetch_closed_orders(active["symbol"], limit=100)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Gagal memeriksa status time-exit {active['symbol']}: {type(exc).__name__}: {exc}"
+        ) from exc
+    exit_id = str(active.get("exit_order_id") or "")
+    exit_oid = str(active.get("exit_client_oid") or "")
+    terminal_rows = [
+        order for order in closed or []
+        if _is_reduce_only(order)
+        and (
+            (exit_id and str(order.get("id") or "") == exit_id)
+            or (exit_oid and _client_order_id(order) == exit_oid)
+        )
+    ]
+    terminal = max(terminal_rows, key=lambda order: float(order.get("timestamp") or 0)) if terminal_rows else None
+    if terminal:
+        active["exit_order_id"] = str(terminal.get("id") or active.get("exit_order_id") or "")
+        active["exit_order_status"] = str(terminal.get("status") or "unknown").lower()
+        active["exit_filled_contracts"] = _filled_amount(terminal)
+        active["exit_submission_uncertain"] = False
+
+
+def _submit_time_exit(exchange, active: dict, position: dict, orders: list[dict]) -> None:
+    if active.get("exit_order_id") or active.get("exit_client_oid"):
+        matching = [
+            order for order in _tracked_orders(orders, active)
+            if _is_reduce_only(order)
+        ]
+        if matching or active.get("exit_submission_uncertain"):
+            return
+        if active.get("exit_order_status") in ("closed", "filled"):
+            return
+        raise RuntimeError("Status time-exit tidak pasti; pengiriman ulang otomatis diblokir")
+
+    if not cancel_tracked_orders(exchange, active, orders):
+        return
+    quantity = abs(float(position["contracts"]))
+    if not math.isfinite(quantity) or quantity <= 0:
+        raise RuntimeError("Ukuran posisi tidak valid untuk time-exit")
+
+    client_oid = "bt-exit-" + uuid.uuid4().hex[:16]
+    active["exit_client_oid"] = client_oid
+    active["exit_submission_uncertain"] = True
+    active["exit_requested_at"] = now_iso()
+    _persist_active(active)
+    side = "sell" if active["direction"] == "LONG" else "buy"
+    params = {
+        "uta": True,
+        "marginMode": "cross",
+        "posSide": "long" if active["direction"] == "LONG" else "short",
+        "reduceOnly": True,
+        "clientOid": client_oid,
+    }
+    try:
+        result = exchange.create_order(
+            active["symbol"], "market", side, quantity, None, params,
+        )
+    except Exception as exc:
+        active["exit_submission_uncertain"] = True
+        _persist_active(active)
+        raise RuntimeError(
+            f"Time-exit submit tidak pasti untuk {active['symbol']}: {type(exc).__name__}: {exc}"
+        ) from exc
+    if not isinstance(result, dict) or not result.get("id"):
+        active["exit_submission_uncertain"] = True
+        _persist_active(active)
+        raise RuntimeError("Respons time-exit tanpa exchange order ID; retry otomatis diblokir")
+    active["exit_order_id"] = str(result["id"])
+    active["exit_order_status"] = str(result.get("status") or "submitted").lower()
+    active["exit_submission_uncertain"] = False
+    _persist_active(active)
+
+
+def _demo_close_accounting(exchange, active: dict) -> dict | None:
+    order_id = str(active.get("exchange_order_id") or "")
+    if not order_id:
+        return None
+    try:
+        closed_orders = exchange.fetch_closed_orders(active["symbol"], limit=100)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Gagal membaca closed orders {active['symbol']}: {type(exc).__name__}: {exc}"
+        ) from exc
+    started_ms = int(datetime.fromisoformat(active["timestamp"]).timestamp() * 1000)
+    exit_orders = [
+        order for order in closed_orders or []
+        if _is_reduce_only(order) and float(order.get("timestamp") or 0) >= started_ms
+    ]
+    if not exit_orders:
+        return None
+
+    trades = _fetch_trade_rows(exchange, active)
+    entry_trades = _trades_for_order(trades, order_id)
+    exit_order_ids = {str(order.get("id") or "") for order in exit_orders if order.get("id")}
+    exit_trades = [
+        trade for trade in trades
+        if str(trade.get("order") or (trade.get("info") or {}).get("orderId") or "") in exit_order_ids
+    ]
+    if not entry_trades or not exit_trades:
+        return None
+    entry_fee = _trade_fee_usdt(entry_trades)
+    exit_fee = _trade_fee_usdt(exit_trades)
+    if entry_fee is None or exit_fee is None:
+        return None
+
+    entry_qty, entry_average, entry_notional = _trade_totals(entry_trades)
+    exit_qty, exit_average, _ = _trade_totals(exit_trades)
+    tolerance = max(entry_qty * 1e-6, 1e-8)
+    if abs(entry_qty - exit_qty) > tolerance:
+        return None
+    closed_at_ms = max(float(order.get("timestamp") or 0) for order in exit_orders)
+    if not closed_at_ms:
+        return None
+    funding_cashflow = _funding_cashflow_usdt(exchange, active, int(closed_at_ms))
+    return {
+        "contracts": entry_qty,
+        "entry_average": entry_average,
+        "entry_notional_usdt": entry_notional,
+        "entry_fee_usdt": entry_fee,
+        "exit_average": exit_average,
+        "exit_fee_usdt": exit_fee,
+        "funding_cashflow_usdt": funding_cashflow,
+        "exit_reason": str(
+            max(exit_orders, key=lambda order: float(order.get("timestamp") or 0)).get("type")
+            or "reduce_only"
+        ),
+    }
+
+
+def close_demo_trade(exchange, active: dict, trade_id: str, journal: str) -> bool:
+    symbol = active["symbol"]
+    accounting = _demo_close_accounting(exchange, active)
+    if accounting is None:
+        active["accounting_pending"] = True
+        print(f"  Akuntansi trade {trade_id} belum lengkap; entry baru tetap diblokir.")
+        return False
+    _ensure_open_journal(active, trade_id, journal)
+    entry = accounting["entry_average"]
+    exit_price = accounting["exit_average"]
+    contracts = accounting["contracts"]
+    exchange.load_markets()
+    contract_size = float(exchange.market(symbol).get("contractSize") or 1)
+    notional = contracts * contract_size * entry
     direction = active["direction"]
-    gross = notional * ((exit_price / entry - 1) if direction == "LONG"
-                        else (1 - exit_price / entry))
-    fee = float(active.get("fee_usdt") or 0)
+    gross = contracts * contract_size * (
+        (exit_price - entry) if direction == "LONG" else (entry - exit_price)
+    )
+    fee = accounting["entry_fee_usdt"] + accounting["exit_fee_usdt"]
     payload = {
         "event": "closed",
         "trade_id": trade_id,
@@ -279,17 +662,22 @@ def close_demo_trade(exchange, active: dict, trade_id: str, journal: str) -> Non
         "direction": direction,
         "entry_average": entry,
         "exit_price": exit_price,
-        "exit_reason": reason,
+        "exit_reason": accounting["exit_reason"],
         "stop_loss": active["sl"],
         "take_profit": active["tp"],
+        "filled_contracts": contracts,
         "filled_notional_usdt": notional,
         "gross_pnl_usdt": round(gross, 6),
-        "estimated_fees_usdt": fee,
-        "net_pnl_usdt": round(gross - fee, 6),
+        "entry_fee_usdt": accounting["entry_fee_usdt"],
+        "exit_fee_usdt": accounting["exit_fee_usdt"],
+        "actual_fees_usdt": fee,
+        "funding_cashflow_usdt": accounting["funding_cashflow_usdt"],
+        "net_pnl_usdt": round(gross - fee + accounting["funding_cashflow_usdt"], 6),
         "mode": "demo",
         "candle_timeframe": active.get("candle_timeframe"),
     }
     paper_journal.append_event(payload, journal)
+    return True
 
 
 def reconcile_demo_state(
@@ -308,10 +696,29 @@ def reconcile_demo_state(
         if position:
             item["filled"] = True
             item["order_observed"] = True
+            item["submission_uncertain"] = False
+            item.setdefault("first_filled_at", now_iso())
+            item["filled_contracts"] = abs(float(position["contracts"]))
+            item["entry_average"] = float(
+                position.get("entryPrice") or item.get("entry_average") or item["entry"]
+            )
             mark = float(position.get("markPrice") or position.get("entryPrice") or item["entry"])
             unrealized = float(position.get("unrealizedPnl") or 0)
+            _reconcile_entry_fills(exchange, item, trade_id, journal)
+            entry_orders = [order for order in tracked if not _is_reduce_only(order)]
+            if entry_orders:
+                latest_entry = max(entry_orders, key=lambda order: float(order.get("timestamp") or 0))
+                item["exchange_order_status"] = str(latest_entry.get("status") or "open").lower()
+                item["order_filled_contracts"] = _filled_amount(latest_entry)
+                item["order_average_price"] = latest_entry.get("average")
+            _refresh_exit_order_status(exchange, item, orders)
+            if demo_time_exit_due(item):
+                try:
+                    _submit_time_exit(exchange, item, position, orders)
+                except RuntimeError as exc:
+                    print(f"  Time-exit ditahan: {exc}")
             print(
-                f"  {item['symbol']} OPEN entry={item['entry']} mark={mark} "
+                f"  {item['symbol']} OPEN entry={item.get('entry_average', item['entry'])} mark={mark} "
                 f"unrealized={unrealized:+.4f} USDT"
             )
             continue
@@ -332,6 +739,13 @@ def reconcile_demo_state(
 
         if tracked:
             item["order_observed"] = True
+            item["submission_uncertain"] = False
+            entry_orders = [order for order in tracked if not _is_reduce_only(order)]
+            if entry_orders:
+                latest_entry = max(entry_orders, key=lambda order: float(order.get("timestamp") or 0))
+                item["exchange_order_status"] = str(latest_entry.get("status") or "open").lower()
+                item["order_filled_contracts"] = _filled_amount(latest_entry)
+                item["order_average_price"] = latest_entry.get("average")
             continue
         if not item.get("order_observed"):
             item["submission_uncertain"] = True
@@ -460,9 +874,38 @@ def main() -> None:
     demo_state["pipeline_ready"] = False
     exchange = demo_phase7.build_exchange() if args.send_demo else None
     pakai_ai = args.pakai_ai or config.AI_ENABLED
-    if not demo_state.get("pipeline_ready"):
+    if args.send_demo and exchange:
+        try:
+            exchange.load_markets()
+            startup_positions, _ = reconcile_demo_state(exchange, demo_state, DEMO_JOURNAL)
+            startup_orders = open_orders(exchange)
+        except RuntimeError as exc:
+            write_json(DEMO_STATE, demo_state)
+            raise SystemExit(f"Startup Demo gagal direkonsiliasi; runner dihentikan: {exc}") from exc
+        if has_untracked_activity(startup_positions, startup_orders, demo_state["active"]):
+            write_json(DEMO_STATE, demo_state)
+            raise SystemExit(
+                "Startup menemukan posisi/order exchange yang tidak dilacak; "
+                "runner Demo dihentikan tanpa reset state."
+            )
+        unresolved = [
+            trade_id for trade_id, item in demo_state["active"].items()
+            if item.get("submission_uncertain") or item.get("exit_submission_uncertain")
+        ]
+        if unresolved:
+            write_json(DEMO_STATE, demo_state)
+            raise SystemExit(
+                "Status submit Demo belum pasti untuk "
+                f"{', '.join(unresolved)}; runner dihentikan dan state dipertahankan."
+            )
+        write_json(DEMO_STATE, demo_state)
+    if demo_state["active"] and not demo_state.get("cycle_started_at"):
+        demo_state["cycle_started_at"] = min(
+            (item.get("timestamp") or now_iso()) for item in demo_state["active"].values()
+        )
+    if not demo_state["active"]:
         demo_state["pipeline_ready"] = pipeline_awal(pakai_ai)
-        if not demo_state["active"] or not demo_state.get("cycle_started_at"):
+        if not demo_state.get("cycle_started_at"):
             demo_state["cycle_started_at"] = now_iso()
         write_json(DEMO_STATE, demo_state)
 
@@ -534,7 +977,7 @@ def main() -> None:
                         except RuntimeError as exc:
                             print(f"Cancel gagal; entry baru ditahan: {exc}")
                             canceled = False
-                        if canceled and not item.get("submission_uncertain"):
+                        if canceled and not item.get("submission_uncertain") and not item.get("filled"):
                             del active[trade_id]
                     try:
                         positions = active_positions(exchange, [])
@@ -605,10 +1048,11 @@ def main() -> None:
                                         "sl": float(level["sl"]),
                                         "tp": float(level["tp"]),
                                         "notional": float(plan["estimatedNotionalUSDT"]),
-                                        "fee_usdt": 0,
                                         "candle_timeframe": signal.get("candle_timeframe"),
                                         "client_oid": trade_id,
                                         "order_observed": False,
+                                        "submission_uncertain": False,
+                                        "execution_guard": plan["executionGuard"],
                                     }
                                     active[trade_id] = item
                                     demo_state["send_attempts"] += 1
@@ -631,15 +1075,18 @@ def main() -> None:
                                     write_json(DEMO_STATE, demo_state)
                                     demo_state["opened_orders"] += 1
                                     paper_journal.append_event({
-                                        "event": "opened",
+                                        "event": "order_submitted",
                                         "trade_id": trade_id,
                                         "timestamp": now_iso(),
                                         "symbol": plan["symbol"],
                                         "direction": direction,
-                                        "entry_average": float(level["price"]),
+                                        "exchange_order_id": item["exchange_order_id"],
+                                        "order_status": result.get("status"),
+                                        "requested_entry": float(level["price"]),
                                         "stop_loss": float(level["sl"]),
                                         "take_profit": float(level["tp"]),
-                                        "filled_notional_usdt": float(plan["estimatedNotionalUSDT"]),
+                                        "requested_notional_usdt": float(plan["estimatedNotionalUSDT"]),
+                                        "execution_guard": plan["executionGuard"],
                                         "candle_timeframe": signal.get("candle_timeframe"),
                                         "mode": "demo",
                                     }, DEMO_JOURNAL)

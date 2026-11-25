@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import uuid
 from decimal import Decimal
 from typing import Any
@@ -22,6 +23,7 @@ import ccxt
 
 import bitget_orders
 import config
+import trade_costs
 
 CONFIRMATION_TEXT = "UJI_DEMO_SAYA_PAHAM"
 
@@ -64,6 +66,86 @@ def ccxt_symbol(name: str) -> str:
     return f"{name}/USDT:USDT"
 
 
+def _execution_guard(
+    exchange: Any, symbol: str, direction: str, entry: float, tp: float, notional: float,
+) -> dict[str, float]:
+    thresholds = (
+        config.DEMO_MAKER_FEE_BPS,
+        config.DEMO_TAKER_FEE_BPS,
+        config.DEMO_MIN_NET_BPS,
+        config.DEMO_MAX_SPREAD_BPS,
+        config.DEMO_MIN_BOOK_DEPTH_MULTIPLE,
+        config.DEMO_MAX_HOLD_HOURS,
+        config.DEMO_BOOK_MAX_AGE_SECONDS,
+    )
+    if any(not math.isfinite(value) or value < 0 for value in thresholds):
+        raise bitget_orders.OrderPlanError("Konfigurasi biaya/market Demo harus finite dan non-negatif")
+    if config.DEMO_MIN_BOOK_DEPTH_MULTIPLE < 1 or config.DEMO_MAX_HOLD_HOURS <= 0:
+        raise bitget_orders.OrderPlanError("Depth minimum harus >=1× dan time-exit harus positif")
+    market = exchange.market(symbol)
+    contract_size = float(market.get("contractSize") or 1)
+    try:
+        book = exchange.fetch_order_book(symbol, limit=20)
+        metrics = trade_costs.order_book_metrics(
+            book,
+            notional,
+            contract_size,
+            int(exchange.milliseconds()),
+            config.DEMO_BOOK_MAX_AGE_SECONDS,
+            config.DEMO_MIN_BOOK_DEPTH_MULTIPLE,
+        )
+    except Exception as exc:
+        raise bitget_orders.OrderPlanError(
+            f"Order book Demo tidak memenuhi pemeriksaan real-time: {type(exc).__name__}: {exc}"
+        ) from exc
+    if metrics["spread_bps"] > config.DEMO_MAX_SPREAD_BPS:
+        raise bitget_orders.OrderPlanError(
+            f"Spread {metrics['spread_bps']:.2f} bps melebihi batas "
+            f"{config.DEMO_MAX_SPREAD_BPS:.2f} bps"
+        )
+    if direction == "LONG" and entry >= metrics["best_ask"]:
+        raise bitget_orders.OrderPlanError("Harga LONG marketable; post-only entry ditolak sebelum submit")
+    if direction == "SHORT" and entry <= metrics["best_bid"]:
+        raise bitget_orders.OrderPlanError("Harga SHORT marketable; post-only entry ditolak sebelum submit")
+
+    try:
+        funding = exchange.fetch_funding_rate(symbol)
+        funding_rate = float(funding["fundingRate"])
+    except Exception as exc:
+        raise bitget_orders.OrderPlanError(
+            f"Funding rate Demo tidak tersedia untuk estimasi biaya: {type(exc).__name__}: {exc}"
+        ) from exc
+    if not math.isfinite(funding_rate):
+        raise bitget_orders.OrderPlanError("Funding rate Demo tidak valid")
+    funding_cost_bps = (
+        abs(funding_rate) * 10_000 * config.DEMO_MAX_HOLD_HOURS / 8
+    )
+    gross_bps, net_bps = trade_costs.estimated_net_bps(
+        direction,
+        entry,
+        tp,
+        config.DEMO_MAKER_FEE_BPS,
+        config.DEMO_TAKER_FEE_BPS,
+        metrics["estimated_round_trip_book_cost_bps"],
+        funding_cost_bps,
+    )
+    if net_bps < config.DEMO_MIN_NET_BPS:
+        raise bitget_orders.OrderPlanError(
+            f"Estimasi net {net_bps:.2f} bps di bawah minimum "
+            f"{config.DEMO_MIN_NET_BPS:.2f} bps"
+        )
+    return {
+        **metrics,
+        "funding_rate": funding_rate,
+        "funding_cost_bps": funding_cost_bps,
+        "gross_reward_bps": gross_bps,
+        "entry_fee_bps": config.DEMO_MAKER_FEE_BPS,
+        "exit_fee_bps": config.DEMO_TAKER_FEE_BPS,
+        "estimated_net_bps": net_bps,
+        "minimum_net_bps": config.DEMO_MIN_NET_BPS,
+    }
+
+
 def preflight(symbol: str, direction: str, entry: float, sl: float, tp: float,
               notional_usdt: float) -> dict[str, Any]:
     """Build and validate a demo limit plan without sending an order."""
@@ -100,6 +182,9 @@ def preflight(symbol: str, direction: str, entry: float, sl: float, tp: float,
         raise bitget_orders.OrderPlanError(
             f"Demo rounded order {actual_notional} USDT is below minimum {min_n} USDT"
         )
+    execution_guard = _execution_guard(
+        ex, sym, direction, entry, tp, float(actual_notional),
+    )
 
     plan = {
         "symbol": sym,
@@ -116,6 +201,7 @@ def preflight(symbol: str, direction: str, entry: float, sl: float, tp: float,
         "posSide": "long" if direction == "LONG" else "short",
         "reduceOnly": False,
         "clientOid": "bt-" + uuid.uuid4().hex[:18],
+        "executionGuard": execution_guard,
     }
     return plan
 
@@ -133,11 +219,21 @@ def send_demo_order(plan: dict[str, Any]) -> dict[str, Any]:
 
     ex = build_exchange()
     ex.load_markets()
+    direction = "LONG" if plan["side"] == "buy" else "SHORT"
+    guard = _execution_guard(
+        ex,
+        plan["symbol"],
+        direction,
+        float(plan["price"]),
+        float(plan["takeProfitTriggerPrice"]),
+        float(plan["estimatedNotionalUSDT"]),
+    )
     params = {
         "uta": True,
         "marginMode": plan["marginMode"],
         "posSide": plan["posSide"],
         "reduceOnly": plan["reduceOnly"],
+        "postOnly": True,
         "takeProfitTriggerPrice": str(plan["takeProfitTriggerPrice"]),
         "stopLossTriggerPrice": str(plan["stopLossTriggerPrice"]),
         "triggerType": plan["triggerType"],
@@ -147,7 +243,7 @@ def send_demo_order(plan: dict[str, Any]) -> dict[str, Any]:
         plan["symbol"], plan["orderType"], plan["side"],
         plan["amountContracts"], plan["price"], params,
     )
-    return result
+    return {**result, "executionGuard": guard}
 
 
 def main() -> None:

@@ -1,0 +1,415 @@
+{
+  "waktu": "2026-11-18T13:19:58.173736+00:00",
+  "sumber": "ai",
+  "galat": null,
+  "token": 1387,
+  "watchlist_mode": "prefer",
+  "watchlist": [
+    "BTC",
+    "SPCX"
+  ],
+  "bullish": [
+    {
+      "simbol": "MMT/USDT:USDT",
+      "harga": 0.2502,
+      "ubah_24j": 116.811,
+      "vol_24j_usdt": 77636634.9116,
+      "rasio_vol": 22.125064959727784,
+      "skor": 173.4040021818086,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "PIPPIN/USDT:USDT",
+      "harga": 0.01896,
+      "ubah_24j": 69.286,
+      "vol_24j_usdt": 11500335.62428,
+      "rasio_vol": 53.972231034329496,
+      "skor": 123.64263089589075,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ICNT/USDT:USDT",
+      "harga": 0.3323,
+      "ubah_24j": 41.585,
+      "vol_24j_usdt": 9671058.9042,
+      "rasio_vol": 4.389938178643018,
+      "skor": 119.12844170913897,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "PIEVERSE/USDT:USDT",
+      "harga": 2.8493,
+      "ubah_24j": 47.369,
+      "vol_24j_usdt": 8105522.75471,
+      "rasio_vol": 2.5852398395244816,
+      "skor": 98.69313523863973,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "BREV/USDT:USDT",
+      "harga": 0.08704,
+      "ubah_24j": 19.56,
+      "vol_24j_usdt": 72226935.60372,
+      "rasio_vol": 11.634055354776315,
+      "skor": 167.74846842779357,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "IRYS/USDT:USDT",
+      "harga": 0.01716,
+      "ubah_24j": 15.323,
+      "vol_24j_usdt": 4257941.92946,
+      "rasio_vol": 4.736380837495024,
+      "skor": 74.89268257961477,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ARIA/USDT:USDT",
+      "harga": 0.23397,
+      "ubah_24j": 11.744,
+      "vol_24j_usdt": 5540401.75163,
+      "rasio_vol": 0.43775559892853216,
+      "skor": 8.963548664733613,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "UVXY/USDT:USDT",
+      "harga": 21.893,
+      "ubah_24j": 9.569,
+      "vol_24j_usdt": 5468424.4969,
+      "rasio_vol": 2.3264114180593243,
+      "skor": 38.68729965690083,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "CROSS/USDT:USDT",
+      "harga": 0.16305,
+      "ubah_24j": 6.59,
+      "vol_24j_usdt": 5728405.12883,
+      "rasio_vol": 3.328944158182692,
+      "skor": 34.756326741395746,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "BLESS/USDT:USDT",
+      "harga": 0.01126,
+      "ubah_24j": 9.087,
+      "vol_24j_usdt": 7733642.090705,
+      "rasio_vol": 1.0857577681604242,
+      "skor": 18.631327559720717,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ZHIPU/USDT:USDT",
+      "harga": 45.83,
+      "ubah_24j": 4.802,
+      "vol_24j_usdt": 11027699.9749,
+      "rasio_vol": 1.134884503182293,
+      "skor": 11.13096161037556,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "NATGAS/USDT:USDT",
+      "harga": 3.679,
+      "ubah_24j": 4.576,
+      "vol_24j_usdt": 7999071.3222,
+      "rasio_vol": 0.91439276168469,
+      "skor": 7.962814778518588,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "CSOPSK2LHKD/USDT:USDT",
+      "harga": 13.776,
+      "ubah_24j": 3.704,
+      "vol_24j_usdt": 8905523.39257,
+      "rasio_vol": 1.0839175384038058,
+      "skor": 7.827552340879156,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "BTW/USDT:USDT",
+      "harga": 0.46945,
+      "ubah_24j": 7.588,
+      "vol_24j_usdt": 5658914.22095,
+      "rasio_vol": 0.9119322850066364,
+      "skor": 12.128461235066752,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "MINIMAX/USDT:USDT",
+      "harga": 15.216,
+      "ubah_24j": 3.117,
+      "vol_24j_usdt": 12456496.8041,
+      "rasio_vol": 1.5482927021665989,
+      "skor": 10.112440124439383,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "SPCX/USDT:USDT",
+      "harga": 142.19,
+      "ubah_24j": 2.494,
+      "vol_24j_usdt": 46399523.5802,
+      "rasio_vol": 0.912234323373851,
+      "skor": 6.066617983820493,
+      "prioritas_watchlist": true,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "KORU/USDT:USDT",
+      "harga": 6.868,
+      "ubah_24j": 2.907,
+      "vol_24j_usdt": 170361941.556,
+      "rasio_vol": 1.6632168659290727,
+      "skor": 15.623594106094568,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "SKHYNIX/USDT:USDT",
+      "harga": 857.59,
+      "ubah_24j": 2.385,
+      "vol_24j_usdt": 68073434.2228,
+      "rasio_vol": 2.065203418242433,
+      "skor": 13.953860230055112,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "RENDER/USDT:USDT",
+      "harga": 1.4337,
+      "ubah_24j": 3.018,
+      "vol_24j_usdt": 5010901.71929,
+      "rasio_vol": 1.4545097999421683,
+      "skor": 7.462138738393955,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "NVDA/USDT:USDT",
+      "harga": 159.97,
+      "ubah_24j": 1.1,
+      "vol_24j_usdt": 333955217.6668,
+      "rasio_vol": 1.9078535524519533,
+      "skor": 7.394949224801461,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    }
+  ],
+  "bearish": [
+    {
+      "simbol": "AAOI/USDT:USDT",
+      "harga": 40.54,
+      "ubah_24j": -16.824,
+      "vol_24j_usdt": 9319276.0965,
+      "rasio_vol": 0.9075047323450425,
+      "skor": 30.06825063352847,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "MSTU/USDT:USDT",
+      "harga": 14.0961,
+      "ubah_24j": -13.986,
+      "vol_24j_usdt": 6629621.537909,
+      "rasio_vol": 0.6329207460083561,
+      "skor": 16.123872129369254,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "MSTR/USDT:USDT",
+      "harga": 96.56,
+      "ubah_24j": -6.921,
+      "vol_24j_usdt": 39125783.4003,
+      "rasio_vol": 0.9941353005835363,
+      "skor": 17.83720974549108,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "EVAA/USDT:USDT",
+      "harga": 3.3391,
+      "ubah_24j": -5.672,
+      "vol_24j_usdt": 22082621.18,
+      "rasio_vol": 0.5883468446417526,
+      "skor": 7.822339073754133,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ASTER/USDT:USDT",
+      "harga": 0.548,
+      "ubah_24j": -5.223,
+      "vol_24j_usdt": 5825992.0879,
+      "rasio_vol": 0.6092533310281981,
+      "skor": 5.617636750829947,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ENA/USDT:USDT",
+      "harga": 0.11206,
+      "ubah_24j": -4.961,
+      "vol_24j_usdt": 19327111.32076,
+      "rasio_vol": 0.8320903393914362,
+      "skor": 9.43729755899649,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "CRCL/USDT:USDT",
+      "harga": 55.23,
+      "ubah_24j": -4.479,
+      "vol_24j_usdt": 19271545.446,
+      "rasio_vol": 0.9506998305928356,
+      "skor": 9.729596303504604,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "XAG/USDT:USDT",
+      "harga": 45.79,
+      "ubah_24j": -4.004,
+      "vol_24j_usdt": 135623018.2915,
+      "rasio_vol": 1.571657407322925,
+      "skor": 19.71151181505305,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "SKDD/USDT:USDT",
+      "harga": 11.014,
+      "ubah_24j": -3.471,
+      "vol_24j_usdt": 4298303.18049,
+      "rasio_vol": 0.897544022190351,
+      "skor": 5.088333273738172,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "COIN/USDT:USDT",
+      "harga": 115.81,
+      "ubah_24j": -3.274,
+      "vol_24j_usdt": 15626098.4555,
+      "rasio_vol": 1.0408744065789428,
+      "skor": 7.47625396136928,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "AXTI/USDT:USDT",
+      "harga": 37.2,
+      "ubah_24j": -2.821,
+      "vol_24j_usdt": 4723853.6803,
+      "rasio_vol": 1.085396932188003,
+      "skor": 5.126536206259481,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "ZEC/USDT:USDT",
+      "harga": 931.59,
+      "ubah_24j": -2.599,
+      "vol_24j_usdt": 100944123.49739,
+      "rasio_vol": 0.6847187014206579,
+      "skor": 5.346014270546936,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "PAXG/USDT:USDT",
+      "harga": 3759.67,
+      "ubah_24j": -2.302,
+      "vol_24j_usdt": 11388165.36132,
+      "rasio_vol": 1.2707968006262136,
+      "skor": 6.015896858729513,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "XAU/USDT:USDT",
+      "harga": 3772.39,
+      "ubah_24j": -2.389,
+      "vol_24j_usdt": 252203917.5884,
+      "rasio_vol": 1.542935624820764,
+      "skor": 12.53910627377488,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "XAUT/USDT:USDT",
+      "harga": 3758.78,
+      "ubah_24j": -2.256,
+      "vol_24j_usdt": 15520561.5928,
+      "rasio_vol": 1.0084862388981952,
+      "skor": 4.984631989841418,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "IREN/USDT:USDT",
+      "harga": 16.397,
+      "ubah_24j": -1.967,
+      "vol_24j_usdt": 8089535.04953,
+      "rasio_vol": 1.4284972073687447,
+      "skor": 5.360986662768052,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "SNXX/USDT:USDT",
+      "harga": 2.996,
+      "ubah_24j": -1.835,
+      "vol_24j_usdt": 86631950.14064,
+      "rasio_vol": 1.3291153105477544,
+      "skor": 7.164781222667481,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "TQQQ/USDT:USDT",
+      "harga": 52.83,
+      "ubah_24j": -1.492,
+      "vol_24j_usdt": 45050554.1164,
+      "rasio_vol": 2.388577067339526,
+      "skor": 9.457142398344267,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "BTC/USDT:USDT",
+      "harga": 64029.0,
+      "ubah_24j": -1.514,
+      "vol_24j_usdt": 2650846630.46313,
+      "rasio_vol": 0.753037944618468,
+      "skor": 5.043098343210442,
+      "prioritas_watchlist": true,
+      "sumber": "ai"
+    },
+    {
+      "simbol": "PUMP/USDT:USDT",
+      "harga": 0.002703,
+      "ubah_24j": -3.91,
+      "vol_24j_usdt": 9205217.418996,
+      "rasio_vol": 0.8999075603783541,
+      "skor": 6.910725945742583,
+      "prioritas_watchlist": false,
+      "sumber": "ai"
+    }
+  ]
+}

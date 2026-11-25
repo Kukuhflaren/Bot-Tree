@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import time
 import uuid
 from datetime import datetime, timezone
@@ -213,11 +214,14 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
 #
 
 def _n_filled(pos: dict[str, Any]) -> int:
-    return sum(1 for t in pos["titik_grid"] if t["status"] == "filled")
+    return sum(
+        1 for t in pos["titik_grid"]
+        if t["status"] == "filled" or float(t.get("filled_notional") or 0) > 0
+    )
 
 
 def _n_pending(pos: dict[str, Any]) -> int:
-    return sum(1 for t in pos["titik_grid"] if t["status"] == "pending")
+    return sum(1 for t in pos["titik_grid"] if t["status"] in ("pending", "partial"))
 
 
 def _harga_fill_limit(limit: float, arah: int, candle: dict) -> float:
@@ -258,44 +262,69 @@ def _harga_exit_tp(tp: float, arah: int, candle: dict) -> float:
 
 
 def _cek_fill(pos: dict[str, Any], candle: dict) -> list[dict]:
-    """Cek titik limit mana yang terisi pada candle ini.
-
-    Long  : low <= harga limit  → filled
-    Short : high >= harga limit → filled
-
-    Bisa mengisi beberapa level sekaligus jika candle merentang jauh (gap).
-    Harga fill disimpan di t['harga_fill'] (bisa beda dari limit saat gap).
-    """
+    """Apply trade-through confirmation and a shared candle-volume fill cap."""
     filled = []
     arah = pos["arah"]
     low, high = candle["l"], candle["h"]
+    threshold = max(0.0, config.PAPER_FILL_THROUGH_BPS) / 10_000
+    participation = config.PAPER_FILL_PARTICIPATION_PCT / 100
+    if not 0 < participation <= 1:
+        raise ValueError("PAPER_FILL_PARTICIPATION_PCT must be in (0, 100]")
+    volume = float(candle.get("v") or 0)
+    if not math.isfinite(volume) or volume < 0:
+        raise ValueError("Candle volume must be finite and non-negative")
+    capacity = volume * float(candle["c"]) * participation
 
     for t in pos["titik_grid"]:
-        if t["status"] != "pending":
+        if t["status"] not in ("pending", "partial"):
             continue
         harga = t["harga"]
-        if arah > 0 and low <= harga:
-            t["status"] = "filled"
-            t["harga_fill"] = _harga_fill_limit(harga, arah, candle)
-            t["waktu_fill"] = _waktu_iso()
-            filled.append(t)
-        elif arah < 0 and high >= harga:
-            t["status"] = "filled"
-            t["harga_fill"] = _harga_fill_limit(harga, arah, candle)
-            t["waktu_fill"] = _waktu_iso()
-            filled.append(t)
+        crossed = (
+            arah > 0
+            and low <= harga * (1 - threshold)
+            and float(candle["c"]) <= harga
+        ) or (
+            arah < 0
+            and high >= harga * (1 + threshold)
+            and float(candle["c"]) >= harga
+        )
+        if not crossed or capacity <= 0:
+            continue
+        per_level = pos["notional"] / max(len(pos["titik_grid"]), 1)
+        already_filled = float(t.get("filled_notional") or 0)
+        if t["status"] == "filled" and "filled_notional" not in t:
+            already_filled = per_level
+        remaining = max(0.0, per_level - already_filled)
+        fill_notional = min(remaining, capacity)
+        if fill_notional <= 0:
+            continue
+        t["filled_notional"] = already_filled + fill_notional
+        t["_fill_notional_delta"] = fill_notional
+        t["status"] = "filled" if t["filled_notional"] >= per_level - 1e-9 else "partial"
+        t["harga_fill"] = _harga_fill_limit(harga, arah, candle)
+        t["waktu_fill"] = _waktu_iso()
+        filled.append(t)
+        capacity -= fill_notional
     return filled
 
 
 def _hitung_entry_avg(pos: dict[str, Any]) -> float | None:
-    """Rata-rata entry dari titik yang sudah filled (porsi sama per level).
-
-    Pakai harga_fill jika ada (setelah gap slippage), selain itu harga limit.
-    """
-    filled = [t for t in pos["titik_grid"] if t["status"] == "filled"]
+    """Weighted average entry across full, partial, and cancelled partial fills."""
+    filled = [
+        t for t in pos["titik_grid"]
+        if t["status"] in ("filled", "partial", "cancelled")
+        and (float(t.get("filled_notional") or 0) > 0 or t["status"] == "filled")
+    ]
     if not filled:
         return None
-    return sum(t.get("harga_fill", t["harga"]) for t in filled) / len(filled)
+    values = []
+    for level in filled:
+        notional = float(level.get("filled_notional") or 0)
+        if notional <= 0:
+            notional = pos["notional"] / max(len(pos["titik_grid"]), 1)
+        values.append((float(level.get("harga_fill", level["harga"])), notional))
+    total = sum(notional for _, notional in values)
+    return sum(price * notional for price, notional in values) / total if total else None
 
 
 def _tp_efektif(pos: dict[str, Any]) -> float | None:
@@ -308,7 +337,12 @@ def _tp_efektif(pos: dict[str, Any]) -> float | None:
         pending = [level["harga"] for level in pos["tp_ladder"] if level["status"] == "pending"]
         return pending[0] if pending else None
 
-    filled = [t for t in pos["titik_grid"] if t["status"] == "filled" and t.get("tp") is not None]
+    filled = [
+        t for t in pos["titik_grid"]
+        if t["status"] in ("filled", "partial", "cancelled")
+        and (float(t.get("filled_notional") or 0) > 0 or t["status"] == "filled")
+        and t.get("tp") is not None
+    ]
     if not filled:
         return pos.get("tp")
     arah = pos["arah"]
@@ -338,7 +372,7 @@ def _cek_exit(pos: dict[str, Any], candle: dict) -> str | None:
         if low <= sl:
             return "sl"
         if any(
-            level["status"] == "pending" and high >= level["harga"]
+            level["status"] == "pending" and _trade_through_target(level["harga"], arah, candle)
             for level in pos.get("tp_ladder", [])
         ):
             return "tp"
@@ -346,7 +380,7 @@ def _cek_exit(pos: dict[str, Any], candle: dict) -> str | None:
         if high >= sl:
             return "sl"
         if any(
-            level["status"] == "pending" and low <= level["harga"]
+            level["status"] == "pending" and _trade_through_target(level["harga"], arah, candle)
             for level in pos.get("tp_ladder", [])
         ):
             return "tp"
@@ -354,16 +388,23 @@ def _cek_exit(pos: dict[str, Any], candle: dict) -> str | None:
         tp = _tp_efektif(pos)
         if tp is None:
             return None
-        if (arah > 0 and high >= tp) or (arah < 0 and low <= tp):
+        if _trade_through_target(tp, arah, candle):
             return "tp"
     return None
+
+
+def _trade_through_target(target: float, arah: int, candle: dict) -> bool:
+    threshold = max(0.0, config.PAPER_FILL_THROUGH_BPS) / 10_000
+    if arah > 0:
+        return candle["h"] >= target * (1 + threshold) and candle["c"] >= target
+    return candle["l"] <= target * (1 - threshold) and candle["c"] <= target
 
 
 def _cancel_sisa_pending(pos: dict[str, Any]) -> int:
     """Batalkan semua limit yang masih pending. Return jumlah yang di-cancel."""
     n = 0
     for t in pos["titik_grid"]:
-        if t["status"] == "pending":
+        if t["status"] in ("pending", "partial"):
             t["status"] = "cancelled"
             n += 1
     for level in pos.get("tp_ladder", []):
@@ -541,10 +582,18 @@ def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> N
     baru_filled = _cek_fill(pos, candle)
     if baru_filled:
         total = len(pos["titik_grid"])
-        ukuran_baru = pos["notional"] * len(baru_filled) / total if total else 0.0
+        fill_deltas = [
+            (t, float(t.pop("_fill_notional_delta", 0)))
+            for t in baru_filled
+        ]
+        ukuran_baru = sum(delta for _, delta in fill_deltas)
         ukuran_lama = pos.get("ukuran_terisi", 0.0)
         harga_lama = pos.get("entry_avg")
-        harga_baru = sum(t.get("harga_fill", t["harga"]) for t in baru_filled) / len(baru_filled)
+        nilai_baru = sum(
+            float(t.get("harga_fill", t["harga"])) * delta
+            for t, delta in fill_deltas
+        )
+        harga_baru = nilai_baru / ukuran_baru if ukuran_baru else 0.0
         pos["ukuran_masuk_total"] = pos.get("ukuran_masuk_total", ukuran_lama) + ukuran_baru
         pos["ukuran_terisi"] = ukuran_lama + ukuran_baru
         pos["entry_avg"] = (
@@ -578,8 +627,7 @@ def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> N
             if level["status"] != "pending":
                 continue
             tersentuh = (
-                candle["h"] >= level["harga"] if pos["arah"] > 0
-                else candle["l"] <= level["harga"]
+                _trade_through_target(level["harga"], pos["arah"], candle)
             )
             if not tersentuh:
                 continue

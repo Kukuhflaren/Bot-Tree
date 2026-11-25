@@ -68,7 +68,7 @@ def test_belum_ada_fill_tidak_bisa_exit():
 def test_fill_satu_level():
     pos = _pos_contoh()
     # Harga turun sampai S1 (100), belum ke S2
-    c = _candle(100.5, 100.5, 99.5, 100.2)
+    c = _candle(100.5, 100.5, 99.5, 100.0)
     filled = paper._cek_fill(pos, c)
     assert len(filled) == 1
     assert filled[0]["nama"] == "S1"
@@ -97,6 +97,37 @@ def test_fill_multi_level_satu_candle():
     # rata-rata (100+99+98)/3 = 99
     assert abs(pos["entry_avg"] - 99.0) < 1e-9
     print("  [OK] fill 3 level sekaligus (gap) -> entry=99")
+
+
+def test_touch_saja_tidak_mengisi_limit():
+    pos = _pos_contoh()
+    candle = _candle(100.2, 101.0, 100.0, 100.1)
+    assert paper._cek_fill(pos, candle) == []
+    candle = _candle(100.2, 100.2, 99.9, 100.01)
+    assert paper._cek_fill(pos, candle) == []
+    print("  [OK] candle touch tanpa trade-through/close confirmation tidak mengisi")
+
+
+def test_volume_membatasi_partial_fill_dan_dapat_dibatalkan():
+    state = _state()
+    pos = _pos_contoh()
+    state["open_positions"] = [pos]
+    original = paper.config.PAPER_FILL_PARTICIPATION_PCT
+    paper.config.PAPER_FILL_PARTICIPATION_PCT = 1
+    try:
+        paper.update_posisi(state, pos, _candle(100.2, 100.2, 99.5, 100.0) | {"v": 0.5})
+        assert pos["titik_grid"][0]["status"] == "partial"
+        assert abs(pos["ukuran_terisi"] - 0.5) < 1e-9
+        paper.update_posisi(state, pos, _candle(100.2, 100.2, 99.5, 100.0) | {"v": 0.5})
+        assert pos["titik_grid"][0]["status"] == "partial"
+        assert abs(pos["ukuran_terisi"] - 1.0) < 1e-9
+        assert abs(pos["entry_avg"] - 100.0) < 1e-9
+        assert paper._cancel_sisa_pending(pos) == 3
+        assert pos["titik_grid"][0]["status"] == "cancelled"
+        assert abs(pos["ukuran_terisi"] - 1.0) < 1e-9
+    finally:
+        paper.config.PAPER_FILL_PARTICIPATION_PCT = original
+    print("  [OK] volume caps fills and cancel preserves partial exposure")
 
 
 def test_partial_lalu_tp():
@@ -254,7 +285,7 @@ def test_tp_bertingkat_menutup_25_persen_dan_sisa_ke_sl():
     pos["realisasi"] = {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0}
     state["open_positions"] = [pos]
 
-    paper.update_posisi(state, pos, _candle(100.5, 100.5, 97.5, 99.0))
+    paper.update_posisi(state, pos, _candle(100.5, 100.5, 97.5, 97.5))
     assert paper._n_filled(pos) == 3
     assert pos["ukuran_terisi"] == 7.5
 
@@ -291,9 +322,9 @@ def test_tp_ladder_short_menutup_25_persen_per_target():
     pos["realisasi"] = {"pnl_kotor": 0.0, "fee": 0.0, "pnl_bersih": 0.0, "notional": 0.0}
     state["open_positions"] = [pos]
 
-    paper.update_posisi(state, pos, _candle(99.5, 102.5, 99.0, 100.0))
+    paper.update_posisi(state, pos, _candle(99.5, 102.5, 99.0, 102.5))
     assert paper._n_filled(pos) == 3
-    paper.update_posisi(state, pos, _candle(100.0, 101.0, 94.5, 96.0))
+    paper.update_posisi(state, pos, _candle(100.0, 101.0, 94.5, 94.5))
 
     assert pos["status"] == "open"
     assert abs(pos["ukuran_terisi"] - 3.75) < 1e-9
@@ -380,6 +411,8 @@ def main():
         test_belum_ada_fill_tidak_bisa_exit,
         test_fill_satu_level,
         test_fill_multi_level_satu_candle,
+        test_touch_saja_tidak_mengisi_limit,
+        test_volume_membatasi_partial_fill_dan_dapat_dibatalkan,
         test_partial_lalu_tp,
         test_partial_lalu_sl,
         test_sl_diprioritaskan_atas_tp,

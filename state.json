@@ -2,7 +2,7 @@
   "versi": 1,
   "mode": "demo",
   "dibuat": "2026-11-25T15:36:35.190562+00:00",
-  "diperbarui": "2026-11-25T15:37:24.896880+00:00",
+  "diperbarui": "2026-11-25T19:32:55.796227+00:00",
   "modal_awal": 25.0,
   "modal_saat_ini": 25.0,
   "daily_pnl_usdt": 0.0,
@@ -16,6 +16,66 @@
   "log": [
     {
       "waktu": "2026-11-25T15:37:24.888138+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:28:46.729906+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:34:50.237774+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:38:45.798948+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:40:49.296025+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:46:25.811505+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:51:57.849151+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T18:57:21.946725+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T19:02:53.500841+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T19:08:20.606237+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T19:13:56.125732+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T19:19:24.312328+00:00",
+      "level": "info",
+      "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
+    },
+    {
+      "waktu": "2026-11-25T19:26:27.012125+00:00",
       "level": "info",
       "pesan": "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"
     }

@@ -1,183 +1,151 @@
 {
-  "generated_at": "2026-11-25T18:35:59.309111+00:00",
+  "generated_at": "2026-11-26T03:08:01.762427+00:00",
   "ai_enabled": false,
-  "source_count": 40,
+  "source_count": 32,
   "bot_ready_count": 0,
   "rejection_counts": {
-    "trend_structure": 24,
-    "ema": 22,
-    "macd": 34,
-    "near_sr": 3,
-    "vwap": 11,
-    "trend_30m": 35,
+    "trend_structure": 13,
+    "ema": 4,
+    "macd": 25,
+    "near_sr": 18,
+    "vwap": 6,
+    "trend_30m": 26,
     "extreme_candle": 0,
-    "minimum_score": 22,
+    "minimum_score": 11,
     "grid_available": 0,
-    "valid_risk_reward_grid": 32,
+    "valid_risk_reward_grid": 25,
     "displayed_universe_membership": 0,
     "data_or_runtime_error": 0
   },
   "signals": [],
   "rejected": [
     {
-      "symbol": "PROS/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "ZEC/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "LISTA/USDT:USDT",
+      "symbol": "BTC/USDT:USDT",
       "reason": "failed gates: macd, near_sr, trend_30m, minimum_score, valid_risk_reward_grid"
     },
     {
-      "symbol": "TRUMP/USDT:USDT",
-      "reason": "failed gates: trend_structure, vwap, trend_30m"
-    },
-    {
-      "symbol": "XRP/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "BABY/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "SUI/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "BANK/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "WLD/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "INIT/USDT:USDT",
-      "reason": "failed gates: macd"
-    },
-    {
-      "symbol": "NEAR/USDT:USDT",
-      "reason": "failed gates: trend_structure, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "XPL/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd"
-    },
-    {
-      "symbol": "XMR/USDT:USDT",
-      "reason": "failed gates: trend_structure, trend_30m"
-    },
-    {
-      "symbol": "OPG/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, minimum_score"
-    },
-    {
-      "symbol": "AT/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, vwap, trend_30m"
-    },
-    {
-      "symbol": "VVV/USDT:USDT",
-      "reason": "failed gates: trend_structure, trend_30m"
-    },
-    {
-      "symbol": "XLM/USDT:USDT",
-      "reason": "failed gates: trend_structure, vwap, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "AAVE/USDT:USDT",
-      "reason": "failed gates: trend_structure, vwap, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "MON/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, trend_30m"
-    },
-    {
-      "symbol": "BCH/USDT:USDT",
-      "reason": "failed gates: trend_structure, macd, trend_30m, valid_risk_reward_grid"
-    },
-    {
       "symbol": "SPCX/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "BTC/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, near_sr, trend_30m, valid_risk_reward_grid"
     },
     {
       "symbol": "NVDA/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, near_sr, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, vwap, trend_30m, valid_risk_reward_grid"
     },
     {
       "symbol": "ETH/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, near_sr, vwap, trend_30m, minimum_score, valid_risk_reward_grid"
     },
     {
       "symbol": "SOL/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, near_sr, vwap, trend_30m, valid_risk_reward_grid"
     },
     {
       "symbol": "PEPE/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "XRP/USDT:USDT",
+      "reason": "failed gates: trend_structure, macd, near_sr, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "PROS/USDT:USDT",
+      "reason": "failed gates: trend_structure, ema, macd, near_sr, trend_30m, minimum_score, valid_risk_reward_grid"
     },
     {
       "symbol": "HYPE/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, vwap, trend_30m, minimum_score, valid_risk_reward_grid"
     },
     {
-      "symbol": "KITE/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "SHIB/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "BGB/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "SEI/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "ADA/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "symbol": "XMR/USDT:USDT",
+      "reason": "failed gates: trend_structure, macd, near_sr, trend_30m, minimum_score, valid_risk_reward_grid"
     },
     {
       "symbol": "UNI/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, vwap, trend_30m, minimum_score"
     },
     {
-      "symbol": "GRAM/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "1000BONK/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "LINK/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, vwap, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "ENA/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "LUNC/USDT:USDT",
-      "reason": "failed gates: trend_structure, ema, macd, near_sr, vwap, trend_30m, minimum_score, valid_risk_reward_grid"
+      "symbol": "ADA/USDT:USDT",
+      "reason": "failed gates: macd, near_sr, trend_30m"
     },
     {
       "symbol": "DOGE/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: macd, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "ZEC/USDT:USDT",
+      "reason": "failed gates: macd, trend_30m"
+    },
+    {
+      "symbol": "SUI/USDT:USDT",
+      "reason": "failed gates: macd, trend_30m, minimum_score, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "BANK/USDT:USDT",
+      "reason": "failed gates: ema, macd, near_sr, vwap, trend_30m, minimum_score, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SHIB/USDT:USDT",
+      "reason": "failed gates: macd, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "BGB/USDT:USDT",
+      "reason": "failed gates: trend_structure, macd, near_sr, trend_30m, minimum_score, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "LISTA/USDT:USDT",
+      "reason": "failed gates: macd, near_sr, trend_30m"
+    },
+    {
+      "symbol": "WLD/USDT:USDT",
+      "reason": "failed gates: macd, near_sr, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "OPG/USDT:USDT",
+      "reason": "failed gates: macd, near_sr"
+    },
+    {
+      "symbol": "KITE/USDT:USDT",
+      "reason": "failed gates: trend_structure, near_sr, trend_30m, valid_risk_reward_grid"
     },
     {
       "symbol": "ATOM/USDT:USDT",
-      "reason": "failed gates: ema, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+      "reason": "failed gates: trend_structure, macd, trend_30m, minimum_score, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "DOS/USDT:USDT",
+      "reason": "failed gates: near_sr, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "INIT/USDT:USDT",
+      "reason": "failed gates: trend_structure, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "BLESS/USDT:USDT",
+      "reason": "failed gates: trend_structure, macd, trend_30m"
+    },
+    {
+      "symbol": "AKE/USDT:USDT",
+      "reason": "failed gates: trend_structure, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SKYAI/USDT:USDT",
+      "reason": "failed gates: trend_structure, ema, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "HUMA/USDT:USDT",
+      "reason": "failed gates: macd, near_sr, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "ICNT/USDT:USDT",
+      "reason": "failed gates: trend_structure, ema, macd, trend_30m, minimum_score"
+    },
+    {
+      "symbol": "ACE/USDT:USDT",
+      "reason": "failed gates: trend_structure, near_sr, trend_30m, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "IRYS/USDT:USDT",
+      "reason": "failed gates: trend_structure, near_sr, trend_30m, valid_risk_reward_grid"
     }
   ]
 }

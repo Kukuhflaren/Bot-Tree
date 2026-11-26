@@ -3,6 +3,6 @@
   "started": "2026-11-25T13:34:11.267551+00:00",
   "send_attempts": 0,
   "opened_orders": 0,
-  "cycle_started_at": "2026-11-25T15:10:14.986204+00:00",
-  "pipeline_ready": false
+  "cycle_started_at": "2026-11-25T21:13:58.510977+00:00",
+  "pipeline_ready": true
 }

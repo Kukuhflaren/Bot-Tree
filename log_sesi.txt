@@ -1,0 +1,96 @@
+Script started on 2026-11-27 17:41:44+07:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="119" LINES="40"]
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m ls .[Khla[K[K[K-la
+[?2004ltotal 700
+drwx------.  9 u0_a247 u0_a247  4096 Nov 27 17:41 [0m[01;34m.[0m
+drwx------. 10 u0_a247 u0_a247  3452 Nov 27 16:29 [01;34m..[0m
+-rw-------.  1 u0_a247 u0_a247  2214 Nov 27 17:36 .env
+drwx------.  7 u0_a247 u0_a247  3452 Nov 27 17:32 [01;34m.git[0m
+-rw-------.  1 u0_a247 u0_a247    97 Nov 27 16:36 .gitignore
+-rw-------.  1 u0_a247 u0_a247    95 Nov 21 20:37 .gitkeep
+-rw-------.  1 u0_a247 u0_a247  1009 Nov 22 23:36 FASE_A.md
+-rw-------.  1 u0_a247 u0_a247  1596 Nov 22 23:36 FASE_STATUS.md
+-rw-------.  1 u0_a247 u0_a247  1068 Nov 21 20:37 LICENSE
+-rw-------.  1 u0_a247 u0_a247  2765 Nov 21 20:37 PHASE6.md
+-rw-------.  1 u0_a247 u0_a247  5729 Nov 25 20:15 PHASE7.md
+-rw-------.  1 u0_a247 u0_a247  2347 Nov 21 20:37 PHASE_ROADMAP.md
+-rw-------.  1 u0_a247 u0_a247 10559 Nov 27 15:38 README.md
+drwx------.  2 u0_a247 u0_a247  3452 Nov 25 20:15 [01;34mWebsite[0m
+drwx------.  2 u0_a247 u0_a247  3452 Nov 27 17:37 [01;34m__pycache__[0m
+-rw-------.  1 u0_a247 u0_a247  6973 Nov 22 23:36 ai_kelayakan.py
+-rw-------.  1 u0_a247 u0_a247    54 Nov 21 20:37 ai_pemakaian.json
+-rw-------.  1 u0_a247 u0_a247 12119 Nov 21 20:37 ai_pemilih.py
+drwx------.  5 u0_a247 u0_a247  3452 Nov 27 14:40 [01;34marchive[0m
+-rw-------.  1 u0_a247 u0_a247  6452 Nov 21 20:37 bitget_orders.py
+-rw-------.  1 u0_a247 u0_a247 27436 Nov 23 09:31 bot-tree-dashboard.html
+-rw-------.  1 u0_a247 u0_a247  9125 Nov 22 23:36 cek_kelayakan.py
+-rw-------.  1 u0_a247 u0_a247  1271 Nov 21 20:37 cek_koneksi.py
+-rw-------.  1 u0_a247 u0_a247  4768 Nov 27 16:49 cek_risk_universe.py
+-rw-------.  1 u0_a247 u0_a247  6838 Nov 27 17:30 config.py
+-rw-------.  1 u0_a247 u0_a247 32084 Nov 27 17:39 daftar_40.json
+-rw-------.  1 u0_a247 u0_a247  9789 Nov 25 23:24 daftar_ai.json
+-rw-------.  1 u0_a247 u0_a247 26532 Nov 27 15:38 dashboard_server.py
+-rw-------.  1 u0_a247 u0_a247  1019 Nov 21 20:37 data_pasar.py
+drwx------.  4 u0_a247 u0_a247  3452 Nov 25 23:24 [01;34mdemo_backups[0m
+-rw-------.  1 u0_a247 u0_a247 10244 Nov 25 20:15 demo_phase7.py
+-rw-------.  1 u0_a247 u0_a247   195 Nov 27 16:29 demo_test_state.json
+drwx------.  3 u0_a247 u0_a247  3452 Nov 27 14:40 [01;34mdocs[0m
+-rw-------.  1 u0_a247 u0_a247  2263 Nov 27 17:32 env.example
+-rw-------.  1 u0_a247 u0_a247 12375 Nov 27 15:38 indikator.py
+-rw-------.  1 u0_a247 u0_a247  7938 Nov 25 20:15 log_aktivitas_pengembangan.json
+-rw-------.  1 u0_a247 u0_a247 37904 Nov 21 20:37 log_penilai.jsonl
+-rw-------.  1 u0_a247 u0_a247     0 Nov 27 17:41 log_sesi.txt
+-rw-------.  1 u0_a247 u0_a247   455 Nov 27 14:40 loop_otomatis.sh
+-rw-------.  1 u0_a247 u0_a247 34999 Nov 27 15:38 paper.py
+-rw-------.  1 u0_a247 u0_a247  4815 Nov 21 20:37 paper_journal.py
+-rw-------.  1 u0_a247 u0_a247  7714 Nov 21 20:37 paper_metrics.py
+-rw-------.  1 u0_a247 u0_a247  3485 Nov 21 20:37 paper_phase6.py
+-rw-------.  1 u0_a247 u0_a247   623 Nov 27 16:29 paper_trades.jsonl
+-rw-------.  1 u0_a247 u0_a247  4300 Nov 27 16:29 penilai_ai.json
+-rw-------.  1 u0_a247 u0_a247 17090 Nov 27 15:38 penilai_ai.py
+-rw-------.  1 u0_a247 u0_a247  7784 Nov 27 16:29 penyaring.py
+-rw-------.  1 u0_a247 u0_a247   225 Nov 21 20:37 phase7_config.py
+-rw-------.  1 u0_a247 u0_a247    34 Nov 21 20:37 requirements.txt
+-rw-------.  1 u0_a247 u0_a247  2732 Nov 25 20:15 reset_demo_data.py
+-rw-------.  1 u0_a247 u0_a247  3007 Nov 21 20:37 risk.py
+-rw-------.  1 u0_a247 u0_a247  4679 Nov 27 15:38 scanner.py
+-rw-------.  1 u0_a247 u0_a247 22973 Nov 27 16:50 signal.json
+-rw-------.  1 u0_a247 u0_a247  7153 Nov 27 15:38 signal_engine.py
+-rw-------.  1 u0_a247 u0_a247 17715 Nov 27 16:50 state.json
+-rw-------.  1 u0_a247 u0_a247 19875 Nov 27 16:29 state.json.bak2
+-rw-------.  1 u0_a247 u0_a247  2696 Nov 21 20:37 state.py
+-rw-------.  1 u0_a247 u0_a247  2128 Nov 21 20:37 tes_bitget_orders.py
+-rw-------.  1 u0_a247 u0_a247   982 Nov 22 18:11 tes_cek_kelayakan.py
+-rw-------.  1 u0_a247 u0_a247  4422 Nov 25 20:15 tes_demo_phase7.py
+-rw-------.  1 u0_a247 u0_a247  2180 Nov 21 20:37 tes_indikator.py
+-rw-------.  1 u0_a247 u0_a247 15621 Nov 25 20:15 tes_paper_partial.py
+-rw-------.  1 u0_a247 u0_a247  8836 Nov 27 15:38 tes_paper_slippage.py
+-rw-------.  1 u0_a247 u0_a247  2010 Nov 25 23:24 tes_penyaring_lokal.py
+-rw-------.  1 u0_a247 u0_a247  2627 Nov 21 20:37 tes_phase6.py
+-rw-------.  1 u0_a247 u0_a247  3876 Nov 25 20:15 tes_reset_demo_data.py
+-rw-------.  1 u0_a247 u0_a247  6961 Nov 27 15:38 tes_strategi_sederhana.py
+-rw-------.  1 u0_a247 u0_a247  2182 Nov 27 15:38 tes_tp_sl_metode.py
+-rw-------.  1 u0_a247 u0_a247 14441 Nov 25 23:24 tes_uji_demo_unified.py
+-rw-------.  1 u0_a247 u0_a247  4323 Nov 27 16:29 trade_costs.py
+-rw-------.  1 u0_a247 u0_a247 50282 Nov 25 23:24 uji_demo_unified.py
+-rw-------.  1 u0_a247 u0_a247  3171 Nov 22 23:36 uji_paper_demo.py
+-rw-------.  1 u0_a247 u0_a247  4393 Nov 21 20:37 universe.py
+drwx------.  5 u0_a247 u0_a247  3452 Nov 23 23:00 [01;34mvenv[0m
+-rw-------.  1 u0_a247 u0_a247   218 Nov 25 23:24 watchlist.json
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano readme.md
+[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;54H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 9.3                                           readme.md                                                     [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[?12l[?25h[?25l[38d[J[40d[?12l[?25h[40;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano log_sesi.tsx
+[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;54H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 9.3                                         log_sesi.tsx                                                    [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[38d[J[40d[?12l[?25h[40;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m pytb[Kon[K[Khon signal_engine.py
+[?2004lSignals: 3/33 bot-ready -> signal.json
+Rejection counts (gate failures may overlap):
+  trend_or_range: 26
+  adx_ok: 26
+  range_ok: 26
+  minimum_score: 26
+  grid_available: 26
+  valid_risk_reward_grid: 30
+  extreme_candle: 0
+  displayed_universe_membership: 0
+  data_or_runtime_error: 0
+AI disabled; no orders are submitted.
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano loop o[K[K_otomathis[K[K[Kis.sh
+[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;53H(B[0;7m[ Reading... ](B[m[38;52H(B[0;7m[ Read 24 lines ](B[m[H(B[0;7m  GNU nano 9.3                                       loop_otomatis.sh                                                  [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[36m#!/data/data/com.termux/files/usr/bin/bash[3d(B[0;1m[34mset[35m -e[5d[39m(B[mRESCREEN_EVERY[32m=[39m(B[m12  [36m # 12 × 5 menit = 60 menit[6d[39m(B[mi[32m=[39m(B[m0[8d[32mwhile[39m(B[m true[32m;[39m(B[m [32mdo[9;3Hif[39m(B[m [32m(([39m(B[m i % RESCREEN_EVERY [32m==[39m(B[m 0 [32m));[39m(B[m [32mthen[10;5H(B[0;1m[34mecho[39m(B[m (B[0;1m[33m"[$(date)] Screening ulang universe (penyaring.py)..."[11;5H[39m(B[mpython penyaring.py [32m||[39m(B[m true[12;3H[32mfi[14d(B[0;1m[34mecho[39m(B[m (B[0;1m[33m"[$(date)] Siklus scanner #$i"[15;3H[39m(B[mpython scanner.py(B[0;1m[35m --sekali[39m(B[m [32m||[39m(B[m true[17;3Hi[32m=$(([39m(B[mi + 1[32m))[18;3H[39m(B[msleep 300[19d[32mdone[21d(B[0;1m[33m""[39m(B[m"menjalankan loop otomatis termux[22d(B[0;1m[34mchmod[39m(B[m +x loop_otomatis.sh[23d./loop_otomatis.sh[25d(B[0;1m[33m""[39m(B[m"[2d[?12l[?25h[?25l[1;110H(B[0;7mModified(B[m
+Script done on 2026-11-27 23:14:13+07:00 [COMMAND_EXIT_CODE="0"]

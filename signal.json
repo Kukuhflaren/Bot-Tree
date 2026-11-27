@@ -1,68 +1,55 @@
 {
-  "generated_at": "2026-11-27T09:50:06.901491+00:00",
+  "generated_at": "2026-11-27T10:44:31.251513+00:00",
   "ai_enabled": false,
-  "source_count": 36,
-  "bot_ready_count": 13,
+  "source_count": 33,
+  "bot_ready_count": 3,
   "rejection_counts": {
-    "trend_or_range": 20,
-    "adx_ok": 20,
-    "range_ok": 22,
-    "minimum_score": 20,
-    "grid_available": 20,
-    "valid_risk_reward_grid": 23,
+    "trend_or_range": 26,
+    "adx_ok": 26,
+    "range_ok": 26,
+    "minimum_score": 26,
+    "grid_available": 26,
+    "valid_risk_reward_grid": 30,
     "extreme_candle": 0,
     "displayed_universe_membership": 0,
     "data_or_runtime_error": 0
   },
   "signals": [
     {
-      "timestamp": "2026-11-27T09:49:57.294587+00:00",
-      "symbol": "ZEC/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 23.11,
-      "range_atr": 3.89,
+      "timestamp": "2026-11-27T10:44:27.147761+00:00",
+      "symbol": "MOVE/USDT:USDT",
+      "direction": "SHORT",
+      "label": "bearish",
+      "adx": 32.55,
+      "range_atr": 3.14,
       "entry_levels": [
         {
-          "level": "S3",
-          "price": 746.61,
-          "tp": 760.96,
+          "level": "R1",
+          "price": 0.0053956,
+          "tp": 0.005341,
           "tp_levels": [
-            760.96
+            0.005341
           ],
-          "sl": 742.56,
-          "risk_atr": 0.989,
-          "rr": 3.54,
-          "net_rr": 2.72,
-          "arah_level": 1
-        },
-        {
-          "level": "S2",
-          "price": 749.8,
-          "tp": 760.96,
-          "tp_levels": [
-            760.96
-          ],
-          "sl": 742.56,
-          "risk_atr": 1.77,
-          "rr": 1.54,
-          "net_rr": 1.26,
-          "arah_level": 1
+          "sl": 0.0054289,
+          "risk_atr": 1.34,
+          "rr": 1.64,
+          "net_rr": 1.21,
+          "arah_level": -1
         }
       ],
       "take_profit_fraction_per_level": 1.0,
-      "sl": 742.56,
-      "tp": 760.96,
-      "risk_atr": 0.989,
-      "rr": 3.54,
-      "net_rr": 2.72,
-      "score": 91,
+      "sl": 0.0054289,
+      "tp": 0.005341,
+      "risk_atr": 1.34,
+      "rr": 1.64,
+      "net_rr": 1.21,
+      "score": 98,
       "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
+      "candle_timestamp": 1795775700000,
       "score_components": {
         "tren": 30,
-        "adx": 20.1,
-        "dekat_grid": 16.0,
+        "adx": 25.0,
+        "dekat_grid": 18.5,
         "range": 15,
         "tanpa_ekstrem": 10
       },
@@ -74,116 +61,49 @@
         "minimum_score": true,
         "grid_available": true
       },
-      "hl": 745.02,
-      "hh": 760.96,
-      "atr": 4.101428571428585,
+      "hl": 0.005341,
+      "hh": 0.005419,
+      "atr": 2.4857142857142812e-05,
       "bot_ready": true,
       "ai_enabled": false,
       "source": "trend-range-grid",
-      "candidate_24h_change_pct": 1.066
+      "candidate_24h_change_pct": -4.385
     },
     {
-      "timestamp": "2026-11-27T09:49:58.051689+00:00",
-      "symbol": "WIF/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 20.82,
-      "range_atr": 3.57,
+      "timestamp": "2026-11-27T10:44:28.717145+00:00",
+      "symbol": "SKDD/USDT:USDT",
+      "direction": "SHORT",
+      "label": "bearish",
+      "adx": 21.51,
+      "range_atr": 5.78,
       "entry_levels": [
         {
-          "level": "S2",
-          "price": 0.13772,
-          "tp": 0.1388,
+          "level": "R1",
+          "price": 9.8085,
+          "tp": 9.539,
           "tp_levels": [
-            0.1388
+            9.539
           ],
-          "sl": 0.1374,
-          "risk_atr": 0.957,
-          "rr": 3.36,
-          "net_rr": 1.88,
-          "arah_level": 1
+          "sl": 9.9506,
+          "risk_atr": 2.13,
+          "rr": 1.9,
+          "net_rr": 1.67,
+          "arah_level": -1
         }
       ],
       "take_profit_fraction_per_level": 1.0,
-      "sl": 0.1374,
-      "tp": 0.1388,
-      "risk_atr": 0.957,
-      "rr": 3.36,
-      "net_rr": 1.88,
-      "score": 88,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 17.8,
-        "dekat_grid": 15.2,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.1376,
-      "hh": 0.1388,
-      "atr": 0.0003357142857142884,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 4.776
-    },
-    {
-      "timestamp": "2026-11-27T09:49:58.259453+00:00",
-      "symbol": "SEI/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 21.09,
-      "range_atr": 3.4,
-      "entry_levels": [
-        {
-          "level": "S3",
-          "price": 0.038838,
-          "tp": 0.03954,
-          "tp_levels": [
-            0.03954
-          ],
-          "sl": 0.038622,
-          "risk_atr": 0.94,
-          "rr": 3.26,
-          "net_rr": 2.5,
-          "arah_level": 1
-        },
-        {
-          "level": "S2",
-          "price": 0.038994,
-          "tp": 0.03954,
-          "tp_levels": [
-            0.03954
-          ],
-          "sl": 0.038622,
-          "risk_atr": 1.62,
-          "rr": 1.47,
-          "net_rr": 1.19,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.038622,
-      "tp": 0.03954,
-      "risk_atr": 0.94,
-      "rr": 3.26,
-      "net_rr": 2.5,
+      "sl": 9.9506,
+      "tp": 9.539,
+      "risk_atr": 2.13,
+      "rr": 1.9,
+      "net_rr": 1.67,
       "score": 90,
       "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
+      "candle_timestamp": 1795775700000,
       "score_components": {
         "tren": 30,
-        "adx": 18.1,
-        "dekat_grid": 16.5,
+        "adx": 16.5,
+        "dekat_grid": 18.0,
         "range": 15,
         "tanpa_ekstrem": 10
       },
@@ -195,358 +115,49 @@
         "minimum_score": true,
         "grid_available": true
       },
-      "hl": 0.03876,
-      "hh": 0.03954,
-      "atr": 0.00022928571428571412,
+      "hl": 9.539,
+      "hh": 9.924,
+      "atr": 0.0665714285714286,
       "bot_ready": true,
       "ai_enabled": false,
       "source": "trend-range-grid",
-      "candidate_24h_change_pct": 10.273
+      "candidate_24h_change_pct": -13.687
     },
     {
-      "timestamp": "2026-11-27T09:49:58.670910+00:00",
-      "symbol": "SOL/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 31.77,
-      "range_atr": 4.32,
-      "entry_levels": [
-        {
-          "level": "S3",
-          "price": 73.182,
-          "tp": 73.884,
-          "tp_levels": [
-            73.884
-          ],
-          "sl": 72.996,
-          "risk_atr": 1.03,
-          "rr": 3.77,
-          "net_rr": 2.24,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 72.996,
-      "tp": 73.884,
-      "risk_atr": 1.03,
-      "rr": 3.77,
-      "net_rr": 2.24,
-      "score": 98,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 25.0,
-        "dekat_grid": 18.4,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 73.104,
-      "hh": 73.884,
-      "atr": 0.18035714285714124,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 3.33
-    },
-    {
-      "timestamp": "2026-11-27T09:49:59.657302+00:00",
-      "symbol": "XRP/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 26.22,
-      "range_atr": 5.4,
-      "entry_levels": [
-        {
-          "level": "S2",
-          "price": 0.97663,
-          "tp": 0.9868,
-          "tp_levels": [
-            0.9868
-          ],
-          "sl": 0.97424,
-          "risk_atr": 1.14,
-          "rr": 4.26,
-          "net_rr": 2.53,
-          "arah_level": 1
-        },
-        {
-          "level": "S1",
-          "price": 0.97889,
-          "tp": 0.9868,
-          "tp_levels": [
-            0.9868
-          ],
-          "sl": 0.97424,
-          "risk_atr": 2.22,
-          "rr": 1.7,
-          "net_rr": 1.16,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.97424,
-      "tp": 0.9868,
-      "risk_atr": 1.14,
-      "rr": 4.26,
-      "net_rr": 2.53,
-      "score": 93,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 23.2,
-        "dekat_grid": 14.6,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.9755,
-      "hh": 0.9868,
-      "atr": 0.002092857142857158,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 2.862
-    },
-    {
-      "timestamp": "2026-11-27T09:49:59.901685+00:00",
-      "symbol": "JCT/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 26.97,
-      "range_atr": 3.19,
-      "entry_levels": [
-        {
-          "level": "S3",
-          "price": 0.0015098,
-          "tp": 0.001535,
-          "tp_levels": [
-            0.001535
-          ],
-          "sl": 0.0015017,
-          "risk_atr": 0.919,
-          "rr": 3.12,
-          "net_rr": 2.37,
-          "arah_level": 1
-        },
-        {
-          "level": "S2",
-          "price": 0.0015154,
-          "tp": 0.001535,
-          "tp_levels": [
-            0.001535
-          ],
-          "sl": 0.0015017,
-          "risk_atr": 1.56,
-          "rr": 1.43,
-          "net_rr": 1.15,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.0015017,
-      "tp": 0.001535,
-      "risk_atr": 0.919,
-      "rr": 3.12,
-      "net_rr": 2.37,
-      "score": 95,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 24.0,
-        "dekat_grid": 16.2,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.001507,
-      "hh": 0.001535,
-      "atr": 8.785714285714258e-06,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 3.108
-    },
-    {
-      "timestamp": "2026-11-27T09:50:00.313391+00:00",
-      "symbol": "INIT/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 29.9,
-      "range_atr": 3.01,
-      "entry_levels": [
-        {
-          "level": "S3",
-          "price": 0.12277,
-          "tp": 0.13526,
-          "tp_levels": [
-            0.13526
-          ],
-          "sl": 0.11861,
-          "risk_atr": 0.901,
-          "rr": 3.01,
-          "net_rr": 2.87,
-          "arah_level": 1
-        },
-        {
-          "level": "S2",
-          "price": 0.12554,
-          "tp": 0.13526,
-          "tp_levels": [
-            0.13526
-          ],
-          "sl": 0.11861,
-          "risk_atr": 1.5,
-          "rr": 1.4,
-          "net_rr": 1.35,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.11861,
-      "tp": 0.13526,
-      "risk_atr": 0.901,
-      "rr": 3.01,
-      "net_rr": 2.87,
-      "score": 98,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 25.0,
-        "dekat_grid": 17.8,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.12138,
-      "hh": 0.13526,
-      "atr": 0.004611428571428576,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 18.826
-    },
-    {
-      "timestamp": "2026-11-27T09:50:00.536946+00:00",
-      "symbol": "ADA/USDT:USDT",
+      "timestamp": "2026-11-27T10:44:29.203888+00:00",
+      "symbol": "ELSA/USDT:USDT",
       "direction": "SHORT",
       "label": "bearish",
-      "adx": 21.54,
-      "range_atr": 2.8,
+      "adx": 73.3,
+      "range_atr": 5.16,
       "entry_levels": [
         {
-          "level": "R4",
-          "price": 0.15312,
-          "tp": 0.1524,
+          "level": "R2",
+          "price": 0.091471,
+          "tp": 0.0876,
           "tp_levels": [
-            0.1524
+            0.0876
           ],
-          "sl": 0.15337,
-          "risk_atr": 0.88,
-          "rr": 2.86,
-          "net_rr": 1.23,
+          "sl": 0.093558,
+          "risk_atr": 1.95,
+          "rr": 1.85,
+          "net_rr": 1.71,
           "arah_level": -1
         }
       ],
       "take_profit_fraction_per_level": 1.0,
-      "sl": 0.15337,
-      "tp": 0.1524,
-      "risk_atr": 0.88,
-      "rr": 2.86,
-      "net_rr": 1.23,
-      "score": 93,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772400000,
-      "score_components": {
-        "tren": 30,
-        "adx": 18.5,
-        "dekat_grid": 19.1,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.1524,
-      "hh": 0.1532,
-      "atr": 0.00028571428571428796,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": 2.279
-    },
-    {
-      "timestamp": "2026-11-27T09:50:02.264198+00:00",
-      "symbol": "XMR/USDT:USDT",
-      "direction": "SHORT",
-      "label": "bearish",
-      "adx": 30.27,
-      "range_atr": 2.54,
-      "entry_levels": [
-        {
-          "level": "R5",
-          "price": 459.85,
-          "tp": 455.33,
-          "tp_levels": [
-            455.33
-          ],
-          "sl": 461.54,
-          "risk_atr": 0.854,
-          "rr": 2.67,
-          "net_rr": 1.77,
-          "arah_level": -1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 461.54,
-      "tp": 455.33,
-      "risk_atr": 0.854,
-      "rr": 2.67,
-      "net_rr": 1.77,
+      "sl": 0.093558,
+      "tp": 0.0876,
+      "risk_atr": 1.95,
+      "rr": 1.85,
+      "net_rr": 1.71,
       "score": 99,
       "candle_timeframe": "5m",
-      "candle_timestamp": 1795772700000,
+      "candle_timestamp": 1795775700000,
       "score_components": {
         "tren": 30,
         "adx": 25.0,
-        "dekat_grid": 19.5,
+        "dekat_grid": 18.6,
         "range": 15,
         "tanpa_ekstrem": 10
       },
@@ -558,271 +169,62 @@
         "minimum_score": true,
         "grid_available": true
       },
-      "hl": 455.33,
-      "hh": 460.35,
-      "atr": 1.9792857142857088,
+      "hl": 0.0876,
+      "hh": 0.09313,
+      "atr": 0.001070714285714284,
       "bot_ready": true,
       "ai_enabled": false,
       "source": "trend-range-grid",
-      "candidate_24h_change_pct": -13.005
-    },
-    {
-      "timestamp": "2026-11-27T09:50:03.038515+00:00",
-      "symbol": "BLUR/USDT:USDT",
-      "direction": "SHORT",
-      "label": "bearish",
-      "adx": 22.24,
-      "range_atr": 4.3,
-      "entry_levels": [
-        {
-          "level": "R3",
-          "price": 0.009156,
-          "tp": 0.00875,
-          "tp_levels": [
-            0.00875
-          ],
-          "sl": 0.009411,
-          "risk_atr": 1.89,
-          "rr": 1.59,
-          "net_rr": 1.49,
-          "arah_level": -1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.009411,
-      "tp": 0.00875,
-      "risk_atr": 1.89,
-      "rr": 1.59,
-      "net_rr": 1.49,
-      "score": 91,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772700000,
-      "score_components": {
-        "tren": 30,
-        "adx": 19.2,
-        "dekat_grid": 16.3,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.00875,
-      "hh": 0.00933,
-      "atr": 0.00013500000000000008,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": -15.855
-    },
-    {
-      "timestamp": "2026-11-27T09:50:05.044098+00:00",
-      "symbol": "BLESS/USDT:USDT",
-      "direction": "SHORT",
-      "label": "bearish",
-      "adx": 20.42,
-      "range_atr": 6.25,
-      "entry_levels": [
-        {
-          "level": "R3",
-          "price": 0.017053,
-          "tp": 0.016428,
-          "tp_levels": [
-            0.016428
-          ],
-          "sl": 0.01719,
-          "risk_atr": 1.22,
-          "rr": 4.59,
-          "net_rr": 3.86,
-          "arah_level": -1
-        },
-        {
-          "level": "R2",
-          "price": 0.016914,
-          "tp": 0.016428,
-          "tp_levels": [
-            0.016428
-          ],
-          "sl": 0.01719,
-          "risk_atr": 2.47,
-          "rr": 1.77,
-          "net_rr": 1.58,
-          "arah_level": -1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.01719,
-      "tp": 0.016428,
-      "risk_atr": 1.22,
-      "rr": 4.59,
-      "net_rr": 3.86,
-      "score": 90,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772700000,
-      "score_components": {
-        "tren": 30,
-        "adx": 17.4,
-        "dekat_grid": 17.9,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.016428,
-      "hh": 0.017123,
-      "atr": 0.0001112857142857143,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": -3.9
-    },
-    {
-      "timestamp": "2026-11-27T09:50:06.279038+00:00",
-      "symbol": "MMT/USDT:USDT",
-      "direction": "LONG",
-      "label": "bullish",
-      "adx": 27.78,
-      "range_atr": 4.57,
-      "entry_levels": [
-        {
-          "level": "S1",
-          "price": 0.17265,
-          "tp": 0.1947,
-          "tp_levels": [
-            0.1947
-          ],
-          "sl": 0.16698,
-          "risk_atr": 1.06,
-          "rr": 3.89,
-          "net_rr": 3.72,
-          "arah_level": 1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 0.16698,
-      "tp": 0.1947,
-      "risk_atr": 1.06,
-      "rr": 3.89,
-      "net_rr": 3.72,
-      "score": 95,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772700000,
-      "score_components": {
-        "tren": 30,
-        "adx": 24.8,
-        "dekat_grid": 15.3,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 0.1702,
-      "hh": 0.1947,
-      "atr": 0.005364285714285715,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": -24.288
-    },
-    {
-      "timestamp": "2026-11-27T09:50:06.510446+00:00",
-      "symbol": "EVAA/USDT:USDT",
-      "direction": "SHORT",
-      "label": "bearish",
-      "adx": 21.47,
-      "range_atr": 5.8,
-      "entry_levels": [
-        {
-          "level": "R2",
-          "price": 2.2148,
-          "tp": 2.0519,
-          "tp_levels": [
-            2.0519
-          ],
-          "sl": 2.3087,
-          "risk_atr": 2.34,
-          "rr": 1.74,
-          "net_rr": 1.66,
-          "arah_level": -1
-        }
-      ],
-      "take_profit_fraction_per_level": 1.0,
-      "sl": 2.3087,
-      "tp": 2.0519,
-      "risk_atr": 2.34,
-      "rr": 1.74,
-      "net_rr": 1.66,
-      "score": 87,
-      "candle_timeframe": "5m",
-      "candle_timestamp": 1795772700000,
-      "score_components": {
-        "tren": 30,
-        "adx": 18.5,
-        "dekat_grid": 13.7,
-        "range": 15,
-        "tanpa_ekstrem": 10
-      },
-      "zone": "dekat_grid",
-      "conditions": {
-        "trend_or_range": true,
-        "adx_ok": true,
-        "range_ok": true,
-        "minimum_score": true,
-        "grid_available": true
-      },
-      "hl": 2.0519,
-      "hh": 2.2846,
-      "atr": 0.04009999999999996,
-      "bot_ready": true,
-      "ai_enabled": false,
-      "source": "trend-range-grid",
-      "candidate_24h_change_pct": -22.693
+      "candidate_24h_change_pct": -6.576
     }
   ],
   "rejected": [
     {
       "symbol": "BTC/USDT:USDT",
-      "reason": "failed gates: range_ok, valid_risk_reward_grid"
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "NVDA/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
       "symbol": "SPCX/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "NVDA/USDT:USDT",
-      "reason": "failed gates: valid_risk_reward_grid"
+      "symbol": "INIT/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
       "symbol": "SSV/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "ME/USDT:USDT",
+      "symbol": "ZEC/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "2Z/USDT:USDT",
+      "symbol": "COPPER/USDT:USDT",
+      "reason": "failed gates: valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SEI/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "ONE/USDT:USDT",
+      "symbol": "HYUNDAI/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "XAU/USDT:USDT",
+      "reason": "failed gates: valid_risk_reward_grid"
+    },
+    {
+      "symbol": "CL/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SKHYNIX/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
@@ -830,7 +232,11 @@
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "W/USDT:USDT",
+      "symbol": "BZ/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SOL/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
@@ -838,23 +244,31 @@
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "ENA/USDT:USDT",
+      "symbol": "XRP/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "GALA/USDT:USDT",
+      "symbol": "CBRS/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "MOVE/USDT:USDT",
+      "symbol": "TSM/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "TRUMP/USDT:USDT",
+      "symbol": "ADA/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "ELSA/USDT:USDT",
+      "symbol": "ME/USDT:USDT",
+      "reason": "failed gates: valid_risk_reward_grid"
+    },
+    {
+      "symbol": "XMR/USDT:USDT",
+      "reason": "failed gates: valid_risk_reward_grid"
+    },
+    {
+      "symbol": "SQQQ/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
@@ -866,27 +280,23 @@
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "TIA/USDT:USDT",
-      "reason": "failed gates: range_ok, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "VVV/USDT:USDT",
+      "symbol": "SOXS/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "FIL/USDT:USDT",
+      "symbol": "BLESS/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
-      "symbol": "SKYAI/USDT:USDT",
-      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
-    },
-    {
-      "symbol": "ARIA/USDT:USDT",
+      "symbol": "MMT/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     },
     {
       "symbol": "AKE/USDT:USDT",
+      "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
+    },
+    {
+      "symbol": "EVAA/USDT:USDT",
       "reason": "failed gates: trend_or_range, adx_ok, range_ok, minimum_score, grid_available, valid_risk_reward_grid"
     }
   ]

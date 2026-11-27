@@ -1,0 +1,24 @@
+!/data/data/com.termux/files/usr/bin/bash
+set -e
+
+RESCREEN_EVERY=12   # 12 × 5 menit = 60 menit
+i=0
+
+while true; do
+  if (( i % RESCREEN_EVERY == 0 )); then
+    echo "[$(date)] Screening ulang universe (penyaring.py)..."
+    python penyaring.py || true
+  fi
+
+  echo "[$(date)] Siklus scanner #$i"
+  python scanner.py --sekali || true
+
+  i=$((i + 1))
+  sleep 300
+done
+
+"""menjalankan loop otomatis termux
+chmod +x loop_otomatis.sh
+./loop_otomatis.sh
+
+"""

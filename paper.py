@@ -1,14 +1,4 @@
-"""Fase D — Paper Trading Engine.
-
-Mensimulasikan grid limit + TP/SL tanpa mengirim order ke Bitget.
-Analisis, target, dan pemantauan eksekusi memakai candle 30m publik. State disimpan di state.json.
-
-Alur:
-  1. Baca kandidat yang ditampilkan di daftar_40.json dan analisis ulang tanpa AI.
-  2. Cek risk.boleh_order_baru(state).
-  3. Buka posisi paper (grid limit pending).
-  4. Setiap candle 30m baru: cek fill limit, TP bertahap, dan SL.
-  5. Tutup posisi → hitung PnL setelah fee → update state.
+"""Paper Trading Engine.
 
 Pakai:
   python paper.py                  # satu siklus (cek sinyal + update posisi)
@@ -37,10 +27,6 @@ import universe as uni
 
 BIAYA_PP = 0.12  # % fee pulang-pergi (perkiraan taker 2 sisi)
 
-# Slippage paper (konservatif):
-# - Limit entry: jika candle gap menembus limit, fill di open (bisa lebih baik/buruk tergantung arah)
-# - SL: selalu fill di extreme candle (low untuk long, high untuk short) — adverse
-# - TP: diasumsikan limit, fill di harga TP (tanpa slippage positif)
 SLIPPAGE_SL = True   # True = SL pakai extreme candle (realistis saat gap)
 SLIPPAGE_LIMIT_GAP = True  # True = gap-through limit fill di open
 
@@ -63,16 +49,14 @@ def _alasan_tolak(a: dict[str, Any], grid: list[dict[str, Any]]) -> list[str]:
     """Nama pintu yang gagal, singkat, untuk log scanner. Bukan keputusan baru."""
     valid = [g for g in grid if g.get("valid")]
     label = {
-        "trend_structure": "tren",
-        "ema": "ema",
-        "macd": "macd",
-        "near_sr": "dekat_sr",
-        "vwap": "vwap",
-        "trend_30m": "tren_30m",
-        "extreme_candle": "ekstrem",
-        "minimum_score": "skor",
-        "grid_available": "grid",
-    }
+    "trend_or_range": "tren/range",
+    "adx_ok": "adx",
+    "range_ok": "range",
+    "minimum_score": "skor",
+    "grid_available": "grid",
+    "valid_risk_reward_grid": "rr_grid",
+    "extreme_candle": "ekstrem",
+}
     alasan: list[str] = []
     for nama in pa.kegagalan_gate(a, valid):
         if nama == "valid_risk_reward_grid":

@@ -133,7 +133,7 @@ def main():
             "Cek: python cek_kelayakan.py atau python ai_kelayakan.py --pakai-ai"
         )
     else:
-        print(f"Ada {masalah} item perlu diperbaiki sebelum menganggap Fase A selesai.")
+        print(f"Ada {masalah} item perlu diperbaiki sebelum selesai.")
     return masalah
 
 

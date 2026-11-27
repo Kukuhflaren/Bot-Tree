@@ -84,7 +84,7 @@ def tp_levels_untuk(a, arah, h):
 def buffer_sl(a):
     """Jarak SL di luar HL/HH = SL_BUFFER_ATR × ATR."""
     atr_val = a.get("atr") or 0.0
-    buf = getattr(config, "SL_BUFFER_ATR", 0.35)
+    buf = config.SL_BUFFER_ATR
     if buf > 0:
         return buf * atr_val
     # fallback lama
@@ -93,69 +93,63 @@ def buffer_sl(a):
     return 0.0
 
 
-def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
-    """Grid ATR arithmetic + TP struktur + SL buffer + Net RR setelah fee.
+def rencana(a, arah=None, rr_min=None, risk_atr_min=None, risk_atr_max=None):
+    """Grid dalam range HL..HH + satu SL + TP struktur + Net RR setelah fee.
 
-    arah: 1=long, -1=short, 0=range/sideways
+    Arah yang dipakai selalu hasil deteksi di `a["arah"]` (1=long, -1=short).
+    Sideways (0) = skip: tidak ada titik grid.
     """
+    arah = a.get("arah", arah) if a.get("arah") is not None else (arah or 0)
+    if arah == 0:
+        return []
     if rr_min is None:
-        rr_min = getattr(config, "RR_MIN", 1.1)
+        rr_min = config.RR_MIN
     if risk_atr_min is None:
-        risk_atr_min = getattr(config, "RISK_ATR_MIN", 0.7)
+        risk_atr_min = config.RISK_ATR_MIN
     if risk_atr_max is None:
-        risk_atr_max = getattr(config, "RISK_ATR_MAX", 3.0)
-    fee_pct = getattr(config, "FEE_ROUNDTRIP_PCT", 0.12)
+        risk_atr_max = config.RISK_ATR_MAX
+    fee_pct = config.FEE_ROUNDTRIP_PCT
 
     p = a["harga"]
     atr_val = a.get("atr") or 0.0
-    hl = a.get("HL") or p * 0.99
-    hh = a.get("HH") or p * 1.01
+    hl, hh = a.get("HL"), a.get("HH")
+    if hl is None or hh is None:
+        return []
     buf = buffer_sl(a)
+
+    if arah > 0:
+        sl_h, tp_h = hl - buf, hh      # satu SL untuk semua level
+    else:
+        sl_h, tp_h = hh + buf, hl
 
     hasil = []
     for nama, h in a.get("grid") or []:
         tolak = []
-        # Tentukan arah efektif per level (penting untuk range)
-        if arah != 0:
-            arah_level = arah
-        else:
-            mid = (hh + hl) / 2
-            arah_level = 1 if h < mid else -1
-
-        if arah_level > 0:
-            sl_h = hl - buf
-            tp_h = hh
+        if arah > 0:
             sl_salah_sisi = sl_h >= h
-            risk = h - sl_h
-            reward = tp_h - h if tp_h is not None else None
+            risk, reward = h - sl_h, tp_h - h
         else:
-            sl_h = hh + buf
-            tp_h = hl
             sl_salah_sisi = sl_h <= h
-            risk = sl_h - h
-            reward = h - tp_h if tp_h is not None else None
+            risk, reward = sl_h - h, h - tp_h
 
         risiko_persen = (risk / h * 100) if h > 0 else 0.0
-        reward_persen = (reward / h * 100) if (reward is not None and h > 0) else None
+        reward_persen = (reward / h * 100) if h > 0 else 0.0
         risk_atr = (risk / atr_val) if atr_val > 0 else None
 
-        # Net RR setelah fee
-        rr = None
-        net_rr = None
-        if tp_h is None:
-            tolak.append("tanpa TP")
+        rr = net_rr = None
         if sl_salah_sisi:
             tolak.append("SL salah sisi")
-        if risk <= 0 or (reward is not None and reward <= 0):
+        if tp_h is None:
+            tolak.append("tanpa TP nyata")
+        elif risk <= 0 or reward <= 0:
             tolak.append("geometri rusak")
-        elif reward is not None and not sl_salah_sisi:
+        elif not sl_salah_sisi:
             rr = reward / risk
-            # Net: kurangi fee dari reward dan risk
-            net_reward = max(0.0, reward_persen - fee_pct) if reward_persen is not None else 0.0
+            net_reward = max(0.0, reward_persen - fee_pct)
             net_risk = risiko_persen + fee_pct
             net_rr = (net_reward / net_risk) if net_risk > 0 else 0.0
             if net_rr < rr_min:
-                tolak.append(f"net_RR {net_rr:.2f} < {rr_min}")
+                tolak.append(f"RR net {net_rr:.2f} < {rr_min}")
             if risk_atr is not None and risk_atr < risk_atr_min:
                 tolak.append(f"risk_atr {risk_atr:.2f} < {risk_atr_min}")
             if risk_atr is not None and risk_atr > risk_atr_max:
@@ -169,21 +163,11 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
             "tp_levels": [r(tp_h)] if tp_h is not None else [],
             "sl": r(sl_h),
             "risiko_sl_persen": r(risiko_persen, 3),
-            "reward_persen": r(reward_persen, 3) if reward_persen is not None else None,
+            "reward_persen": r(reward_persen, 3),
             "rr": r(rr, 3) if rr is not None else None,
-            "net_
-
-        hasil.append({
-            "titik": nama,
-            "harga": r(h),
-            "jarak_persen": r(abs(h - p) / p * 100, 3),
-            "tp": r(tp_h) if tp_h is not None else None,
-            "tp_levels": [r(level) for level in tp_levels],
-            "sl": r(sl_h),
-            "risiko_sl_persen": r(risiko_persen, 3),
-            "reward_persen": r(reward_persen, 3) if reward_persen is not None else None,
-            "rr": r(rr, 3) if rr is not None else None,
+            "net_rr": r(net_rr, 3) if net_rr is not None else None,
             "risk_atr": r(risk_atr, 3) if risk_atr is not None else None,
+            "arah_level": arah,
             "sl_salah_sisi": sl_salah_sisi,
             "valid": not tolak,
             "tolak": tolak,
@@ -249,6 +233,7 @@ def snapshot(t, a):
         "arah": arah_label,
         "label": a.get("label"),
         "harga": r(a["harga"]),
+        "atr": r(a.get("atr"), 6),
         "hl": r(a.get("HL")),
         "hh": r(a.get("HH")),
         "atr_persen": r(a["atr"] / a["harga"] * 100, 3) if a.get("harga") else None,
@@ -263,7 +248,7 @@ def snapshot(t, a):
         "komponen": {n: v for n, v in a.get("rincian") or []},
         "rsi": r(a.get("rsi"), 3),
         "syarat": syarat_dict,
-        "tp_fraction_per_level": 0.25,
+        "tp_fraction_per_level": 1.0,
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
         "rr_terbaik": r(max((g.get("rr") for g in valid_grid if g.get("rr") is not None), default=None), 3),
@@ -283,15 +268,15 @@ def buat_prompt(snaps):
     return f"""Kamu penilai risiko untuk bot scalping grid futures USDT.
 Parameter bot:
 - leverage {config.LEVERAGE:.0f}x
-- TP mode "{config.TP_MODE}" (sr_lawan = target bertahap pada S/R lawan; struktur = di HH/HL; persen = {config.TP_PERCENT}% dari entry)
-- tiap level TP merealisasikan 25% dari posisi yang terisi saat target pertama tercapai; sisa tetap terbuka sampai target berikutnya atau SL
+- strategi Trend Grid Sederhana: hanya bullish (long) atau bearish (short); sideways di-skip
+- grid di dalam range HL-HH, TP utama di HH (long) / HL (short), satu SL untuk seluruh grid
 - SL di luar HL/HH dengan jarak {_teks_sl()}
-- RR minimum per titik grid = {config.RR_MIN}
+- Net RR minimum (setelah fee) per titik grid = {config.RR_MIN}
 - risk (jarak entry→SL) harus antara {config.RISK_ATR_MIN}× dan {config.RISK_ATR_MAX}× ATR (menolak SL terlalu sempit/lebar)
 - biaya pulang-pergi sekitar {BIAYA_PP}% harga
 - tiap titik limit memakai sebagian modal
 
-Di bawah ini ringkasan ANGKA tiap token yang dihitung bot dari candle 30 menit asli.
+Di bawah ini ringkasan ANGKA tiap token yang dihitung bot dari candle {config.CANDLE_TIMEFRAME} asli.
 Tugasmu memberi second opinion (bukan memprediksi harga):
 - verdict: "MASUK" (setup layak dicoba), "TUNGGU" (belum matang), atau "TOLAK" (risiko lebih besar dari peluang).
 - keyakinan: 1 sampai 5.
@@ -302,7 +287,7 @@ Tugasmu memberi second opinion (bukan memprediksi harga):
 Pertimbangkan:
 - hanya titik dengan valid=true yang boleh dipilih
 - RR tinggi saja TIDAK cukup jika risk_atr terlalu kecil (mudah kena noise)
-- VWAP dan tren_30m harus mendukung arah
+- tren (struktur + EMA9/21) dan ADX harus mendukung arah
 - jarak ke S/R relatif ATR
 - lonjakan ekstrem
 - likuiditas
@@ -391,7 +376,7 @@ def jalankan(k, pakai_ai=None):
               f"rr terbaik: {s['rr_terbaik'] if s['rr_terbaik'] is not None else '-'} | "
               f"risk_atr min valid: {s.get('risk_atr_min_valid')} | "
               f"SL salah sisi: {n_salah} | "
-              f"VWAP ok: {s.get('vwap_ok')} | tren30m: {s.get('tren_30m', {}).get('ok')} | "
+              f"label: {s.get('label')} | adx: {s.get('adx')} | "
               f"layak AI: {h.get('titik_layak')}")
         if pakai_ai:
             log.append({

@@ -242,6 +242,9 @@ def buka_posisi(state: dict[str, Any], sinyal: dict[str, Any]) -> dict[str, Any]
         "status": "open",
         "skor_bot": sinyal.get("skor_bot"),
         "rr_terbaik": sinyal.get("rr_terbaik"),
+        "atr": sinyal.get("atr"),
+        "hl": sinyal.get("hl"),
+        "hh": sinyal.get("hh"),
     }
 
     state["open_positions"].append(pos)
@@ -587,7 +590,12 @@ def tutup_posisi(state: dict[str, Any], pos: dict[str, Any], alasan: str, harga_
     _catat_pnl(state, hasil_baru["pnl_bersih"])
     hasil = _akumulasi_hasil(pos, hasil_baru, harga_keluar)
     pos["ukuran_terisi"] = 0.0
-    level_teori = pos["sl"] if alasan == "sl" else (_tp_efektif(pos) or pos["tp"])
+    if alasan == "sl":
+        level_teori = pos["sl"]
+    elif alasan == "tp":
+        level_teori = _tp_efektif(pos) or pos["tp"]
+    else:
+        level_teori = None  # time_exit / candle_ekstrem: keluar di harga pasar
     _finalisasi_posisi(state, pos, alasan, hasil, harga_keluar, level_teori)
 
 
@@ -624,6 +632,38 @@ def _realisasi_tp(
     if pos["ukuran_terisi"] <= 1e-10:
         pos["ukuran_terisi"] = 0.0
         _finalisasi_posisi(state, pos, "tp", hasil, harga, harga)
+
+
+def _batal_tanpa_fill(state: dict[str, Any], pos: dict[str, Any], alasan: str) -> None:
+    """Posisi belum terisi sama sekali: batalkan semua limit, tidak dihitung sebagai trade."""
+    n = _cancel_sisa_pending(pos)
+    pos["status"] = "closed"
+    pos["waktu_tutup"] = _waktu_iso()
+    pos["alasan_tutup"] = alasan
+    pos["pending_dibatalkan"] = n
+    state["open_positions"] = [p for p in state["open_positions"] if p["id"] != pos["id"]]
+    state.setdefault("riwayat", []).append(pos)
+    state["riwayat"] = state["riwayat"][-100:]
+    st.tambah_log(state, f"BATAL {pos['simbol']} ({alasan}) | {n} limit dibatalkan, tidak ada fill", "info")
+
+
+def _umur_jam(pos: dict[str, Any], candle: dict) -> float | None:
+    """Umur posisi (jam) diukur dari waktu candle tutup, supaya konsisten saat replay/tes."""
+    try:
+        buka = datetime.fromisoformat(pos["waktu_buka"])
+        sekarang = datetime.fromtimestamp(candle["t"] / 1000, tz=timezone.utc)
+        return (sekarang - buka).total_seconds() / 3600
+    except Exception:
+        return None
+
+
+def _candle_ekstrem_melawan(pos: dict[str, Any], candle: dict) -> bool:
+    atr_val = pos.get("atr") or 0.0
+    if atr_val <= 0:
+        return False
+    body = candle["c"] - candle["o"]
+    batas = config.EXTREME_BODY_ATR * atr_val
+    return (pos["arah"] > 0 and body < -batas) or (pos["arah"] < 0 and body > batas)
 
 
 def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> None:
@@ -690,7 +730,20 @@ def update_posisi(state: dict[str, Any], pos: dict[str, Any], candle: dict) -> N
             _realisasi_tp(state, pos, level)
             if pos.get("status") == "closed":
                 return
-        return
+        if pos.get("status") == "closed":
+            return
+
+    # 3. Exit tambahan: candle ekstrem melawan arah dan batas waktu hold
+    if pos.get("entry_avg") is not None and pos.get("ukuran_terisi", 0.0) > 0:
+        if _candle_ekstrem_melawan(pos, candle):
+            tutup_posisi(state, pos, "candle_ekstrem", candle["c"])
+            return
+    umur = _umur_jam(pos, candle)
+    if umur is not None and umur >= config.MAX_HOLD_HOURS:
+        if pos.get("entry_avg") is None or pos.get("ukuran_terisi", 0.0) <= 0:
+            _batal_tanpa_fill(state, pos, "time_exit")
+        else:
+            tutup_posisi(state, pos, "time_exit", candle["c"])
 
 
 # ---------------------------------------------------------------------------
@@ -727,7 +780,7 @@ def satu_siklus(state: dict[str, Any], buka_baru: bool = True) -> None:
         if not sinyal_list:
             st.tambah_log(state, "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)", "info")
             print("  Tidak ada posisi dibuka: belum ada setup yang lolos syarat bot.")
-            print("  Penyebab umum: tren_30m/MACD/dekat_SR gagal, atau SL risk_atr di luar batas.")
+            print("  Penyebab umum: tren sideways / ADX lemah, harga jauh dari zona grid, candle ekstrem, atau RR net / risk_atr di luar batas.")
             print("  Cek: python tes_indikator.py  dan  python cek_kelayakan.py")
         else:
             terbaik = max(sinyal_list, key=lambda s: s.get("skor_bot") or 0)

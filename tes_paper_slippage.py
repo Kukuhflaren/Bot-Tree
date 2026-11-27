@@ -177,24 +177,11 @@ def test_konfigurasi_candle_terbaru():
 
 
 def test_metode_tp_sl_terbaru():
-    old = (
-        config.TP_METHOD, config.TP_ATR_PERCENT,
-        config.SL_METHOD, config.SL_ATR_PERCENT,
-    )
-    try:
-        config.TP_METHOD = "atr"
-        config.TP_ATR_PERCENT = 100
-        config.SL_METHOD = "atr"
-        config.SL_ATR_PERCENT = 50
-        data = {"atr": 10}
-        assert penilai_ai.tp_untuk(data, 1, 100) == 110
-        assert penilai_ai.buffer_sl(data) == 5
-    finally:
-        (
-            config.TP_METHOD, config.TP_ATR_PERCENT,
-            config.SL_METHOD, config.SL_ATR_PERCENT,
-        ) = old
-    print("  [OK] TP/SL ATR mengikuti konfigurasi terbaru")
+    data = {"atr": 10, "HH": 110, "HL": 90}
+    assert penilai_ai.tp_untuk(data, 1, 100) == 110
+    assert penilai_ai.tp_untuk(data, -1, 100) == 90
+    assert abs(penilai_ai.buffer_sl(data) - config.SL_BUFFER_ATR * 10) < 1e-9
+    print("  [OK] TP di HH/HL dan SL = SL_BUFFER_ATR x ATR")
 
 
 def test_slippage_membuat_loss_lebih_dalam():

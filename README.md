@@ -1,18 +1,19 @@
 # Bot-Tree
 
-Bot sinyal dan eksperimen trading futures USDT Bitget UTA. Strategi utama: **Trend + Range Grid (ATR Arithmetic)** — klasifikasi bullish / bearish / sideways, grid otomatis berbasis ATR, dan filter Net RR setelah fee.
+Bot sinyal dan eksperimen trading futures USDT Bitget UTA. Strategi utama: **Trend Grid Sederhana** — hanya trade saat tren jelas (bullish/bearish), sideways di-skip; grid di dalam range HL–HH, satu SL untuk seluruh grid, dan filter Net RR setelah fee.
 
 > **Status:** gunakan paper dan Demo saja. Eksekusi Live belum tersedia. Belum ada bukti bahwa strategi menghasilkan edge setelah biaya dan slippage; hasil uji singkat bukan jaminan keuntungan atau nasihat keuangan.
 
 ## Fitur bot
 
 - Penyaring universe berdasarkan volume, watchlist, blacklist, dan batas perubahan harga.
-- Klasifikasi tren sederhana: **bullish**, **bearish**, **sideways** (struktur HH/HL + EMA 9/21 + ADX).
-- Sideways boleh masuk jika range `(HH−HL) ≥ RANGE_MIN_ATR × ATR`.
-- Grid otomatis deret aritmatika: jarak level = `GRID_SPACING_ATR × ATR`.
-- TP di struktur (HH untuk long, HL untuk short); SL di luar HL/HH = `SL_BUFFER_ATR × ATR`.
-- Syarat masuk memakai **Net RR setelah fee** (`FEE_ROUNDTRIP_PCT`, `RR_MIN`).
-- Risk gate: batas posisi terbuka, rugi harian, rugi beruntun, kill switch, risk ATR.
+- Klasifikasi tren: **bullish** (HH+HL, EMA9>EMA21, ADX ≥ `ADX_TREND_MIN`), **bearish** (LH+LL, EMA9<EMA21, ADX kuat), selain itu **sideways = skip**.
+- Token layak hanya jika: tren jelas, ADX kuat, harga masih dalam jangkauan `NEAR_ATR_MULT`×ATR dari zona grid, range cukup lebar, dan tidak ada candle ekstrem.
+- Grid di dalam range HL–HH: `jarak = max(GRID_SPACING_ATR × ATR, (HH−HL)/5)`; level long = `HL + (k+0.5)×jarak` (di bawah harga), level short = `HH − (k+0.5)×jarak` (di atas harga); maksimal `GRID_MAX_LEVELS` level.
+- Satu SL untuk seluruh grid: `HL − SL_BUFFER_ATR×ATR` (long) / `HH + SL_BUFFER_ATR×ATR` (short). TP utama di HH (long) / HL (short).
+- Syarat masuk memakai **Net RR setelah fee**: `(Reward% − fee) / (Risk% + fee) ≥ RR_MIN`, dan risk antara `RISK_ATR_MIN`–`RISK_ATR_MAX` × ATR.
+- Risk gate: batas posisi terbuka, rugi harian, rugi beruntun, kill switch.
+- Keluar: kena TP, kena SL (struktur rusak), **time exit** (`MAX_HOLD_HOURS`), atau candle ekstrem melawan arah. Limit yang belum terisi dibatalkan saat time exit.
 - Scanner berulang untuk **paper**; scanner tidak mengirim order exchange.
 - Simulasi paper dengan trade-through, partial fill, slippage, fee estimasi, TP/SL, dan state.
 - Signal engine formula-only; AI opsional (tidak menentukan sinyal engine).
@@ -22,11 +23,13 @@ Bot sinyal dan eksperimen trading futures USDT Bitget UTA. Strategi utama: **Tre
 
 | Kondisi | Syarat | Aksi |
 |---|---|---|
-| Bullish | HH+HL + EMA9>EMA21 + ADX ≥ `ADX_TREND_MIN` | Long grid (beli di bawah harga) |
-| Bearish | LH+LL + EMA9<EMA21 + ADX ≥ `ADX_TREND_MIN` | Short grid (jual di atas harga) |
-| Sideways | ADX lemah / struktur tidak jelas | Range grid **hanya jika** range ≥ `RANGE_MIN_ATR` × ATR |
+| Bullish | HH+HL + EMA9>EMA21 + ADX ≥ `ADX_TREND_MIN` | Long grid (limit buy di bawah harga) |
+| Bearish | LH+LL + EMA9<EMA21 + ADX ≥ `ADX_TREND_MIN` | Short grid (limit sell di atas harga) |
+| Sideways | selain di atas / ADX lemah | **Skip** |
 
-Keluar jika: tembus struktur (HL/HH), kena TP, time exit (`MAX_HOLD_HOURS`), atau candle ekstrem melawan arah.
+Alur: saring universe → klasifikasi tren → hitung HL & HH → bangun grid → cek Net RR → pasang limit → monitor (TP / SL / time exit / candle ekstrem) → cari setup baru.
+
+Tes offline strategi: `python tes_strategi_sederhana.py`.
 
 ## Struktur folder
 
@@ -128,16 +131,20 @@ Salin dari `env.example`. Parameter penting:
 | Kelompok | Variabel | Default |
 |---|---|---|
 | Mode | `MODE` | `demo` atau `paper` |
-| Timeframe | `CANDLE_TIMEFRAME` | `5m` |
+| Timeframe | `CANDLE_TIMEFRAME` | `15m` |
 | Modal | `MODAL_DEMO_USDT` | `40` |
 | Leverage | `LEVERAGE` | `4` |
 | Risk | `RISK_PER_SETUP_PCT` | `2.5` |
-| Tren | `ADX_TREND_MIN` | `18` |
-| Sideways | `RANGE_MIN_ATR` | `3.0` |
-| Grid | `GRID_SPACING_ATR`, `GRID_MAX_LEVELS` | `0.45`, `6` |
-| SL | `SL_BUFFER_ATR` | `0.35` |
-| Fee & RR | `FEE_ROUNDTRIP_PCT`, `RR_MIN` | `0.12`, `1.1` |
-| Hold | `MAX_HOLD_HOURS` | `3` |
+| Tren | `ADX_PERIOD`, `ADX_TREND_MIN` | `14`, `20` |
+| Range | `RANGE_MIN_ATR` | `2.0` |
+| Grid | `GRID_SPACING_ATR`, `GRID_MAX_LEVELS` | `0.4`, `5` |
+| SL | `SL_BUFFER_ATR` | `0.4` |
+| Fee & RR | `FEE_ROUNDTRIP_PCT`, `RR_MIN` | `0.12`, `1.0` |
+| Risk ATR | `RISK_ATR_MIN`, `RISK_ATR_MAX` | `1.0`, `2.5` |
+| Candle ekstrem | `EXTREME_BODY_ATR` | `2.5` |
+| Hold | `MAX_HOLD_HOURS` | `5` |
+
+Catatan: `dashboard_config.json` (lokal) bisa menimpa timeframe saat scanner dijalankan lewat dashboard. Hapus file itu atau ubah timeframe lewat dashboard bila ingin selalu mengikuti `.env`.
 
 ---
 
@@ -159,7 +166,7 @@ BITGET_API_KEY=<Demo API key>
 BITGET_SECRET_KEY=<Demo secret>
 BITGET_PASSPHRASE=<Demo passphrase>
 BITGET_UTA=on
-CANDLE_TIMEFRAME=5m
+CANDLE_TIMEFRAME=15m
 ```
 
 `DEMO_LOOP_EXECUTION_VERIFIED` biarkan `off` sampai uji manual order selesai.
@@ -192,7 +199,7 @@ python cek_risk_universe.py
 
 ---
 
-### Langkah 3 — Generate sinyal (strategi Trend + Range Grid)
+### Langkah 3 — Generate sinyal (strategi Trend Grid Sederhana)
 
 Membaca `daftar_40.json`, menganalisis candle, menulis `signal.json`.
 

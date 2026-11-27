@@ -80,18 +80,12 @@ def satu_putaran(
     else:
         print("  Risk gate: OK")
 
-    tp_teks = "struktur" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
-
-if getattr(config, "SL_BUFFER_ATR", 0) > 0:
-    sl_teks = f"{config.SL_BUFFER_ATR:.2f}×ATR buffer"
-elif getattr(config, "SL_METHOD", "atr") == "sr":
-    sl_teks = "S/R HH/HL"
-else:
-    sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+    tp_teks = "struktur (HH/HL)" if config.TP_METHOD == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
+    sl_teks = f"{config.SL_BUFFER_ATR:.2f}xATR di luar HL/HH"
 
     print(
-        f"  TP: {tp_teks} | SL: {sl_teks} | "
-        f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]"
+        f"  TF: {config.CANDLE_TIMEFRAME} | TP: {tp_teks} | SL: {sl_teks} | "
+        f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}] | RR net min {config.RR_MIN}"
     )
 
     paper.satu_siklus(state, buka_baru=buka_baru and boleh)

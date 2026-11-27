@@ -26,6 +26,10 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()  # baca .env supaya CANDLE_TIMEFRAME dll. sama dengan scanner
+
 HALAMAN = "bot-tree-dashboard.html"
 STATE_FIELD = ("mode", "diperbarui", "modal_awal", "modal_saat_ini", "daily_pnl_usdt",
                "consecutive_losses", "total_trades", "total_wins", "total_losses")
@@ -138,9 +142,9 @@ def kumpulkan(folder: Path) -> dict:
     state = baca_json(folder / "state.json")
     penilai = baca_json(folder / "penilai_ai.json")
     config_dashboard = baca_json(folder / "dashboard_config.json") or {}
-    timeframe = config_dashboard.get("timeframe") or os.getenv("CANDLE_TIMEFRAME", "30m").lower()
+    timeframe = config_dashboard.get("timeframe") or os.getenv("CANDLE_TIMEFRAME", "15m").lower()
     if timeframe not in ("5m", "15m", "30m"):
-        timeframe = "30m"
+        timeframe = "15m"
     return {
         "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "signal": baca_json(folder / "signal.json"),
@@ -165,9 +169,9 @@ class KontrolBot:
         self.telegram_token = telegram_token
         self.telegram_chat_id = telegram_chat_id
         saved = baca_json(folder / "dashboard_config.json") or {}
-        self.timeframe = saved.get("timeframe", "30m")
+        self.timeframe = saved.get("timeframe") or os.getenv("CANDLE_TIMEFRAME", "15m").strip().lower()
         if self.timeframe not in ("5m", "15m", "30m"):
-            self.timeframe = "30m"
+            self.timeframe = "15m"
         self.tp_method = saved.get("tp_method", os.getenv("TP_METHOD", "sr"))
         self.tp_atr_percent = float(saved.get("tp_atr_percent", os.getenv("TP_ATR_PERCENT", "100")))
         self.sl_method = saved.get("sl_method", os.getenv("SL_METHOD", "atr"))

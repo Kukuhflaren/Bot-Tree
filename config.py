@@ -1,4 +1,10 @@
-"""Membaca semua pengaturan dari file .env. Tidak ada API key di dalam kode."""
+"""Membaca semua pengaturan dari file .env. Tidak ada API key di dalam kode.
+
+Perbaikan:
+- typo os.get.env -> os.getenv
+- semua nilai numerik kini dikonversi ke float/int (sebelumnya str)
+- nilai default mengikuti env.example, jadi key yang hilang di .env tidak membuat crash
+"""
 import os
 import sys
 
@@ -22,118 +28,140 @@ def _siapkan_konsol() -> None:
 _siapkan_konsol()
 
 
+# ---------------------------------------------------------------- helper
 def _f(nama, default):
+    """Baca angka desimal. Kosong/hilang -> default. Bukan angka -> berhenti dengan pesan jelas."""
+    v = os.getenv(nama, "").strip()
+    if v == "":
+        return float(default)
     try:
-        return float(os.getenv(nama, default))
+        return float(v)
     except ValueError:
-        raise SystemExit(f"Nilai {nama} di .env bukan angka.")
+        raise SystemExit(f"Nilai {nama} di .env bukan angka: {v!r}")
 
 
-MODE = os.getenv("MODE", "paper").strip().lower()
+def _i(nama, default):
+    """Baca bilangan bulat (menerima '3' maupun '3.0')."""
+    return int(_f(nama, default))
+
+
+def _s(nama, default=""):
+    return os.getenv(nama, default).strip()
+
+
+def _onoff(nama, default="off"):
+    return _s(nama, default).lower() == "on"
+
+
+# ---------------------------------------------------------------- mode
+MODE = _s("MODE", "paper").lower()
 if MODE not in ("paper", "demo", "live"):
     raise SystemExit("MODE di .env harus paper, demo, atau live.")
 if MODE == "live" and os.getenv("LIVE_CONFIRM", "") != "SAYA_PAHAM_RISIKONYA":
     raise SystemExit("MODE=live butuh LIVE_CONFIRM=SAYA_PAHAM_RISIKONYA di .env.")
 
-CANDLE_TIMEFRAME = os.getenv("CANDLE_TIMEFRAME", "").strip().lower()
+CANDLE_TIMEFRAME = _s("CANDLE_TIMEFRAME", "15m").lower()
 if CANDLE_TIMEFRAME not in ("5m", "15m", "30m"):
     raise SystemExit("CANDLE_TIMEFRAME di .env harus 5m, 15m, atau 30m.")
 
-DEMO_API = os.getenv("DEMO_API", "off").strip().lower() == "on"
-DEMO_CONFIRM = os.getenv("DEMO_CONFIRM", "").strip()
-DEMO_LOOP_EXECUTION_VERIFIED = os.getenv("DEMO_LOOP_EXECUTION_VERIFIED", "off").strip().lower() == "on"
-DEMO_MAKER_FEE_BPS = os.getenv("DEMO_MAKER_FEE_BPS", "")
-DEMO_TAKER_FEE_BPS = os.getenv("DEMO_TAKER_FEE_BPS", "")
-DEMO_MIN_NET_BPS = os.getenv("DEMO_MIN_NET_BPS", "")
-DEMO_MAX_SPREAD_BPS = os.getenv("DEMO_MAX_SPREAD_BPS", "")
-DEMO_MIN_BOOK_DEPTH_MULTIPLE = os.getenv("DEMO_MIN_BOOK_DEPTH_MULTIPLE", "")
-DEMO_MAX_HOLD_HOURS = os.getenv("DEMO_MAX_HOLD_HOURS", "")
-DEMO_BOOK_MAX_AGE_SECONDS = os.getenv("DEMO_BOOK_MAX_AGE_SECONDS", "")
-PAPER_FILL_THROUGH_BPS = os.get.env("PAPER_FILL_THROUGH_BPS", "")
-PAPER_FILL_PARTICIPATION_PCT = os.getenv("PAPER_FILL_PARTICIPATION_PCT", "")
+# ---------------------------------------------------------------- demo / paper
+DEMO_API = _onoff("DEMO_API")
+DEMO_CONFIRM = _s("DEMO_CONFIRM")
+DEMO_LOOP_EXECUTION_VERIFIED = _onoff("DEMO_LOOP_EXECUTION_VERIFIED")
+DEMO_MAKER_FEE_BPS = _f("DEMO_MAKER_FEE_BPS", 6)
+DEMO_TAKER_FEE_BPS = _f("DEMO_TAKER_FEE_BPS", 6)
+DEMO_MIN_NET_BPS = _f("DEMO_MIN_NET_BPS", 15)
+DEMO_MAX_SPREAD_BPS = _f("DEMO_MAX_SPREAD_BPS", 10)
+DEMO_MIN_BOOK_DEPTH_MULTIPLE = _f("DEMO_MIN_BOOK_DEPTH_MULTIPLE", 5)
+DEMO_MAX_HOLD_HOURS = _f("DEMO_MAX_HOLD_HOURS", 5)
+DEMO_BOOK_MAX_AGE_SECONDS = _f("DEMO_BOOK_MAX_AGE_SECONDS", 3)
+PAPER_FILL_THROUGH_BPS = _f("PAPER_FILL_THROUGH_BPS", 1)          # typo os.get.env diperbaiki
+PAPER_FILL_PARTICIPATION_PCT = _f("PAPER_FILL_PARTICIPATION_PCT", 1)
 
+# ---------------------------------------------------------------- Bitget
 BITGET_API_KEY = os.getenv("BITGET_API_KEY", "")
 BITGET_SECRET_KEY = os.getenv("BITGET_SECRET_KEY", "")
 BITGET_PASSPHRASE = os.getenv("BITGET_PASSPHRASE", "")
-BITGET_UTA = os.getenv("BITGET_UTA", "on").strip().lower() != "off"
+BITGET_UTA = _s("BITGET_UTA", "on").lower() != "off"
 
-AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini").strip().lower()
-AI_ENABLED = os.getenv("USE_AI", "off").strip().lower() == "on"
+# ---------------------------------------------------------------- AI (opsional)
+AI_PROVIDER = _s("AI_PROVIDER", "gemini").lower()
+AI_ENABLED = _onoff("USE_AI")
 AI_KEYS = {
     "gemini": os.getenv("GEMINI_API_KEY", ""),
     "claude": os.getenv("ANTHROPIC_API_KEY", ""),
     "grok": os.getenv("XAI_API_KEY", ""),
     "gpt": os.getenv("OPENAI_API_KEY", ""),
 }
-AI_MODEL = os.getenv("AI_MODEL", "").strip()
-AI_MODEL_CARI = os.getenv("AI_MODEL_CARI", "").strip()
-AI_MAX_CALLS_PER_DAY = int(_f("AI_MAX_CALLS_PER_DAY", 24))
-AI_MAX_TOKENS_PER_HARI = int(_f("AI_MAX_TOKENS_PER_HARI", 30000))
+AI_MODEL = _s("AI_MODEL")
+AI_MODEL_CARI = _s("AI_MODEL_CARI")
+AI_MAX_CALLS_PER_DAY = _i("AI_MAX_CALLS_PER_DAY", 24)
+AI_MAX_TOKENS_PER_HARI = _i("AI_MAX_TOKENS_PER_HARI", 30000)
 
-# --- Modal & Risk (rekomendasi strategi baru) ---
-MODAL_DEMO_USDT = os.getenv("MODAL_DEMO_USDT", "")
-MODAL_LIVE_USDT = os.getenv("MODAL_LIVE_USDT", "")
+# ---------------------------------------------------------------- Modal & Risk
+MODAL_DEMO_USDT = _f("MODAL_DEMO_USDT", 40)
+MODAL_LIVE_USDT = _f("MODAL_LIVE_USDT", 40)
 MODAL_USDT = MODAL_LIVE_USDT if MODE == "live" else MODAL_DEMO_USDT
-LEVERAGE = os.getenv("LEVERAGE", "")
-RISK_PER_SETUP_PCT = os.getenv("RISK_PER_SETUP_PCT", "")
+LEVERAGE = _f("LEVERAGE", 4)
+RISK_PER_SETUP_PCT = _f("RISK_PER_SETUP_PCT", 2.5)
 
-# --- Strategi Trend + Range Grid (ATR Arithmetic) ---
-ADX_PERIOD = int(os.getenv("ADX_PERIOD", ""))
-ADX_TREND_MIN = os.getenv("ADX_TREND_MIN", "")
-ADX_SIDEWAYS_MAX = os.getenv("ADX_SIDEWAYS_MAX", "")
-RANGE_MIN_ATR = os.getenv("RANGE_MIN_ATR", "")
+# ---------------------------------------------------------------- Strategi Trend Grid Sederhana
+ADX_PERIOD = _i("ADX_PERIOD", 14)
+ADX_TREND_MIN = _f("ADX_TREND_MIN", 20)
+ADX_SIDEWAYS_MAX = _f("ADX_SIDEWAYS_MAX", 20)  # tidak dipakai strategi baru (sideways = skip)
+RANGE_MIN_ATR = _f("RANGE_MIN_ATR", 2.0)
 
-GRID_SPACING_ATR = os.getenv("GRID_SPACING_ATR", "")
-GRID_MAX_LEVELS = int(os.getenv("GRID_MAX_LEVELS", ""))
-SL_BUFFER_ATR = os.getenv("SL_BUFFER_ATR", "")
+GRID_SPACING_ATR = _f("GRID_SPACING_ATR", 0.4)   # jarak minimum antar level = max(ini x ATR, range/5)
+GRID_MAX_LEVELS = _i("GRID_MAX_LEVELS", 5)
+SL_BUFFER_ATR = _f("SL_BUFFER_ATR", 0.4)
 
-FEE_ROUNDTRIP_PCT = os.getenv("FEE_ROUNDTRIP_PCT", "")
-RR_MIN = os.getenv("RR_MIN", "")
-# Risk ATR ≈ (entry−SL)/ATR. Minimum praktis ≈ GRID_SPACING_ATR + SL_BUFFER_ATR.
-# Jangan set RISK_ATR_MIN lebih besar dari itu atau level dekat HL/HH selalu ditolak.
-RISK_ATR_MIN = os.getenv("RISK_ATR_MIN", "")
-RISK_ATR_MAX = os.getenv("RISK_ATR_MAX", "")
+FEE_ROUNDTRIP_PCT = _f("FEE_ROUNDTRIP_PCT", 0.12)
+RR_MIN = _f("RR_MIN", 1.0)
+# Risk ATR = (entry-SL)/ATR. Disarankan 1.0 - 2.5 agar fee (0.12%) tidak memakan RR.
+RISK_ATR_MIN = _f("RISK_ATR_MIN", 1.0)
+RISK_ATR_MAX = _f("RISK_ATR_MAX", 2.5)
+EXTREME_BODY_ATR = _f("EXTREME_BODY_ATR", 2.5)      # body candle > ini x ATR = ekstrem
 
-# Kompatibilitas lama (masih dibaca beberapa modul)
-TP_PERCENT = os.getenv("TP_PERCENT", "")
-SL_POINTS = os.getenv("SL_POINTS", "")
-TP_MODE = os.getenv("TP_MODE", "struktur").strip().lower()
+# ---------------------------------------------------------------- Kompatibilitas lama
+TP_PERCENT = _f("TP_PERCENT", 0.25)
+SL_POINTS = _f("SL_POINTS", 0)
+TP_MODE = _s("TP_MODE", "struktur").lower()
 if TP_MODE not in ("sr_lawan", "struktur", "persen"):
     raise SystemExit("TP_MODE di .env harus sr_lawan, struktur, atau persen.")
-TP_METHOD = os.getenv("TP_METHOD", "sr").strip().lower()
+TP_METHOD = _s("TP_METHOD", "sr").lower()
 if TP_METHOD not in ("sr", "atr"):
     raise SystemExit("TP_METHOD di .env harus sr atau atr.")
-TP_ATR_PERCENT = os.getenv("TP_ATR_PERCENT", "")
-SL_METHOD = os.getenv("SL_METHOD", "atr").strip().lower()
+TP_ATR_PERCENT = _f("TP_ATR_PERCENT", 100)
+SL_METHOD = _s("SL_METHOD", "atr").lower()
 if SL_METHOD not in ("sr", "atr"):
     raise SystemExit("SL_METHOD di .env harus sr atau atr.")
-SL_ATR_PERCENT = os.getenv("SL_ATR_PERCENT", "")
-SCORE_MIN = os.getenv("SCORE_MIN", "")
-NEAR_SR_PERCENT = os.getenv("NEAR_SR_PERCENT", "")
-NEAR_MODE = os.getenv("NEAR_MODE", "atr").strip().lower()
+SL_ATR_PERCENT = _f("SL_ATR_PERCENT", 35)
+SCORE_MIN = _f("SCORE_MIN", 35)
+NEAR_SR_PERCENT = _f("NEAR_SR_PERCENT", 0.5)
+NEAR_MODE = _s("NEAR_MODE", "atr").lower()
 if NEAR_MODE not in ("atr", "persen"):
     raise SystemExit("NEAR_MODE di .env harus atr atau persen.")
-NEAR_ATR_MULT = os.getenv("NEAR_ATR_MULT", "")
+NEAR_ATR_MULT = _f("NEAR_ATR_MULT", 3.0)           # level grid maksimal sejauh ini x ATR dari harga
 
-# --- Pengaman ---
-MAX_DAILY_LOSS_USDT = os.getenv("MAX_DAILY_LOSS_USDT", "")
-MAX_OPEN_TOKENS = int(os.getenv("MAX_OPEN_TOKENS", ""))
-DRY_RUN = os.getenv("DRY_RUN", "on").strip().lower() != "off"
-MAX_CONSECUTIVE_LOSSES = int(os.getenv("MAX_CONSECUTIVE_LOSSES", ""))
-KILL_SWITCH = os.getenv("KILL_SWITCH", "off").strip().lower() == "on"
-MAX_HOLD_HOURS = os.getenv("MAX_HOLD_HOURS", "")
+# ---------------------------------------------------------------- Pengaman
+MAX_DAILY_LOSS_USDT = _f("MAX_DAILY_LOSS_USDT", 2)
+MAX_OPEN_TOKENS = _i("MAX_OPEN_TOKENS", 1)
+DRY_RUN = _s("DRY_RUN", "on").lower() != "off"
+MAX_CONSECUTIVE_LOSSES = _i("MAX_CONSECUTIVE_LOSSES", 3)
+KILL_SWITCH = _onoff("KILL_SWITCH")
+MAX_HOLD_HOURS = _f("MAX_HOLD_HOURS", 5)
 
-# --- Penyaring / universe ---
-PENYARING_VOL_MIN_USDT = os.getenv("PENYARING_VOL_MIN_USDT", "")
-PENYARING_TOP_VOLUME = int(os.getenv("PENYARING_TOP_VOLUME", ""))
-JUMLAH_PER_SISI = int(os.getenv("JUMLAH_PER_SISI", ""))
-UBAH_MAKS_SKOR = os.getenv("UBAH_MAKS_SKOR", "")
-UBAH_IDEAL_SKOR = os.getenv("UBAH_IDEAL_SKOR", "")
-EXCLUDE_RWA = os.getenv("EXCLUDE_RWA", "on").strip().lower() != "off"
-WATCHLIST_MODE = os.getenv("WATCHLIST_MODE", "prefer").strip().lower()
+# ---------------------------------------------------------------- Penyaring / universe
+PENYARING_VOL_MIN_USDT = _f("PENYARING_VOL_MIN_USDT", 1_000_000)
+PENYARING_TOP_VOLUME = _i("PENYARING_TOP_VOLUME", 100)
+JUMLAH_PER_SISI = _i("JUMLAH_PER_SISI", 20)
+UBAH_MAKS_SKOR = _f("UBAH_MAKS_SKOR", 20)
+UBAH_IDEAL_SKOR = _f("UBAH_IDEAL_SKOR", 4)
+EXCLUDE_RWA = _s("EXCLUDE_RWA", "on").lower() != "off"
+WATCHLIST_MODE = _s("WATCHLIST_MODE", "prefer").lower()
 if WATCHLIST_MODE not in ("off", "prefer", "only"):
     raise SystemExit("WATCHLIST_MODE di .env harus off, prefer, atau only.")
-WATCHLIST_FILE = os.getenv("WATCHLIST_FILE", "watchlist.json").strip()
+WATCHLIST_FILE = _s("WATCHLIST_FILE", "watchlist.json")
 
 _raw_bl = os.getenv("TOKEN_BLACKLIST", "")
 TOKEN_BLACKLIST = [x.strip().upper() for x in _raw_bl.split(",") if x.strip()]

@@ -2,7 +2,7 @@
 
 Input: displayed bullish/bearish candidates from daftar_40.json.
 Output: signal.json with bot-ready setups and the scoring/entry metadata.
-Analysis uses closed 30m candles and TP targets ladder through opposing S/R levels.
+Analysis uses closed candles of CANDLE_TIMEFRAME; strategy = Trend Grid Sederhana (sideways skipped).
 This module is signal generation only; it never submits orders.
 """
 from __future__ import annotations
@@ -100,7 +100,7 @@ def build_signal(
             }
             for level in valid_levels
         ],
-        "take_profit_fraction_per_level": 0.25,
+        "take_profit_fraction_per_level": 1.0,
         "sl": best["sl"],
         "tp": best["tp"],
         "risk_atr": best.get("risk_atr"),

@@ -57,56 +57,79 @@ def _read_candidates(path: str) -> list[tuple[str, int, dict[str, Any]]]:
 def build_signal(
     symbol: str, direction: int, candidate: dict[str, Any], exchange: Any,
 ) -> tuple[dict[str, Any] | None, list[str]]:
+    """direction dari daftar_40 hanya petunjuk; klasifikasi final dari analisis (bisa sideways)."""
     candles = dp.ambil_candle(exchange, symbol, config.CANDLE_TIMEFRAME, 300)[:-1]
-    analysis = ik.analisis(
-        candles, direction,
-        config.NEAR_SR_PERCENT, config.SCORE_MIN,
-        config.NEAR_MODE, config.NEAR_ATR_MULT,
-        c30=candles,
-    )
-    grid = pa.rencana(analysis, direction)
+    # Deteksi otomatis (arah=None) supaya sideways ikut dinilai
+    analysis = ik.analisis(candles, arah=None)
+    arah_final = analysis.get("arah", direction)
+    # Jika deteksi sideways tapi pemanggil dari sisi bullish/bearish, tetap izinkan
+    # selama analysis.layak True (range cukup).
+    grid = pa.rencana(analysis, arah_final)
     valid_levels = [level for level in grid if level.get("valid")]
     gagal = pa.kegagalan_gate(analysis, valid_levels)
     if gagal:
         return None, gagal
 
-    direction_name = "LONG" if direction > 0 else "SHORT"
-    valid_levels.sort(key=lambda level: level["harga"], reverse=direction < 0)
-    best = max(valid_levels, key=lambda level: level.get("rr") or 0)
+    if arah_final > 0:
+        direction_name = "LONG"
+    elif arah_final < 0:
+        direction_name = "SHORT"
+    else:
+        direction_name = "RANGE"
+
+    valid_levels.sort(key=lambda level: level.get("net_rr") or level.get("rr") or 0, reverse=True)
+    best = valid_levels[0]
     return {
         "timestamp": _timestamp(),
         "symbol": symbol,
         "direction": direction_name,
+        "label": analysis.get("label"),
+        "adx": round(analysis.get("adx") or 0, 2),
+        "range_atr": round(analysis.get("range_atr") or 0, 2),
         "entry_levels": [
-            {"level": level["titik"], "price": level["harga"], "tp": level["tp"],
-             "tp_levels": level["tp_levels"], "sl": level["sl"],
-             "risk_atr": level["risk_atr"], "rr": level["rr"]}
+            {
+                "level": level["titik"],
+                "price": level["harga"],
+                "tp": level["tp"],
+                "tp_levels": level.get("tp_levels") or [],
+                "sl": level["sl"],
+                "risk_atr": level.get("risk_atr"),
+                "rr": level.get("rr"),
+                "net_rr": level.get("net_rr"),
+                "arah_level": level.get("arah_level"),
+            }
             for level in valid_levels
         ],
         "take_profit_fraction_per_level": 0.25,
         "sl": best["sl"],
         "tp": best["tp"],
-        "risk_atr": best["risk_atr"],
-        "rr": best["rr"],
+        "risk_atr": best.get("risk_atr"),
+        "rr": best.get("rr"),
+        "net_rr": best.get("net_rr"),
         "score": analysis["mentah"],
         "candle_timeframe": config.CANDLE_TIMEFRAME,
         "candle_timestamp": analysis.get("candle_timestamp"),
-        "score_components": {name: score for name, score in analysis["rincian"]},
-        "zone": analysis["zona"],
+        "score_components": {name: score for name, score in analysis.get("rincian") or []},
+        "zone": analysis.get("zona"),
         "conditions": {
-            name: bool(passed) for name, passed in zip(
-                ("structure", "ema", "macd", "near_sr", "vwap", "trend_30m"),
-                analysis["syarat"],
+            name: bool(passed)
+            for name, passed in zip(
+                ("trend_or_range", "adx_ok", "range_ok", "minimum_score", "grid_available"),
+                analysis.get("syarat") or [],
             )
         },
+        "hl": analysis.get("HL"),
+        "hh": analysis.get("HH"),
+        "atr": analysis.get("atr"),
         "bot_ready": True,
         "ai_enabled": False,
-        "source": "formula-only",
+        "source": "trend-range-grid",
         "candidate_24h_change_pct": candidate.get("ubah_24j"),
     }, []
 
 
 def generate(input_file: str = INPUT_FILE, output_file: str = OUTPUT_FILE) -> dict[str, Any]:
+
     # This engine is formula-only and consumes the displayed universe directly.
     candidates = _read_candidates(input_file)
     daftar_40 = uni.muat_daftar_40()

@@ -97,6 +97,22 @@ pip install python-dotenv certifi requests aiohttp yarl typing_extensions
 cp env.example .env
 nano .env
 termux-wake-lock
+
+# 1. Pastikan gate baru sudah aktif
+python signal_engine.py
+
+# 2. Cek tidak ada lagi gate "macd", "trend_30m", "near_sr", "vwap"
+python -c "import json; s=json.load(open('signal.json')); print(s.get('rejection_counts'))"
+
+# 3. Cek kelayakan dan risk ATR
+python cek_risk_universe.py
+python cek_kelayakan.py
+
+# 4. Jalankan paper satu siklus
+python paper.py
+
+# 5. Baru jalankan loop penuh
+./loop_otomatis.sh
 ```
 
 Verifikasi:

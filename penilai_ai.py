@@ -1,4 +1,4 @@
-"""Eksperimen: AI sebagai PENILAI (second opinion) atas sinyal bot. Tidak membuat order.
+"""AI sebagai PENILAI (second opinion) atas sinyal bot. Tidak membuat order.
 
 Alur:
   1. Ambil pilihan daftar_ai.json yang masih ada pada sisi sama di daftar_40.json.
@@ -76,108 +76,118 @@ def muat_token():
     return token
 
 
-# [FASE B] TP sesuai TP_MODE; SL bisa berbasis poin atau ATR
+# --- Strategi baru: TP di struktur (HH/HL), SL buffer ATR, fee-aware RR ---
+
 def tp_untuk(a, arah, h):
-    """Harga TP untuk titik masuk h. None = tidak ada level nyata (titik ditolak)."""
-    if getattr(config, "TP_METHOD", "sr") == "atr":
-        atr = a.get("atr") or 0.0
-        persen_atr = getattr(config, "TP_ATR_PERCENT", 100.0) / 100.0
-        jarak = atr * persen_atr
-        return h + arah * jarak if jarak > 0 else None
-    if config.TP_MODE == "persen":
-        return h * (1 + arah * config.TP_PERCENT / 100)
-    if config.TP_MODE == "struktur":
-        return a["HH"] if arah > 0 else a["HL"]
-    lawan = a["level_atas"] if arah > 0 else a["level_bawah"]  # S/R lawan terdekat (level nyata)
-    sesuai = [level for level in lawan if level > h] if arah > 0 else [level for level in lawan if level < h]
-    sesuai.sort(reverse=arah < 0)
-    return sesuai[0] if sesuai else None
+    """TP utama: HH untuk long, HL untuk short, tengah range untuk sideways."""
+    if arah > 0:
+        return a.get("HH")
+    if arah < 0:
+        return a.get("HL")
+    # Sideways / range: TP di sisi berlawanan dari entry relatif ke tengah
+    mid = (a.get("HH", h) + a.get("HL", h)) / 2
+    if h < mid:
+        return a.get("HH")
+    return a.get("HL")
 
 
 def tp_levels_untuk(a, arah, h):
-    """Target bertahap; tiap level berikutnya dapat merealisasikan 25% notional."""
-    if getattr(config, "TP_METHOD", "sr") == "atr":
-        target = tp_untuk(a, arah, h)
-        return [target] if target is not None else []
-    if config.TP_MODE == "persen":
-        target = tp_untuk(a, arah, h)
-        return [target] if target is not None else []
-    if config.TP_MODE == "struktur":
-        target = tp_untuk(a, arah, h)
-        return [target] if target is not None else []
-    lawan = a["level_atas"] if arah > 0 else a["level_bawah"]
-    sesuai = [level for level in lawan if level > h] if arah > 0 else [level for level in lawan if level < h]
-    return sorted(set(sesuai), reverse=arah < 0)
+    """Satu target utama (struktur). Bisa dikembangkan jadi multi-level nanti."""
+    target = tp_untuk(a, arah, h)
+    return [target] if target is not None else []
 
 
 def buffer_sl(a):
-    """Jarak SL di luar HL/HH dalam satuan harga."""
-    if getattr(config, "SL_METHOD", "atr") == "sr":
-        return 0.0
+    """Jarak SL di luar HL/HH = SL_BUFFER_ATR × ATR."""
+    atr_val = a.get("atr") or 0.0
+    buf = getattr(config, "SL_BUFFER_ATR", 0.35)
+    if buf > 0:
+        return buf * atr_val
+    # fallback lama
     if getattr(config, "SL_METHOD", "atr") == "atr":
-        atr_persen = getattr(config, "SL_ATR_PERCENT", 50.0) / 100.0
-        return (a.get("atr") or 0.0) * atr_persen
-    if config.SL_BUFFER_ATR > 0:
-        return config.SL_BUFFER_ATR * (a.get("atr") or 0.0)
-    return config.SL_POINTS * a["harga"] * 1e-4  # 1 poin = 0,01% harga
+        return atr_val * (getattr(config, "SL_ATR_PERCENT", 35.0) / 100.0)
+    return 0.0
 
 
 def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
-    """Titik grid dengan TP (sesuai TP_MODE) dan SL di luar HL/HH.
+    """Grid ATR arithmetic + TP struktur + SL buffer + Net RR setelah fee.
 
-    Bullish: SL = HL - buffer     Bearish: SL = HH + buffer
-    Titik ditolak (valid=False) jika:
-      - tidak ada TP nyata (mode sr_lawan tanpa level lawan)
-      - SL berada di sisi yang salah relatif entry
-      - risk atau reward <= 0
-      - RR < rr_min
-      - risk_atr di luar [risk_atr_min, risk_atr_max]
-    Kolom "tolak" berisi alasan penolakan."""
+    arah: 1=long, -1=short, 0=range/sideways
+    """
     if rr_min is None:
-        rr_min = config.RR_MIN
+        rr_min = getattr(config, "RR_MIN", 1.1)
     if risk_atr_min is None:
-        risk_atr_min = config.RISK_ATR_MIN
+        risk_atr_min = getattr(config, "RISK_ATR_MIN", 0.7)
     if risk_atr_max is None:
-        risk_atr_max = config.RISK_ATR_MAX
+        risk_atr_max = getattr(config, "RISK_ATR_MAX", 3.0)
+    fee_pct = getattr(config, "FEE_ROUNDTRIP_PCT", 0.12)
 
     p = a["harga"]
-    atr = a.get("atr") or 0.0
-    ref = a["HL"] if arah > 0 else a["HH"]
-    sl_h = ref - arah * buffer_sl(a)
+    atr_val = a.get("atr") or 0.0
+    hl = a.get("HL") or p * 0.99
+    hh = a.get("HH") or p * 1.01
+    buf = buffer_sl(a)
 
     hasil = []
-    for nama, h in a["grid"]:
-        tp_levels = tp_levels_untuk(a, arah, h)
-        tp_h = tp_levels[0] if tp_levels else None
+    for nama, h in a.get("grid") or []:
         tolak = []
-        if arah > 0:
+        # Tentukan arah efektif per level (penting untuk range)
+        if arah != 0:
+            arah_level = arah
+        else:
+            mid = (hh + hl) / 2
+            arah_level = 1 if h < mid else -1
+
+        if arah_level > 0:
+            sl_h = hl - buf
+            tp_h = hh
             sl_salah_sisi = sl_h >= h
             risk = h - sl_h
-            reward = (tp_h - h) if tp_h is not None else None
+            reward = tp_h - h if tp_h is not None else None
         else:
+            sl_h = hh + buf
+            tp_h = hl
             sl_salah_sisi = sl_h <= h
             risk = sl_h - h
-            reward = (h - tp_h) if tp_h is not None else None
+            reward = h - tp_h if tp_h is not None else None
 
         risiko_persen = (risk / h * 100) if h > 0 else 0.0
         reward_persen = (reward / h * 100) if (reward is not None and h > 0) else None
-        risk_atr = (risk / atr) if atr > 0 else None
+        risk_atr = (risk / atr_val) if atr_val > 0 else None
 
+        # Net RR setelah fee
         rr = None
+        net_rr = None
         if tp_h is None:
-            tolak.append("tanpa TP nyata")
+            tolak.append("tanpa TP")
         if sl_salah_sisi:
             tolak.append("SL salah sisi")
         if risk <= 0 or (reward is not None and reward <= 0):
             tolak.append("geometri rusak")
         elif reward is not None and not sl_salah_sisi:
             rr = reward / risk
-            if rr < rr_min:
-                tolak.append(f"RR {rr:.2f} < {rr_min}")
+            # Net: kurangi fee dari reward dan risk
+            net_reward = max(0.0, reward_persen - fee_pct) if reward_persen is not None else 0.0
+            net_risk = risiko_persen + fee_pct
+            net_rr = (net_reward / net_risk) if net_risk > 0 else 0.0
+            if net_rr < rr_min:
+                tolak.append(f"net_RR {net_rr:.2f} < {rr_min}")
             if risk_atr is not None and risk_atr < risk_atr_min:
                 tolak.append(f"risk_atr {risk_atr:.2f} < {risk_atr_min}")
             if risk_atr is not None and risk_atr > risk_atr_max:
                 tolak.append(f"risk_atr {risk_atr:.2f} > {risk_atr_max}")
+
+        hasil.append({
+            "titik": nama,
+            "harga": r(h),
+            "jarak_persen": r(abs(h - p) / p * 100, 3),
+            "tp": r(tp_h) if tp_h is not None else None,
+            "tp_levels": [r(tp_h)] if tp_h is not None else [],
+            "sl": r(sl_h),
+            "risiko_sl_persen": r(risiko_persen, 3),
+            "reward_persen": r(reward_persen, 3) if reward_persen is not None else None,
+            "rr": r(rr, 3) if rr is not None else None,
+            "net_
 
         hasil.append({
             "titik": nama,

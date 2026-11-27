@@ -47,60 +47,30 @@ Bot-Tree/
 ├── bitget_orders.py       # sizing / order helper Bitget
 ├── trade_costs.py         # fee & biaya
 ├── cek_koneksi.py         # tes koneksi (tanpa order)
+├── cek_risk_universe.py   # cek risk + universe
+├── demo_phase7.py         # uji order Demo satu setup
+├── uji_paper_demo.py      # preflight paper/demo
+├── uji_demo_unified.py    # loop Demo terpadu
+├── reset_demo_data.py     # reset state Demo (aman)
 ├── dashboard_server.py    # dashboard web (opsional)
 ├── watchlist.json
 ├── requirements.txt
-├── docs/phases/           # dokumentasi tahap lama (arsip)
-├── archive/
-│   ├── tests/             # skrip tes lama (tidak dihapus)
-│   ├── scripts/           # skrip eksperimen / fase lama
-│   └── data_samples/      # sample JSON / log lama
-└── Website/               # materi web tambahan
+├── docs/phases/           # dokumentasi tahap lama
+├── archive/               # tes & skrip lama (tidak dihapus)
+└── Website/
 ```
-
-File di `archive/` dan `docs/phases/` **tidak dihapus** — hanya dipisah agar root tetap bersih.
-
-## Tahap pengembangan
-
-| Urutan | Tahap | Cakupan dan status |
-|---|---|---|
-| 1 | Koneksi | Pemeriksaan ticker publik dan koneksi/saldo Bitget; tidak membuat order. |
-| A | Risk dan universe | Risk gate, watchlist, blacklist, volume dan ukuran posisi. |
-| B | Sinyal teknikal | Trend/range, ADX, grid ATR, TP/SL struktur, Net RR setelah fee. |
-| C | Scanner | Siklus paper berulang; bukan loop order Demo. |
-| D | Paper | Simulasi fill/partial/slippage/fee dan state. |
-| E | Sizing dan preflight | Minimum order, precision, geometri TP/SL dan batas notional. |
-| 5 | Signal engine | Pipeline formula-only → `signal.json`. |
-| 6 | Evaluasi paper | Jurnal, metrik, drawdown; perlu observasi yang cukup. |
-| 7 | Bitget Demo | Filter biaya/pasar, post-only, rekonsiliasi dan time-exit. |
-
-## Yang sudah ada
-
-- Strategi Trend + Range Grid (ATR arithmetic) dengan parameter penuh di `.env`.
-- Konfigurasi terpusat di `config.py` dan contoh di `env.example`.
-- Pipeline: `penyaring.py` → `signal_engine.py` → paper/scanner.
-- Fondasi Demo (sizing, fee assumption, state, risk gate).
-- Arsip file lama di `archive/` dan `docs/phases/` (tidak dihapus).
-
-## Yang belum ada
-
-- Verifikasi end-to-end order Demo (TP/SL, partial, cancel, funding) di akun UTA.
-- Bukti statistik edge setelah fee dari paper yang cukup panjang.
-- Eksekusi Live; jangan pakai `MODE=live` untuk mengirim order uang asli.
-- Dashboard sebagai panduan operasional resmi.
 
 ## Persyaratan
 
 - Python 3.10 atau lebih baru.
-- Paket di `requirements.txt`: `ccxt`, `python-dotenv`, `pandas`, dan `requests`.
-- Windows 10/11 dengan Command Prompt, atau Termux Android.
-- Koneksi internet untuk data pasar dan API Bitget.
-- Akun Bitget UTA. Untuk uji privat pakai **Demo API Key** (baca + trade saja; jangan aktifkan withdraw).
-- Jangan menaruh API key di source code, README, atau file JSON hasil eksperimen.
+- Paket di `requirements.txt`: `ccxt`, `python-dotenv`, `pandas`, `requests`.
+- Windows 10/11 (CMD) atau Termux Android.
+- Akun Bitget **UTA Demo** — API key dengan izin baca + trade saja (jangan aktifkan withdraw).
+- Jangan menaruh API key di source code atau commit `.env`.
 
 ## Instalasi
 
-### Windows — Command Prompt (CMD)
+### Windows (CMD)
 
 ```bat
 cd /d "D:\Projek Aplikasi Ipeh\Bot Tree"
@@ -112,7 +82,7 @@ copy env.example .env
 notepad .env
 ```
 
-### Android — Termux
+### Termux (Android)
 
 ```bash
 pkg update && pkg upgrade -y
@@ -135,86 +105,204 @@ Verifikasi:
 python -c "import ccxt, requests, dotenv; print('dependensi OK')"
 ```
 
-## Konfigurasi penting `.env`
+## Konfigurasi `.env` (strategi baru)
 
-Salin dari `env.example`. Nilai di bawah adalah default eksperimen strategi baru.
+Salin dari `env.example`. Parameter penting:
 
-| Kelompok | Variabel | Default / keterangan |
+| Kelompok | Variabel | Default |
 |---|---|---|
-| Mode | `MODE` | `paper` atau `demo` (Live belum siap) |
+| Mode | `MODE` | `demo` atau `paper` |
 | Timeframe | `CANDLE_TIMEFRAME` | `5m` |
-| Modal | `MODAL_DEMO_USDT`, `MODAL_LIVE_USDT` | `40` |
+| Modal | `MODAL_DEMO_USDT` | `40` |
 | Leverage | `LEVERAGE` | `4` |
-| Risk | `RISK_PER_SETUP_PCT` | `2.5` (% modal per setup) |
-| Tren | `ADX_TREND_MIN`, `ADX_SIDEWAYS_MAX` | `18` |
-| Sideways | `RANGE_MIN_ATR` | `3.0` (minimal lebar range × ATR) |
+| Risk | `RISK_PER_SETUP_PCT` | `2.5` |
+| Tren | `ADX_TREND_MIN` | `18` |
+| Sideways | `RANGE_MIN_ATR` | `3.0` |
 | Grid | `GRID_SPACING_ATR`, `GRID_MAX_LEVELS` | `0.45`, `6` |
 | SL | `SL_BUFFER_ATR` | `0.35` |
-| Fee & RR | `FEE_ROUNDTRIP_PCT`, `RR_MIN` | `0.12`, `1.1` (Net RR) |
+| Fee & RR | `FEE_ROUNDTRIP_PCT`, `RR_MIN` | `0.12`, `1.1` |
 | Hold | `MAX_HOLD_HOURS` | `3` |
-| Universe | `PENYARING_VOL_MIN_USDT`, `WATCHLIST_MODE` | volume min & mode watchlist |
-| Pengaman | `MAX_OPEN_TOKENS`, `MAX_DAILY_LOSS_USDT`, `KILL_SWITCH` | batas risiko |
-| Demo | `DEMO_API`, `DEMO_CONFIRM`, `DRY_RUN` | gate pengiriman Demo |
 
-## Perintah utama
+---
 
-Jalankan dari folder project dengan venv aktif.
+## Langkah menjalankan (Paper → Demo)
 
-### 1. Koneksi
+Jalankan dari folder project dengan **venv aktif**.
+
+### Langkah 0 — Siapkan `.env`
+
+Isi kredensial **Demo** saja (bukan Live):
+
+```dotenv
+MODE=demo
+DRY_RUN=off
+DEMO_API=on
+DEMO_CONFIRM=UJI_DEMO_SAYA_PAHAM
+DEMO_LOOP_EXECUTION_VERIFIED=off
+BITGET_API_KEY=<Demo API key>
+BITGET_SECRET_KEY=<Demo secret>
+BITGET_PASSPHRASE=<Demo passphrase>
+BITGET_UTA=on
+CANDLE_TIMEFRAME=5m
+```
+
+`DEMO_LOOP_EXECUTION_VERIFIED` biarkan `off` sampai uji manual order selesai.
+
+---
+
+### Langkah 1 — Cek koneksi
+
+Memeriksa ticker publik dan saldo (jika key terisi). **Tidak mengirim order.**
 
 ```bash
 python cek_koneksi.py
 ```
 
-### A. Universe
+---
+
+### Langkah 2 — Saring universe
+
+Membuat / memperbarui `daftar_40.json` dari volume, watchlist, dan filter.
 
 ```bash
 python penyaring.py
 ```
 
-Menghasilkan / memperbarui `daftar_40.json`.
+Opsional — cek risk & keanggotaan universe:
 
-### B. Sinyal (strategi baru)
+```bash
+python cek_risk_universe.py
+```
+
+---
+
+### Langkah 3 — Generate sinyal (strategi Trend + Range Grid)
+
+Membaca `daftar_40.json`, menganalisis candle, menulis `signal.json`.
 
 ```bash
 python signal_engine.py
 ```
 
-Membaca `daftar_40.json`, menganalisis candle `CANDLE_TIMEFRAME`, menulis `signal.json`.
-
-### C. Scanner paper
+Periksa hasil:
 
 ```bash
-python scanner.py --sekali
-python scanner.py --interval 300
+python -c "import json; s=json.load(open('signal.json')); print('bot_ready:', s.get('bot_ready_count')); print('reject:', s.get('rejection_counts'))"
 ```
 
-### D. Paper
+Jika `bot_ready_count` masih 0, longgarkan sedikit di `.env` (mis. `ADX_TREND_MIN=15`, `RANGE_MIN_ATR=2.5`, `SCORE_MIN=35`) lalu ulangi langkah 3.
+
+---
+
+### Langkah 4 — Paper (simulasi lokal, tanpa order exchange)
 
 ```bash
 python paper.py --status
 python paper.py
 python paper.py --loop
+python scanner.py --sekali
+python scanner.py --interval 300
 ```
 
-### Demo (hati-hati)
+---
 
-Pastikan `MODE=demo`, kredensial Demo terisi, dan gate di `.env` sudah sesuai sebelum mengirim order. Jangan pakai kunci Live.
+### Langkah 5 — Preflight Demo (tanpa mengirim order)
+
+Memeriksa fee, spread, depth, net bps, geometri TP/SL.
+
+```bash
+python uji_paper_demo.py --once --demo-preflight
+```
+
+Pastikan tidak ada penolakan kritis (spread terlalu lebar, depth kurang, net di bawah `DEMO_MIN_NET_BPS`).
+
+---
+
+### Langkah 6 — Uji satu order Demo secara manual
+
+Hanya setelah langkah 1–5 aman. Ganti placeholder dengan angka setup nyata dari `signal.json`:
+
+```bash
+python demo_phase7.py BTC LONG ENTRY SL TP NOTIONAL --send
+```
+
+Contoh konsep (jangan copy angka sembarangan):
+
+```bash
+python demo_phase7.py BTC LONG 95000 94500 96000 20 --send
+```
+
+Periksa di Bitget Demo: order ID, fill/partial, fee, TP/SL, cancel bila perlu.
+
+Jika status submit tidak jelas → **hentikan**, rekonsiliasi manual, jangan retry buta.
+
+---
+
+### Langkah 7 — Loop Demo (setelah uji manual lulus)
+
+1. Ubah di `.env`:
+
+```dotenv
+DEMO_LOOP_EXECUTION_VERIFIED=on
+```
+
+2. Jalankan loop:
+
+```bash
+python uji_demo_unified.py --days 14 --interval 300 --send-demo
+```
+
+Tanpa mengirim order:
+
+```bash
+python uji_demo_unified.py --once
+```
+
+`Ctrl+C` hanya menghentikan proses lokal — order/posisi di exchange bisa tetap aktif.
+
+---
+
+### Langkah 8 — Reset data Demo (opsional)
+
+Hanya jika runner sudah berhenti dan akun Demo bersih:
+
+```bash
+python reset_demo_data.py --confirm RESET_DEMO_BERSIH
+```
+
+Tool membuat backup di `demo_backups/` sebelum mereset state.
+
+---
+
+## Ringkasan perintah cepat
+
+| Tujuan | Perintah |
+|---|---|
+| Koneksi | `python cek_koneksi.py` |
+| Universe | `python penyaring.py` |
+| Sinyal | `python signal_engine.py` |
+| Paper sekali | `python paper.py` |
+| Scanner | `python scanner.py --interval 300` |
+| Preflight Demo | `python uji_paper_demo.py --once --demo-preflight` |
+| Order Demo 1 setup | `python demo_phase7.py SYMBOL SIDE ENTRY SL TP NOTIONAL --send` |
+| Loop Demo | `python uji_demo_unified.py --days 14 --interval 300 --send-demo` |
+| Reset Demo | `python reset_demo_data.py --confirm RESET_DEMO_BERSIH` |
 
 ## File arsip
 
 | Lokasi | Isi |
 |---|---|
-| `docs/phases/` | Dokumentasi fase lama (FASE_A, PHASE6, PHASE7, roadmap) |
+| `docs/phases/` | Dokumentasi fase lama |
 | `archive/tests/` | Skrip `tes_*.py` lama |
-| `archive/scripts/` | AI selector lama, uji demo unified, reset demo, dll. |
-| `archive/data_samples/` | Sample JSON/log eksperimen lama |
+| `archive/scripts/` | AI selector lama & skrip eksperimen |
+| `archive/data_samples/` | Sample JSON / log lama |
 
-Semua file di arsip **masih ada** dan bisa dipindah kembali ke root bila dibutuhkan.
+File di arsip **tidak dihapus**.
 
 ## Peringatan
 
 - Ini eksperimen, bukan nasihat keuangan.
 - Paper ≠ eksekusi exchange; Demo ≠ Live.
-- Fee, funding, dan slippage dapat menghapus edge yang terlihat di backtest singkat.
+- Fee, funding, dan slippage dapat menghapus edge yang terlihat di uji singkat.
 - Jangan commit file `.env` atau kunci API.
+- Jangan aktifkan izin withdraw pada API key.

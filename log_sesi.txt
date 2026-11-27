@@ -1,96 +1,739 @@
-Script started on 2026-11-27 17:41:44+07:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="119" LINES="40"]
-[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m ls .[Khla[K[K[K-la
-[?2004ltotal 700
-drwx------.  9 u0_a247 u0_a247  4096 Nov 27 17:41 [0m[01;34m.[0m
-drwx------. 10 u0_a247 u0_a247  3452 Nov 27 16:29 [01;34m..[0m
--rw-------.  1 u0_a247 u0_a247  2214 Nov 27 17:36 .env
-drwx------.  7 u0_a247 u0_a247  3452 Nov 27 17:32 [01;34m.git[0m
--rw-------.  1 u0_a247 u0_a247    97 Nov 27 16:36 .gitignore
--rw-------.  1 u0_a247 u0_a247    95 Nov 21 20:37 .gitkeep
--rw-------.  1 u0_a247 u0_a247  1009 Nov 22 23:36 FASE_A.md
--rw-------.  1 u0_a247 u0_a247  1596 Nov 22 23:36 FASE_STATUS.md
--rw-------.  1 u0_a247 u0_a247  1068 Nov 21 20:37 LICENSE
--rw-------.  1 u0_a247 u0_a247  2765 Nov 21 20:37 PHASE6.md
--rw-------.  1 u0_a247 u0_a247  5729 Nov 25 20:15 PHASE7.md
--rw-------.  1 u0_a247 u0_a247  2347 Nov 21 20:37 PHASE_ROADMAP.md
--rw-------.  1 u0_a247 u0_a247 10559 Nov 27 15:38 README.md
-drwx------.  2 u0_a247 u0_a247  3452 Nov 25 20:15 [01;34mWebsite[0m
-drwx------.  2 u0_a247 u0_a247  3452 Nov 27 17:37 [01;34m__pycache__[0m
--rw-------.  1 u0_a247 u0_a247  6973 Nov 22 23:36 ai_kelayakan.py
--rw-------.  1 u0_a247 u0_a247    54 Nov 21 20:37 ai_pemakaian.json
--rw-------.  1 u0_a247 u0_a247 12119 Nov 21 20:37 ai_pemilih.py
-drwx------.  5 u0_a247 u0_a247  3452 Nov 27 14:40 [01;34marchive[0m
--rw-------.  1 u0_a247 u0_a247  6452 Nov 21 20:37 bitget_orders.py
--rw-------.  1 u0_a247 u0_a247 27436 Nov 23 09:31 bot-tree-dashboard.html
--rw-------.  1 u0_a247 u0_a247  9125 Nov 22 23:36 cek_kelayakan.py
--rw-------.  1 u0_a247 u0_a247  1271 Nov 21 20:37 cek_koneksi.py
--rw-------.  1 u0_a247 u0_a247  4768 Nov 27 16:49 cek_risk_universe.py
--rw-------.  1 u0_a247 u0_a247  6838 Nov 27 17:30 config.py
--rw-------.  1 u0_a247 u0_a247 32084 Nov 27 17:39 daftar_40.json
--rw-------.  1 u0_a247 u0_a247  9789 Nov 25 23:24 daftar_ai.json
--rw-------.  1 u0_a247 u0_a247 26532 Nov 27 15:38 dashboard_server.py
--rw-------.  1 u0_a247 u0_a247  1019 Nov 21 20:37 data_pasar.py
-drwx------.  4 u0_a247 u0_a247  3452 Nov 25 23:24 [01;34mdemo_backups[0m
--rw-------.  1 u0_a247 u0_a247 10244 Nov 25 20:15 demo_phase7.py
--rw-------.  1 u0_a247 u0_a247   195 Nov 27 16:29 demo_test_state.json
-drwx------.  3 u0_a247 u0_a247  3452 Nov 27 14:40 [01;34mdocs[0m
--rw-------.  1 u0_a247 u0_a247  2263 Nov 27 17:32 env.example
--rw-------.  1 u0_a247 u0_a247 12375 Nov 27 15:38 indikator.py
--rw-------.  1 u0_a247 u0_a247  7938 Nov 25 20:15 log_aktivitas_pengembangan.json
--rw-------.  1 u0_a247 u0_a247 37904 Nov 21 20:37 log_penilai.jsonl
--rw-------.  1 u0_a247 u0_a247     0 Nov 27 17:41 log_sesi.txt
--rw-------.  1 u0_a247 u0_a247   455 Nov 27 14:40 loop_otomatis.sh
--rw-------.  1 u0_a247 u0_a247 34999 Nov 27 15:38 paper.py
--rw-------.  1 u0_a247 u0_a247  4815 Nov 21 20:37 paper_journal.py
--rw-------.  1 u0_a247 u0_a247  7714 Nov 21 20:37 paper_metrics.py
--rw-------.  1 u0_a247 u0_a247  3485 Nov 21 20:37 paper_phase6.py
--rw-------.  1 u0_a247 u0_a247   623 Nov 27 16:29 paper_trades.jsonl
--rw-------.  1 u0_a247 u0_a247  4300 Nov 27 16:29 penilai_ai.json
--rw-------.  1 u0_a247 u0_a247 17090 Nov 27 15:38 penilai_ai.py
--rw-------.  1 u0_a247 u0_a247  7784 Nov 27 16:29 penyaring.py
--rw-------.  1 u0_a247 u0_a247   225 Nov 21 20:37 phase7_config.py
--rw-------.  1 u0_a247 u0_a247    34 Nov 21 20:37 requirements.txt
--rw-------.  1 u0_a247 u0_a247  2732 Nov 25 20:15 reset_demo_data.py
--rw-------.  1 u0_a247 u0_a247  3007 Nov 21 20:37 risk.py
--rw-------.  1 u0_a247 u0_a247  4679 Nov 27 15:38 scanner.py
--rw-------.  1 u0_a247 u0_a247 22973 Nov 27 16:50 signal.json
--rw-------.  1 u0_a247 u0_a247  7153 Nov 27 15:38 signal_engine.py
--rw-------.  1 u0_a247 u0_a247 17715 Nov 27 16:50 state.json
--rw-------.  1 u0_a247 u0_a247 19875 Nov 27 16:29 state.json.bak2
--rw-------.  1 u0_a247 u0_a247  2696 Nov 21 20:37 state.py
--rw-------.  1 u0_a247 u0_a247  2128 Nov 21 20:37 tes_bitget_orders.py
--rw-------.  1 u0_a247 u0_a247   982 Nov 22 18:11 tes_cek_kelayakan.py
--rw-------.  1 u0_a247 u0_a247  4422 Nov 25 20:15 tes_demo_phase7.py
--rw-------.  1 u0_a247 u0_a247  2180 Nov 21 20:37 tes_indikator.py
--rw-------.  1 u0_a247 u0_a247 15621 Nov 25 20:15 tes_paper_partial.py
--rw-------.  1 u0_a247 u0_a247  8836 Nov 27 15:38 tes_paper_slippage.py
--rw-------.  1 u0_a247 u0_a247  2010 Nov 25 23:24 tes_penyaring_lokal.py
--rw-------.  1 u0_a247 u0_a247  2627 Nov 21 20:37 tes_phase6.py
--rw-------.  1 u0_a247 u0_a247  3876 Nov 25 20:15 tes_reset_demo_data.py
--rw-------.  1 u0_a247 u0_a247  6961 Nov 27 15:38 tes_strategi_sederhana.py
--rw-------.  1 u0_a247 u0_a247  2182 Nov 27 15:38 tes_tp_sl_metode.py
--rw-------.  1 u0_a247 u0_a247 14441 Nov 25 23:24 tes_uji_demo_unified.py
--rw-------.  1 u0_a247 u0_a247  4323 Nov 27 16:29 trade_costs.py
--rw-------.  1 u0_a247 u0_a247 50282 Nov 25 23:24 uji_demo_unified.py
--rw-------.  1 u0_a247 u0_a247  3171 Nov 22 23:36 uji_paper_demo.py
--rw-------.  1 u0_a247 u0_a247  4393 Nov 21 20:37 universe.py
-drwx------.  5 u0_a247 u0_a247  3452 Nov 23 23:00 [01;34mvenv[0m
--rw-------.  1 u0_a247 u0_a247   218 Nov 25 23:24 watchlist.json
-[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano readme.md
-[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;54H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 9.3                                           readme.md                                                     [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[?12l[?25h[?25l[38d[J[40d[?12l[?25h[40;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m [K(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano log_sesi.tsx
-[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;54H(B[0;7m[ New File ](B[m[H(B[0;7m  GNU nano 9.3                                         log_sesi.tsx                                                    [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[38d[J[40d[?12l[?25h[40;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m pytb[Kon[K[Khon signal_engine.py
-[?2004lSignals: 3/33 bot-ready -> signal.json
+Script started on 2026-11-28 02:17:08+07:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="119" LINES="40"]
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python cek [K_koneksi.py
+[?2004lMode: demo | UTA: True | DRY_RUN: False | Modal: 40.0 USDT
+Data publik OK. BTC terakhir: 59883.7
+Memakai lingkungan DEMO (wajib Demo API Key).
+Login API OK. Saldo (total, tidak nol): {'USDT': 50.0}
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python cek[K[K[Kpenyaring [K.py
+[?2004lTotal ticker: 902 | lolos saring: 100 | mode watchlist: prefer (3 simbol)
+Dibuang — blacklist: 0 | luar watchlist(only): 0 | saham/ETF/RWA: 0 | volume rendah: 697 | data kosong: 0
+
+BULLISH (20)
+  No Simbol                    Harga   Ubah24j  Vol24j(Juta)  RasioVol    Skor  W
+   1 SPCX/USDT:USDT           132.63     2.37%          44.5     1.05x  279.09  *
+   2 SSV/USDT:USDT             2.767     1.35%          25.8     4.93x  723.27   
+   3 ZEC/USDT:USDT            748.38     4.70%         162.9     1.42x  387.78   
+   4 XAU/USDT:USDT            3650.3     2.17%         299.3     1.00x  348.99   
+   5 SKHYNIX/USDT:USDT         834.94     7.28%         166.9     1.71x  302.32   
+   6 HYPE/USDT:USDT           64.021     3.45%          55.1     1.10x  300.31   
+   7 MSTU/USDT:USDT           9.7829     0.31%          14.2     1.31x  282.40   
+   8 SOXX/USDT:USDT           133.66     2.81%           7.4     1.50x  280.55   
+   9 MSTR/USDT:USDT            82.19     0.30%          41.7     1.03x  268.92   
+  10 QQQ/USDT:USDT             650.8     2.02%          49.0     0.94x  253.93   
+  11 SOL/USDT:USDT             72.15     1.09%         143.7     0.77x  244.13   
+  12 MRVL/USDT:USDT           139.45     4.37%          16.4     1.18x  240.09   
+  13 TSLA/USDT:USDT           399.26     4.35%          18.0     1.16x  239.72   
+  14 SKHY/USDT:USDT            118.8     6.66%          79.0     1.24x  216.46   
+  15 PEPE/USDT:USDT       3.5431e-06     0.61%          19.9     0.91x  208.81   
+  16 PONS/USDT:USDT          0.09977    11.53%           9.8     4.41x  207.13   
+  17 TSM/USDT:USDT            353.41     1.48%          10.4     1.00x  201.36   
+  18 SOXL/USDT:USDT            35.96     7.28%         838.6     0.91x  197.12   
+  19 INTC/USDT:USDT            57.15     3.65%          22.2     0.83x  194.78   
+  20 PAXG/USDT:USDT          3634.48     2.13%          15.3     0.88x  193.23   
+
+BEARISH (20)
+  No Simbol                    Harga   Ubah24j  Vol24j(Juta)  RasioVol    Skor  W
+   1 BTC/USDT:USDT           59933.2    -1.03%        3079.3     0.82x  368.91  *
+   2 NVDA/USDT:USDT           150.38    -0.36%         166.3     0.83x  267.50  *
+   3 USDBRL/USDT:USDT         5.5309    -3.79%           5.7     3.70x  527.67   
+   4 CL/USDT:USDT             83.117    -2.22%          62.9     1.50x  420.27   
+   5 SEI/USDT:USDT           0.03861    -6.15%           9.2     2.91x  371.02   
+   6 ETH/USDT:USDT           1672.37    -1.80%        1272.0     0.85x  348.11   
+   7 XRP/USDT:USDT            0.9524    -0.34%         112.5     0.90x  274.26   
+   8 ADA/USDT:USDT            0.1497    -0.73%          13.8     1.06x  226.29   
+   9 BZ/USDT:USDT              90.58    -1.30%          25.7     0.92x  221.28   
+  10 GOOGL/USDT:USDT          275.75    -0.00%          17.5     0.90x  202.14   
+  11 BIGTIME/USDT:USDT       0.005604    -0.20%          10.1     0.99x  198.27   
+  12 NEAR/USDT:USDT           3.0534    -1.10%          27.9     0.72x  176.51   
+  13 XMR/USDT:USDT            399.26   -10.81%          12.9     2.19x  170.91   
+  14 TRUMP/USDT:USDT           0.868    -1.40%           5.0     0.96x  162.93   
+  15 AVAX/USDT:USDT            6.655    -0.18%           4.9     0.78x  130.93   
+  16 SOXS/USDT:USDT           54.265    -8.57%         180.4     0.73x  111.54   
+  17 BNB/USDT:USDT            552.84    -0.20%           4.9     0.62x  104.89   
+  18 NVDL/USDT:USDT           13.701    -0.64%           4.9     0.59x   99.42   
+  19 SQQQ/USDT:USDT            45.95    -6.26%          20.2     0.67x   97.98   
+  20 SKDD/USDT:USDT            9.763   -13.29%          10.2     0.95x   57.22   
+
+Tersimpan di daftar_40.json
+Kolom W=* artinya token ada di watchlist (diprioritaskan).
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m pp[Kython cek_risk_universe.py
+[?2004l=== Cek Fondasi risk & universe ===
+
+1. Parameter risk
+  [OK] MAX_OPEN_TOKENS=1
+  [OK] RISK_PER_SETUP_PCT=2.5% modal
+  [OK] RISK_ATR_MIN=1.0 | RISK_ATR_MAX=2.5
+  [OK] RR_MIN=1.0 | Candle=5m
+  [OK] TP=S/R | SL=35% ATR
+  [OK] MAX_DAILY_LOSS=2.0 | MAX_CONSECUTIVE=3
+  [OK] KILL_SWITCH=False | DRY_RUN=False | MODE=demo
+
+2. Ukuran posisi (satu setup)
+  [OK] Modal 40.0 -> margin 1.0 USDT (2.5% alokasi margin, bukan rugi di SL) -> notional ~= 4.0 USDT @ 4.0x
+
+3. boleh_order_baru()
+  [OK] state kosong -> ok
+  [OK] 1 token terbuka -> ditolak (Sudah 1 token terbuka (maks 1))
+  [OK] daily loss limit -> ditolak (Rugi harian -2.00 USDT menyentuh batas -2.0)
+  [OK] consecutive losses -> ditolak (Rugi beruntun 3 (maks 3))
+
+4. Universe
+  [OK] WATCHLIST_MODE=prefer | 3 simbol diprioritaskan (bukan dibatasi)
+  [OK] TOKEN_BLACKLIST kosong (eksperimen — tidak ada yang ditolak blacklist)
+  [OK] EXCLUDE_RWA=off (saham/ETF boleh masuk daftar)
+  [OK] prefer: BTC naik ke depan meski skor lebih rendah
+
+5. Geometri risk
+  [OK] risk_atr 0.3 + RR 14.9 ditolak (risk_atr 0.30 < min 1.0)
+  [OK] risk_atr 1.2 + RR 1.5 lolos
+
+=== Hasil ===
+risk + universe Aman.
+Urutan lanjut: penyaring -> (opsional AI) -> penilai_ai -> paper/scanner.
+Cek: python cek_kelayakan.py atau python ai_kelayakan.py --pakai-ai
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python signal_3ngine.py
+[?2004lpython: can't open file '/data/data/com.termux/files/home/Bot-Tree/signal_3ngine.py': [Errno 2] No such file or directory
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python signal_engine.py
+[?2004lSignals: 12/40 bot-ready -> signal.json
 Rejection counts (gate failures may overlap):
-  trend_or_range: 26
-  adx_ok: 26
-  range_ok: 26
-  minimum_score: 26
-  grid_available: 26
-  valid_risk_reward_grid: 30
+  trend_or_range: 27
+  adx_ok: 27
+  range_ok: 27
+  minimum_score: 27
+  grid_available: 27
+  valid_risk_reward_grid: 28
   extreme_candle: 0
   displayed_universe_membership: 0
   data_or_runtime_error: 0
 AI disabled; no orders are submitted.
-[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano loop o[K[K_otomathis[K[K[Kis.sh
-[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;53H(B[0;7m[ Reading... ](B[m[38;52H(B[0;7m[ Read 24 lines ](B[m[H(B[0;7m  GNU nano 9.3                                       loop_otomatis.sh                                                  [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d[36m#!/data/data/com.termux/files/usr/bin/bash[3d(B[0;1m[34mset[35m -e[5d[39m(B[mRESCREEN_EVERY[32m=[39m(B[m12  [36m # 12 × 5 menit = 60 menit[6d[39m(B[mi[32m=[39m(B[m0[8d[32mwhile[39m(B[m true[32m;[39m(B[m [32mdo[9;3Hif[39m(B[m [32m(([39m(B[m i % RESCREEN_EVERY [32m==[39m(B[m 0 [32m));[39m(B[m [32mthen[10;5H(B[0;1m[34mecho[39m(B[m (B[0;1m[33m"[$(date)] Screening ulang universe (penyaring.py)..."[11;5H[39m(B[mpython penyaring.py [32m||[39m(B[m true[12;3H[32mfi[14d(B[0;1m[34mecho[39m(B[m (B[0;1m[33m"[$(date)] Siklus scanner #$i"[15;3H[39m(B[mpython scanner.py(B[0;1m[35m --sekali[39m(B[m [32m||[39m(B[m true[17;3Hi[32m=$(([39m(B[mi + 1[32m))[18;3H[39m(B[msleep 300[19d[32mdone[21d(B[0;1m[33m""[39m(B[m"menjalankan loop otomatis termux[22d(B[0;1m[34mchmod[39m(B[m +x loop_otomatis.sh[23d./loop_otomatis.sh[25d(B[0;1m[33m""[39m(B[m"[2d[?12l[?25h[?25l[1;110H(B[0;7mModified(B[m
-Script done on 2026-11-27 23:14:13+07:00 [COMMAND_EXIT_CODE="0"]
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python paper.py
+[?2004lPaper engine | Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=0 | ConsecLoss=0 | Trades=0 (W0/L0)
+Modal config: 40.0 USDT | Leverage 4.0x | Margin/setup 1.00 USDT
+
+  Sinyal: 3 layak dari daftar_40.json
+  Tolak: tren/range=9, adx=9, range=9, skor=9, grid=9
+    SPCX     LONG  [tren/range, adx, range, skor, grid]
+    SSV      LONG  [tren/range, adx, range, skor, grid]
+    ZEC      LONG  [tren/range, adx, range, skor, grid]
+    XAU      LONG  [tren/range, adx, range, skor, grid]
+    SKHYNIX  LONG  [tren/range, adx, range, skor, grid]
+    HYPE     LONG  [tren/range, adx, range, skor, grid]
+    MSTU     LONG  [tren/range, adx, range, skor, grid]
+    MSTR     LONG  [tren/range, adx, range, skor, grid]
+    SOL      LONG  [tren/range, adx, range, skor, grid]
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python scqnner l[K[Km[K[K[K[K[K[Kanner
+[?2004lpython: can't open file '/data/data/com.termux/files/home/Bot-Tree/scanner': [Errno 2] No such file or directory
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python scanem[K[Kner [K.py
+[?2004lBot-Tree Scanner (Fase C)
+  MODE=demo | MODAL=40.0 USDT | LEV=4.0x
+  DRY_RUN=False | interval=300s | refresh=False
+
+Loop aktif. Ctrl+C untuk berhenti.
+
+
+=== 2026-11-27 19:21:39 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:26:43 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:31:48 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:36:52 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:41:57 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:47:01 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:52:05 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 19:57:10 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:02:14 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:07:18 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:12:23 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:17:27 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:22:32 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:27:36 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:32:40 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:37:45 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:42:49 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:47:53 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:52:58 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 20:58:02 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:03:06 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:08:11 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:13:15 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:18:20 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:23:24 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:28:29 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:33:34 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:38:38 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:43:42 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:48:46 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:53:51 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 21:58:55 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+
+=== 2026-11-27 22:04:00 UTC ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+  Risk gate: OK
+  TF: 5m | TP: struktur (HH/HL) | SL: 0.40xATR di luar HL/HH | RISK_ATR [1.0, 2.5] | RR net min 1.0
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+  tidur 300s...
+^X  0^C
+Scanner dihentikan.
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m paper[K[K[K[K[Kpython paper.py --status
+[?2004l=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m uji [K[K[K[Kpython uji_paper [K_demo.py --one[Kce --demo [K-preflight
+[?2004l=== PHASE 6 / PAPER ===
+  Lewati buka baru: sudah ada 1 posisi terbuka.
+
+=== PHASE 6 METRICS ===
+Trades=0 | days=4.324 | expectancy=None | maxDD=0.0% | gate=BELUM LULUS
+
+=== PHASE 7 / DEMO PREFLIGHT ===
+  Sinyal: 1 layak dari daftar_40.json
+  Tolak: tren/range=37, grid=35, adx=34, range=34, skor=34, ekstrem=2, rr=1, risk_atr=1
+    SPCX     LONG  [tren/range, adx, range, skor, grid]
+    SSV      LONG  [tren/range, adx, range, skor, grid]
+    ZEC      LONG  [tren/range] jarak_atr=0.2x
+    XAU      LONG  [tren/range, adx, range, skor, grid, ekstrem]
+    SKHYNIX  LONG  [tren/range, adx, range, skor, grid]
+    HYPE     LONG  [tren/range, adx, range, skor, grid]
+    MSTU     LONG  [tren/range, adx, range, skor, grid]
+    SOXX     LONG  [tren/range, adx, range, skor, grid]
+    MSTR     LONG  [tren/range, adx, range, skor, grid]
+    QQQ      LONG  [tren/range, adx, range, skor, grid]
+    SOL      LONG  [tren/range, adx, range, skor, grid]
+    MRVL     LONG  [grid]
+    ... 27 simbol lain ditolak
+Phase 7 preflight ditolak PONS: BadSymbol: bitget does not have market symbol PONS/USDT:USDT
+Phase 7: 0 rencana preflight berhasil dibuat; tidak ada order dikirim.
+
+Tidak ada order Demo/Live dikirim. Tambahkan --demo-preflight hanya untuk preflight.
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m phy[K[Kython reset_dem[Kmo_data.py [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kpython reset-[K_demo_data.py _[K--confirm RESET_DEMO_BERSIH
+[?2004lState Demo direset. Backup state/jurnal: /data/data/com.termux/files/home/Bot-Tree/demo_backups/20261127T221255.312942Z
+Jurnal demo_test_trades.jsonl tetap dipertahankan.
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m python paper.py --status
+[?2004l=== STATUS PAPER ===
+Mode=demo | Modal=25.00 USDT | Daily PnL=+0.00 | Open=1 | ConsecLoss=0 | Trades=0 (W0/L0)
+
+  QQQ/USDT:USDT LONG | entry=- | filled=0/1 pending=1 | notional=0.00/4.00 | SL=650.03 TP berikut=652.57
+      S2   @ 650.39 -> pending
+      TP  @ 652.57 -> pending
+
+[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m state[K[K[K[K[Knano state.py
+[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;53H(B[0;7m[ Reading... ](B[m[38;52H(B[0;7m[ Read 88 lines ](B[m[H(B[0;7m  GNU nano 9.3                                           state.py                                                      [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d(B[0;1m[32m"""Manajemen state bot (paper / demo / live).[4dState disimpan di state.json. Digunakan oleh paper engine dan (nanti) order module.[5dTidak memanggil exchange.[6d"""[7d[36mfrom[39m(B[m __future__ (B[0;1m[36mimport[39m(B[m annotations[9d(B[0;1m[36mimport[39m(B[m json[10d(B[0;1m[36mimport[39m(B[m os[11d(B[0;1m[36mfrom[39m(B[m datetime (B[0;1m[36mimport[39m(B[m datetime, timezone[12d(B[0;1m[36mfrom[39m(B[m typing (B[0;1m[36mimport[39m(B[m Any[14d(B[0;1m[36mimport[39m(B[m config[16dFILE_STATE = (B[0;1m[32m"state.json"[19d[36mdef[34m _waktu_iso[39m(B[m() -> str:[20;5H(B[0;1m[36mreturn[39m(B[m datetime.now(timezone.utc).isoformat()[23d(B[0;1m[36mdef[34m state_kosong[39m(B[m() -> dict[str, Any]:[24;5H(B[0;1m[32m"""State awal bersih."""[25;5H[36mreturn[39m(B[m {[26;9H(B[0;1m[32m"versi"[39m(B[m: 1,[27;9H(B[0;1m[32m"mode"[39m(B[m: config.MODE,[28;9H(B[0;1m[32m"dibuat"[39m(B[m: _waktu_iso(),[29;9H(B[0;1m[32m"diperbarui"[39m(B[m: _waktu_iso(),[30;9H(B[0;1m[32m"modal_awal"[39m(B[m: config.MODAL_USDT,[31;9H(B[0;1m[32m"modal_saat_ini"[39m(B[m: config.MODAL_USDT,[32;9H(B[0;1m[32m"daily_pnl_usdt"[39m(B[m: 0.0,[33;9H(B[0;1m[32m"daily_reset_tanggal"[39m(B[m: datetime.now(timezone.utc).strftime((B[0;1m[32m"%Y-%m-%d"[39m(B[m),[34;9H(B[0;1m[32m"consecutive_losses"[39m(B[m: 0,[35;9H(B[0;1m[32m"total_trades"[39m(B[m: 0,[36;9H(B[0;1m[32m"total_wins"[39m(B[m: 0,[37;9H(B[0;1m[32m"total_losses"[39m(B[m: 0,[2d[?12l[?25h[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[6d[?25l[?12l[?25h[7d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[10d[?25l[?12l[?25h[11d[?25l[?12l[?25h[12d[?25l[?12l[?25h[13d[?25l[?12l[?25h[14d[?25l[?12l[?25h[15d[?25l[?12l[?25h[16d[?25l[?12l[?25h[17d[?25l[?12l[?25h[18d[?25l[?12l[?25h[20d[?25l[38d[K[?12l[?25h[22d[?25l[?12l[?25h[23d[?25l[?12l[?25h[26d[?25l[?12l[?25h[28d[?25l[?12l[?25h[29d[?25l[?12l[?25h[30d[?25l[?12l[?25h[32d[?25l[?12l[?25h[34d[?25l[?12l[?25h[35d[?25l[?12l[?25h[37d[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9H(B[0;1m[32m"open_positions"[39m(B[m: [],[37;9H(B[0;1m[32m"riwayat"[39m(B[m: [],[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9H(B[0;1m[32m"log"[39m(B[m: [],[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H}[37d[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;1H(B[0;1m[36mdef[34m muat[39m(B[m(path: str | (B[0;1m[35mNone[39m(B[m = (B[0;1m[35mNone[39m(B[m) -> dict[str, Any]:[37;5H(B[0;1m[32m"""Muat state dari file. Jika belum ada, buat state kosong."""[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5Hpath = path (B[0;1m[36mor[39m(B[m FILE_STATE[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[36mif[39m(B[m (B[0;1m[36mnot[39m(B[m os.path.isfile(path):[37;9Hs = state_kosong()[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9Hsimpan(s, path)[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9H(B[0;1m[36mreturn[39m(B[m s[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[36mwith[39m(B[m open(path, encoding=(B[0;1m[32m"utf-8"[39m(B[m) (B[0;1m[36mas[39m(B[m f:[37;9Hs = json.load(f)[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;4H(B[0;1m[31m # Reset daily PnL jika hari sudah berganti (UTC)[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5Hhari_ini = datetime.now(timezone.utc).strftime((B[0;1m[32m"%Y-%m-%d"[39m(B[m)[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[36mif[39m(B[m s.get((B[0;1m[32m"daily_reset_tanggal"[39m(B[m) != hari_ini:[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9Hs[(B[0;1m[32m"daily_pnl_usdt"[39m(B[m] = 0.0[37;9Hs[(B[0;1m[32m"daily_reset_tanggal"[39m(B[m] = hari_ini[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9Hs[(B[0;1m[32m"diperbarui"[39m(B[m] = _waktu_iso()[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9Hsimpan(s, path)[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[36mreturn[39m(B[m s[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H(B[0;1m[36mdef[34m simpan[39m(B[m(state: dict[str, Any], path: str | (B[0;1m[35mNone[39m(B[m = (B[0;1m[35mNone[39m(B[m) -> (B[0;1m[35mNone[39m(B[m:[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[32m"""Simpan state ke file."""[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5Hpath = path (B[0;1m[36mor[39m(B[m FILE_STATE[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5Hstate[(B[0;1m[32m"diperbarui"[39m(B[m] = _waktu_iso()[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[36mwith[39m(B[m open(path, (B[0;1m[32m"w"[39m(B[m, encoding=(B[0;1m[32m"utf-8"[39m(B[m) (B[0;1m[36mas[39m(B[m f:[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9Hjson.dump(state, f, indent=2, ensure_ascii=(B[0;1m[35mFalse[39m(B[m)[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[36;1H(B[0;1m[36mdef[34m tambah_log[39m(B[m(state: dict[str, Any], pesan: str, level: str = (B[0;1m[32m"info"[39m(B[m) -> (B[0;1m[35mNone[39m(B[m:[37;5H(B[0;1m[32m"""Tambah entri log (maksimal 200 baris terakhir)."""[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5Hstate.setdefault((B[0;1m[32m"log"[39m(B[m, []).append({[36;9H(B[0;1m[32m"waktu"[39m(B[m: _waktu_iso(),[37;9H(B[0;1m[32m"level"[39m(B[m: level,[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9H(B[0;1m[32m"pesan"[39m(B[m: pesan,[37;5H})[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5Hstate[(B[0;1m[32m"log"[39m(B[m] = state[(B[0;1m[32m"log"[39m(B[m][-200:][37d[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H(B[0;1m[36mdef[34m ringkasan[39m(B[m(state: dict[str, Any]) -> str:[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[32m"""Teks ringkas untuk ditampilkan."""[37;5H[39m(B[mopen_n = len(state.get((B[0;1m[32m"open_positions"[39m(B[m) (B[0;1m[36mor[39m(B[m [])[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[36mreturn[39m(B[m ([37;9Hf(B[0;1m[32m"Mode={state.get('mode')} | Modal={state.get('modal_saat_ini'):.2f} USDT | "[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;9Hf(B[0;1m[32m"Daily PnL={state.get('daily_pnl_usdt'):+.2f} | "[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9Hf(B[0;1m[32m"Open={open_n} | ConsecLoss={state.get('consecutive_losses')} | "[37;9H[39m(B[mf(B[0;1m[32m"Trades={state.get('total_trades')} (W{state.get('total_wins')}/L{state.get('total_losses')})"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H)[37d[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[39d[J[40d[?12l[?25h[40;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h(venv) [0;32m~/Bot-Tree[0m [0;97m$[0m nano state.json
+[?2004l[?2004h[?1049h[22;0;0t[1;40r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[38;53H(B[0;7m[ Reading... ](B[m[38;51H(B[0;7m[ Read 596 lines ](B[m[H(B[0;7m  GNU nano 9.3                                          state.json                                                     [1;118H(B[m[39d(B[0;7m^G(B[m Help[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut[39;69H(B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location[103G(B[0;7mM-U(B[m Undo[40d(B[0;7m^X(B[m Exit[40;18H(B[0;7m^R(B[m Read File     (B[0;7m^\(B[m Replace[52G(B[0;7m^U(B[m Paste[40;69H(B[0;7m^J(B[m Justify[86G(B[0;7m^/(B[m Go To Line    (B[0;7mM-E(B[m Redo[2d(B[0;1m[31m{[3;3H[34m"versi"[31m:(B[0m[32m 1(B[0;1m[31m,[4;3H[34m"mode"[31m:[35m "demo"[31m,[5;3H[34m"dibuat"[31m:[35m "2026-11-25T15[31m:[35m36[31m:[35m35.190562+00[31m:[35m00"[31m,[6;3H[34m"diperbarui"[31m:[35m "2026-11-27T22[31m:[35m11[31m:[35m24.004992+00[31m:[35m00"[31m,[7;3H[34m"modal_awal"[31m:(B[0m[32m 25.0(B[0;1m[31m,[8;3H[34m"modal_saat_ini"[31m:(B[0m[32m 25.0(B[0;1m[31m,[9;3H[34m"daily_pnl_usdt"[31m:(B[0m[32m 0.0(B[0;1m[31m,[10;3H[34m"daily_reset_tanggal"[31m:[35m "2026-11-27"[31m,[11;3H[34m"consecutive_losses"[31m:(B[0m[32m 0(B[0;1m[31m,[12;3H[34m"total_trades"[31m:(B[0m[32m 0(B[0;1m[31m,[13;3H[34m"total_wins"[31m:(B[0m[32m 0(B[0;1m[31m,[14;3H[34m"total_losses"[31m:(B[0m[32m 0(B[0;1m[31m,[15;3H[34m"open_positions"[31m:[39m(B[m (B[0;1m[34m[[16;5H[31m{[17;7H[34m"id"[31m:[35m "paper-20261127-192017-QQQ-1f57b9"[31m,[18;7H[34m"simbol"[31m:[35m "QQQ/USDT[31m:[35mUSDT"[31m,[19;7H[34m"arah"[31m:(B[0m[32m 1(B[0;1m[31m,[20;7H[34m"waktu_buka"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m17.999970+00[31m:[35m00"[31m,[21;7H[34m"margin"[31m:(B[0m[32m 1.0(B[0;1m[31m,[22;7H[34m"leverage"[31m:(B[0m[32m 4.0(B[0;1m[31m,[23;7H[34m"notional"[31m:(B[0m[32m 4.0(B[0;1m[31m,[24;7H[34m"titik_grid"[31m:[39m(B[m (B[0;1m[34m[[25;9H[31m{[26;11H[34m"nama"[31m:[35m "S2"[31m,[27;11H[34m"harga"[31m:(B[0m[32m 650.39(B[0;1m[31m,[28;11H[34m"tp"[31m:(B[0m[32m 652.57(B[0;1m[31m,[29;11H[34m"tp_levels"[31m:[39m(B[m (B[0;1m[34m[[30;13H[39m(B[m652.57[31;11H(B[0;1m[34m][31m,[32d[34m"status"[31m:[35m "pending"[33;9H[31m}[34;7H[34m][31m,[35d[34m"tp_ladder"[31m:[39m(B[m (B[0;1m[34m[[36;9H[31m{[37;11H[34m"harga"[31m:(B[0m[32m 652.57(B[0;1m[31m,[2d[39m(B[m[?12l[?25h[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[7d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[11d[?25l[?12l[?25h[13d[?25l[?12l[?25h[14d[?25l[?12l[?25h[15d[?25l[?12l[?25h[17d[?25l[?12l[?25h[19d[?25l[?12l[?25h[21d[?25l[38d[K[?12l[?25h[23d[?25l[?12l[?25h[25d[?25l[?12l[?25h[26d[?25l[?12l[?25h[28d[?25l[?12l[?25h[31d[?25l[?12l[?25h[33d[?25l[?12l[?25h[35d[?25l[?12l[?25h[37d[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;11H(B[0;1m[34m"status"[31m:[35m "pending"[37;9H[31m}[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m][31m,[37d[34m"tp_fraction_per_level"[31m:(B[0m[32m 1.0(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"sl"[31m:(B[0m[32m 650.03(B[0;1m[31m,[37;7H[34m"tp"[31m:(B[0m[32m 652.57(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"candle_timeframe"[31m:[35m "5m"[31m,[37;7H[34m"entry_avg"[31m:[39m(B[m [32mnull(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"ukuran_terisi"[31m:(B[0m[32m 0.0(B[0;1m[31m,[37;7H[34m"ukuran_masuk_total"[31m:(B[0m[32m 0.0(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"ukuran_ditutup"[31m:(B[0m[32m 0.0(B[0;1m[31m,[37;7H[34m"realisasi"[31m:[39m(B[m (B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9H(B[0;1m[34m"pnl_kotor"[31m:(B[0m[32m 0.0(B[0;1m[31m,[37;9H[34m"fee"[31m:(B[0m[32m 0.0(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;9H(B[0;1m[34m"pnl_bersih"[31m:(B[0m[32m 0.0(B[0;1m[31m,[37;9H[34m"notional"[31m:(B[0m[32m 0.0[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[31m},[37d[34m"candle_terakhir_diproses"[31m:(B[0m[32m 1795817100000(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"status"[31m:[35m "open"[31m,[37;7H[34m"skor_bot"[31m:(B[0m[32m 98(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"rr_terbaik"[31m:(B[0m[32m 6.06(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"atr"[31m:(B[0m[32m 0.292857(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"hl"[31m:(B[0m[32m 650.15(B[0;1m[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"hh"[31m:(B[0m[32m 652.57[36;5H(B[0;1m[31m}[37;3H[34m][31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;3H(B[0;1m[34m"riwayat"[31m:[39m(B[m (B[0;1m[34m[][31m,[37;3H[34m"log"[31m:[39m(B[m (B[0;1m[34m[[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T15[31m:[35m37[31m:[35m24.888138+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m28[31m:[35m46.729906+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m34[31m:[35m50.237774+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m38[31m:[35m45.798948+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m40[31m:[35m49.296025+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m46[31m:[35m25.811505+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m51[31m:[35m57.849151+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T18[31m:[35m57[31m:[35m21.946725+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T19[31m:[35m02[31m:[35m53.500841+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T19[31m:[35m08[31m:[35m20.606237+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T19[31m:[35m13[31m:[35m56.125732+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T19[31m:[35m19[31m:[35m24.312328+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T19[31m:[35m26[31m:[35m27.012125+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T20[31m:[35m57[31m:[35m34.394401+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T20[31m:[35m58[31m:[35m05.244240+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m04[31m:[35m12.394740+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m04[31m:[35m42.751785+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m10[31m:[35m51.184318+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m11[31m:[35m21.800116+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m20[31m:[35m01.690506+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m20[31m:[35m31.286868+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m26[31m:[35m45.039331+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m27[31m:[35m15.256912+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m33[31m:[35m22.459927+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m33[31m:[35m53.486739+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m39[31m:[35m59.782544+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m40[31m:[35m29.939776+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m46[31m:[35m36.189733+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m47[31m:[35m06.742584+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m53[31m:[35m13.682334+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m53[31m:[35m43.884323+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-25T21[31m:[35m59[31m:[35m49.773855+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m00[31m:[35m19.867909+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m06[31m:[35m26.453598+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m06[31m:[35m56.244114+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m13[31m:[35m01.542565+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m13[31m:[35m31.649290+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m19[31m:[35m37.889107+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m20[31m:[35m08.233405+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m26[31m:[35m13.385038+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m26[31m:[35m43.227931+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m32[31m:[35m48.652136+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m33[31m:[35m18.984668+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m39[31m:[35m24.387885+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m39[31m:[35m53.670828+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m45[31m:[35m59.087769+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m46[31m:[35m28.499302+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m52[31m:[35m34.872384+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m53[31m:[35m04.073276+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m59[31m:[35m10.145162+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T22[31m:[35m59[31m:[35m39.741233+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m05[31m:[35m48.831685+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m06[31m:[35m19.211364+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m12[31m:[35m26.439853+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m12[31m:[35m56.310080+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m19[31m:[35m02.096589+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m19[31m:[35m31.749764+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m25[31m:[35m37.573233+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m26[31m:[35m07.477553+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m32[31m:[35m13.278206+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m32[31m:[35m43.865972+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m38[31m:[35m50.053691+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m39[31m:[35m20.162547+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m45[31m:[35m26.632966+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m45[31m:[35m56.175685+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m52[31m:[35m01.817853+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m52[31m:[35m31.301505+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m58[31m:[35m37.589175+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m{[35;7H[34m"waktu"[31m:[35m "2026-11-25T23[31m:[35m59[31m:[35m07.073861+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m05[31m:[35m13.781832+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m05[31m:[35m43.991796+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m11[31m:[35m50.600931+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m12[31m:[35m20.655543+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m18[31m:[35m28.417903+00[31m:[35m00"[31m,[35;7H[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m18[31m:[35m58.912993+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m25[31m:[35m06.412581+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m25[31m:[35m36.410558+00[31m:[35m00"[31m,[35;7H[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m{[35;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m31[31m:[35m42.179076+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m32[31m:[35m12.336602+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m38[31m:[35m19.826056+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[35;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m38[31m:[35m49.663662+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m44[31m:[35m55.311921+00[31m:[35m00"[31m,[35;7H[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m45[31m:[35m25.591537+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m52[31m:[35m33.086112+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m53[31m:[35m06.409140+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-26T00[31m:[35m59[31m:[35m52.379519+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T01[31m:[35m35[31m:[35m09.299805+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T01[31m:[35m51[31m:[35m16.722002+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T01[31m:[35m51[31m:[35m58.856230+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m00[31m:[35m51.548623+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m01[31m:[35m38.752507+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m10[31m:[35m51.906694+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m11[31m:[35m30.399838+00[31m:[35m00"[31m,[35;7H[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m{[35;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m20[31m:[35m15.711158+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m21[31m:[35m06.391489+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m29[31m:[35m52.095547+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m30[31m:[35m30.591293+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[36;5H[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m39[31m:[35m37.051506+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m40[31m:[35m27.739051+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m49[31m:[35m22.982797+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[35;7H[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m{[35;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[36;7H[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m},[35d{[36;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[35;5H[31m},[36d{[37;7H[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[36;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[3S[1;40r[35;5H(B[0;1m[31m{[36;7H[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m{[37;7H[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[37;7H[34m"pesan"[31m:[35m "BUKA QQQ/USDT[31m:[35mUSDT LONG | margin=1.00 notional=4.00 | grid=1 titik | SL=650.03 TP levels=[34m[[35m652.57[34m][35m (100[39m(B[0;7m>[37;1H(B[m[?25l[?12l[?25h7[2;38r8[38d[4S[1;40r[34;5H(B[0;1m[31m}[35;3H[34m][36d[31m}[37d[39m(B[m[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[35d[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[30d[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[24d[?25l[?12l[?25h[21d[?25l[?12l[?25h[18d[?25l[?12l[?25h[15d[?25l[?12l[?25h[13d[?25l[?12l[?25h[11d[?25l[?12l[?25h[9d[?25l[?12l[?25h[7d[?25l[?12l[?25h[4d[?25l[?12l[?25h[2;38r[2;1HM[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m49[31m:[35m22.982797+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;5H(B[0;1m[31m},[3d{[A[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m40[31m:[35m27.739051+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[3;5H[31m},[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m39[31m:[35m37.051506+00[31m:[35m00"[31m,[3;7H[34m"level"[31m:[35m "info"[31m,[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;5H(B[0;1m[31m},[3d{[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[3;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[A[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m30[31m:[35m30.591293+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;37r8[3T[1;40r[2;5H(B[0;1m[31m{[3;7H[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m29[31m:[35m52.095547+00[31m:[35m00"[31m,[4;7H[34m"level"[31m:[35m "info"[31m,[2d[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[3;5H[31m},[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m21[31m:[35m06.391489+00[31m:[35m00"[31m,[3;7H[34m"level"[31m:[35m "info"[31m,[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;5H(B[0;1m[31m},[3d{[A[39m(B[m[?25l[?12l[?25h7[2;37r8[2T[1;40r[2;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[3;7H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[A[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m20[31m:[35m15.711158+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;37r8M[1;40r[2;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h[3d[?25l[?12l[?25h[6d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[11d[?25l[?12l[?25h[13d[?25l[?12l[?25h[15d[?25l[?12l[?25h[17d[?25l[?12l[?25h[20d[?25l[?12l[?25h[21d[?25l[?12l[?25h[22d[?25l[?12l[?25h[24d[?25l[?12l[?25h[25d[?25l[?12l[?25h[26d[?25l[?12l[?25h[27d[?25l[?12l[?25h[28d[?25l[?12l[?25h[30d[?25l[?12l[?25h[33d[?25l[?12l[?25h[34d[?25l[?12l[?25h[36d[?25l[?12l[?25h[2;38r[38;1H
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[37;5H[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;5H(B[0;1m[31m},[37d{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d[2S[1;40r[36;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[37;7H[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m},[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m{[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"level"[31m:[35m "info"[31m,[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;7H(B[0;1m[34m"pesan"[31m:[35m "BUKA QQQ/USDT[31m:[35mUSDT LONG | margin=1.00 notional=4.00 | grid=1 titik | SL=650.03 TP levels=[34m[[35m652.57[34m][35m (100[39m(B[0;7m>[37;1H(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;5H(B[0;1m[31m}[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;3H(B[0;1m[34m][39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H(B[0;1m[31m}[39m(B[m[?25l[?12l[?25h7[2;38r8[38d
+[1;40r[37;1H[?25l[?12l[?25h[?25l[?12l[?25h[35d[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[33d[?25l[?12l[?25h[34d[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[C[?25l[1;110H(B[0;7mModified(B[m[?12l[?25h[34d[42m    [49m(B[m[K[?25l[?12l[?25h [?25l [?12l[?25h[?25l [?12l[?25h[?25l[K[?12l[?25h[?25l[2d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[3d(B[0;7m<(B[m[19P[4d[K[5d[K[6d(B[0;7m<(B[m[19P[7d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[8d(B[0;7m<(B[m[19P[9d[K[10d[K[11d(B[0;7m<(B[m[19P[12d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[13d(B[0;7m<(B[m[19P[14d[K[15d[K[16d(B[0;7m<(B[m[19P[17d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[18d(B[0;7m<(B[m[19P[19d[K[20d[K[21d(B[0;7m<(B[m[19P[22d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[23d(B[0;7m<(B[m[19P[24d[K[25d[K[26d(B[0;7m<(B[m[19P[27d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[28d(B[0;7m<(B[m[19P[29d[K[30d[K[31d(B[0;7m<(B[m[19P[32d(B[0;7m<(B[0;1m[35m"[31m,[39m(B[m[K[33d(B[0;7m<(B[0;1m[35m QQQ/USDT[31m:[35mUSDT LONG | margin=1.00 notional=4.00 | grid=1 titik | SL=650.03 TP levels=[34m[[35m652.57[34m][35m (100% posisi/level)"[39m(B[m[K[35d[K[36d[K[33;116H[?12l[?25h[?25l[?12l[?25h[C QQQ/USDT(B[0;1m[31m:[39m(B[mUSDT LONG | margin=1.00 notional=4.00 | grid=1 titik | SL=650.03 TP levels=(B[0;1m[34m[[39m(B[m652.57(B[0;1m[34m][39m(B[m (100% posisi/level)[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[2d(B[0;1m[35mo"[31m,[3;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H6-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35mo"[31m,[8;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H6-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35mo"[31m,[13;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H6-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35mo"[31m,[18;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H6-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35mo"[31m,[23;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H6-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35mo"[31m,[28;2H[35mak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H6-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35mo"[31m,[33;2H[39m(B[mA[42m [49m(B[m[?12l[?25h[?25l[2d(B[0;1m[35mfo"[31m,[3;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H26-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35mfo"[31m,[8;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H26-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35mfo"[31m,[13;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H26-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35mfo"[31m,[18;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H26-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35mfo"[31m,[23;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H26-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35mfo"[31m,[28;2H[35mdak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H26-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35mfo"[31m,[33;2H[39m(B[mKA[?12l[?25h[?25l[2d(B[0;1m[35mnfo"[31m,[3;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35mnfo"[31m,[8;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35mnfo"[31m,[13;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35mnfo"[31m,[18;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35mnfo"[31m,[23;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35mnfo"[31m,[28;2H[35midak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35mnfo"[31m,[33;2H[39m(B[mUK[?12l[?25h[?25l[2d(B[0;1m[35minfo"[31m,[3;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35minfo"[31m,[8;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35minfo"[31m,[13;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35minfo"[31m,[18;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35minfo"[31m,[23;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35minfo"[31m,[28;2H[35mTidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35minfo"[31m,[33;2H[39m(B[mBU[?12l[?25h[?25l[2d(B[0;1m[35m"info"[31m,[3;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H"2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35m"info"[31m,[8;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H"2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35m"info"[31m,[13;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H"2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35m"info"[31m,[18;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H"2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35m"info"[31m,[23;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H"2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35m"info"[31m,[28;2H[35m"Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H"2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35m"info"[31m,[33;2H[35m"[39m(B[mB[?12l[?25h[?25l[2d(B[0;1m[35m "info"[31m,[3;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[35m "info"[31m,[8;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[35m "info"[31m,[13;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[35m "info"[31m,[18;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[35m "info"[31m,[23;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[35m "info"[31m,[28;2H[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[35m "info"[31m,[33;2H[35m "[39m(B[m[?12l[?25h[?25l[2d(B[0;1m[31m:[35m "info"[31m,[3;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H:[35m "info"[31m,[8;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H:[35m "info"[31m,[13;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H:[35m "info"[31m,[18;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H:[35m "info"[31m,[23;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H:[35m "info"[31m,[28;2H:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H:[35m "info"[31m,[33;2H:(B[0m[42m [49m(B[m[?12l[?25h[?25l[2d(B[0;1m[34m"[31m:[35m "info"[31m,[3;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34m"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34m"[31m:[35m "info"[31m,[8;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34m"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34m"[31m:[35m "info"[31m,[13;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34m"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34m"[31m:[35m "info"[31m,[18;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34m"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34m"[31m:[35m "info"[31m,[23;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34m"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34m"[31m:[35m "info"[31m,[28;2H[34m"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34m"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34m"[31m:[35m "info"[31m,[33;2H[34m"[31m:[39m(B[m[?12l[?25h[?25l[2d(B[0;1m[34ml"[31m:[35m "info"[31m,[3;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34mu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34ml"[31m:[35m "info"[31m,[8;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34mu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34ml"[31m:[35m "info"[31m,[13;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34mu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34ml"[31m:[35m "info"[31m,[18;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34mu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34ml"[31m:[35m "info"[31m,[23;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34mu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34ml"[31m:[35m "info"[31m,[28;2H[34mn"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34mu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34ml"[31m:[35m "info"[31m,[33;2H[35mn"[39m(B[m[?12l[?25h[?25l[2d(B[0;1m[34mel"[31m:[35m "info"[31m,[3;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34mtu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34mel"[31m:[35m "info"[31m,[8;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34mtu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34mel"[31m:[35m "info"[31m,[13;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34mtu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34mel"[31m:[35m "info"[31m,[18;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34mtu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34mel"[31m:[35m "info"[31m,[23;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34mtu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34mel"[31m:[35m "info"[31m,[28;2H[34man"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34mtu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34mel"[31m:[35m "info"[31m,[33;2H[39m(B[man[?12l[?25h[?25l[2d(B[0;1m[34mvel"[31m:[35m "info"[31m,[3;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34mktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34mvel"[31m:[35m "info"[31m,[8;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34mktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34mvel"[31m:[35m "info"[31m,[13;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34mktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34mvel"[31m:[35m "info"[31m,[18;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34mktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34mvel"[31m:[35m "info"[31m,[23;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34mktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34mvel"[31m:[35m "info"[31m,[28;2H[34msan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34mktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34mvel"[31m:[35m "info"[31m,[33;2H[39m(B[msa[?12l[?25h[?25l[2d(B[0;1m[34mevel"[31m:[35m "info"[31m,[3;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34maktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34mevel"[31m:[35m "info"[31m,[8;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34maktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34mevel"[31m:[35m "info"[31m,[13;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34maktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34mevel"[31m:[35m "info"[31m,[18;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34maktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34mevel"[31m:[35m "info"[31m,[23;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34maktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34mevel"[31m:[35m "info"[31m,[28;2H[34mesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34maktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34mevel"[31m:[35m "info"[31m,[33;2H[39m(B[mes[?12l[?25h[?25l[2d(B[0;1m[34mlevel"[31m:[35m "info"[31m,[3;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[6;2H[34mwaktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34mlevel"[31m:[35m "info"[31m,[8;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[11;2H[34mwaktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34mlevel"[31m:[35m "info"[31m,[13;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[16;2H[34mwaktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34mlevel"[31m:[35m "info"[31m,[18;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[21;2H[34mwaktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34mlevel"[31m:[35m "info"[31m,[23;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[26;2H[34mwaktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34mlevel"[31m:[35m "info"[31m,[28;2H[34mpesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[31;2H[34mwaktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34mlevel"[31m:[35m "info"[31m,[33;2H[39m(B[mpe[?12l[?25h[?25l[2d(B[0;1m[34m"level"[31m:[35m "info"[31m,[3;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4d[39m(B[0;7m<[6d(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[34m"level"[31m:[35m "info"[31m,[8;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9d[39m(B[0;7m<[11d(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[34m"level"[31m:[35m "info"[31m,[13;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14d[39m(B[0;7m<[16d(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[34m"level"[31m:[35m "info"[31m,[18;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19d[39m(B[0;7m<[21d(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[34m"level"[31m:[35m "info"[31m,[23;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24d[39m(B[0;7m<[26d(B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[34m"level"[31m:[35m "info"[31m,[28;2H[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29d[39m(B[0;7m<[31d(B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[34m"level"[31m:[35m "info"[31m,[33;2H[39m(B[m"p[?12l[?25h[?25l[2d (B[0;1m[34m"level"[31m:[35m "info"[31m,[3;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4;2H[31m,[5d[39m(B[0;7m<[6d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[8;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9;2H[31m,[10d[39m(B[0;7m<[11d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[13;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14;2H[31m,[15d[39m(B[0;7m<[16d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[18;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19;2H[31m,[20d[39m(B[0;7m<[21d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[23;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24;2H[31m,[25d[39m(B[0;7m<[26d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[28;2H[39m(B[m (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29;2H[31m,[30d[39m(B[0;7m<[31d(B[m (B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[39m(B[m (B[0;1m[34m"level"[31m:[35m "info"[31m,[33;2H[39m(B[m "[?12l[?25h[?25l[2d  (B[0;1m[34m"level"[31m:[35m "info"[31m,[3;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4;2H[31m},[5d{[6d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[8;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9;2H[31m},[10d{[11d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[13;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14;2H[31m},[15d{[16d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[18;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19;2H[31m},[20d{[21d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[23;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24;2H[31m},[25d{[26d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[28;2H[39m(B[m  (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29;2H[31m},[30d{[31d[39m(B[m  (B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[39m(B[m  (B[0;1m[34m"level"[31m:[35m "info"[31m,[33;2H(B[0m[42m  [49m(B[m[?12l[?25h[?25l[2d   (B[0;1m[34m"level"[31m:[35m "info"[31m,[3;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4;2H[39m(B[m (B[0;1m[31m},[5;2H[39m(B[m (B[0;1m[31m{[6d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[8;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9;2H[39m(B[m (B[0;1m[31m},[10;2H[39m(B[m (B[0;1m[31m{[11d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[13;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14;2H[39m(B[m (B[0;1m[31m},[15;2H[39m(B[m (B[0;1m[31m{[16d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[18;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19;2H[39m(B[m (B[0;1m[31m},[20;2H[39m(B[m (B[0;1m[31m{[21d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[23;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24;2H[39m(B[m (B[0;1m[31m},[25;2H[39m(B[m (B[0;1m[31m{[26d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[28;2H[39m(B[m   (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29;2H[39m(B[m (B[0;1m[31m},[30;2H[39m(B[m (B[0;1m[31m{[31d[39m(B[m   (B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[39m(B[m   (B[0;1m[34m"level"[31m:[35m "info"[31m,[34d[39m(B[0;7m<[33;4H(B[m[?12l[?25h[?25l[2d    (B[0;1m[34m"level"[31m:[35m "info"[31m,[3;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4;2H[39m(B[m  (B[0;1m[31m},[5;2H[39m(B[m  (B[0;1m[31m{[6;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[8;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9;2H[39m(B[m  (B[0;1m[31m},[10;2H[39m(B[m  (B[0;1m[31m{[11;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[13;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14;2H[39m(B[m  (B[0;1m[31m},[15;2H[39m(B[m  (B[0;1m[31m{[16;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[18;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19;2H[39m(B[m  (B[0;1m[31m},[20;2H[39m(B[m  (B[0;1m[31m{[21;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[23;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24;2H[39m(B[m  (B[0;1m[31m},[25;2H[39m(B[m  (B[0;1m[31m{[26;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[28;2H[39m(B[m    (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29;2H[39m(B[m  (B[0;1m[31m},[30;2H[39m(B[m  (B[0;1m[31m{[31;2H[39m(B[m    (B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;2H[39m(B[m    (B[0;1m[34m"level"[31m:[35m "info"[31m,[34;2H[34m][A[C[39m(B[m[?12l[?25h[?25l[2d  [1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[3;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[4d[39m(B[m    (B[0;1m[31m},[5d[39m(B[m    (B[0;1m[31m{[6d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m50[31m:[35m02.522970+00[31m:[35m00"[31m,[7;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[8;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[9d[39m(B[m    (B[0;1m[31m},[10d[39m(B[m    (B[0;1m[31m{[11d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m07.127143+00[31m:[35m00"[31m,[12;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[13;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[14d[39m(B[m    (B[0;1m[31m},[15d[39m(B[m    (B[0;1m[31m{[16d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T02[31m:[35m59[31m:[35m54.423666+00[31m:[35m00"[31m,[17;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[18;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[19d[39m(B[m    (B[0;1m[31m},[20d[39m(B[m    (B[0;1m[31m{[21d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m09[31m:[35m28.270914+00[31m:[35m00"[31m,[22;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[23;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[24d[39m(B[m    (B[0;1m[31m},[25d[39m(B[m    (B[0;1m[31m{[26d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-26T03[31m:[35m10[31m:[35m12.513837+00[31m:[35m00"[31m,[27;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[28;6H[39m(B[m[1K (B[0;1m[34m"pesan"[31m:[35m "Tidak ada sinyal layak (syarat masuk / grid tidak terpenuhi)"[29d[39m(B[m    (B[0;1m[31m},[30d[39m(B[m    (B[0;1m[31m{[31d[39m(B[m[1K (B[0;1m[34m"waktu"[31m:[35m "2026-11-27T19[31m:[35m20[31m:[35m18.000101+00[31m:[35m00"[31m,[32;6H[39m(B[m[1K (B[0;1m[34m"level"[31m:[35m "info"[31m,[33d(B[0m[42m [34d[49m(B[m  (B[0;1m[34m][35d[31m}[33;4H[39m(B[m[?12l[?25h[?25l [?12l[?25h[?25l [?12l[?25h[?25l[K[?12l[?25h[?25l[33;38r[38;1H
+[1;40r[32;23H[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h[17Ginfo[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h[7G(B[0;1m[35m"level"[39m(B[m[K[?25l[?12l[?25h[7G"level[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m[1K [49m(B[m [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l [?12l[?25h[?25l [?12l[?25h[?25l[K[?12l[?25h[?25l[32;38r[38;1H
+[1;40r[31;51H[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h[31;17H2026-11-27T19(B[0;1m[31m:(B[0m[32m20(B[0;1m[31m:(B[0m[32m18.000101+00(B[0;1m[31m:(B[0m[32m00[39m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h+[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h.[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h[7G(B[0;1m[35m"waktu"[39m(B[m[K[?25l[?12l[?25h[7G"waktu[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[42m[1K [49m(B[m [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l [?12l[?25h[?25l [?12l[?25h[?25l[K[?12l[?25h[?25l[31;38r[38;1H
+[1;40r[30;6H[?12l[?25h[?25l[?12l[?25h[42m    [49m(B[m[K[?25l[?12l[?25h [?25l [?12l[?25h[?25l [?12l[?25h[?25l[K[?12l[?25h[?25l[30;38r[38;1H
+[1;40r[29;7H[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h[42m    [49m(B[m[K[?25l[?12l[?25h [?25l[?12l[?25h   (B[0;1m[31m}[39m(B[m[?25l[38;53H(B[0;7m[ Writing... ](B[m[1;110H(B[0;7m        (B[m[38;51H(B[0;7m[ Wrote 591 lines ](B[m[?12l[?25h[29;5H[?25l[1;110H(B[0;7mModified(B[m[?12l[?25h[29;5Hx[?25l[?12l[?25h [?25l[38d(B[0;7mSave modified buffer?                                                                                                  [39;1H Y(B[m Yes[K[40d(B[0;7m N(B[m No  [40;17H(B[0;7m^C(B[m Cancel[K[38;23H[?12l[?25h[?25l[39d(B[0;7m^G(B[m Help[39;30H(B[0;7mM-D(B[m DOS Format[39;59H(B[0;7mM-A(B[m Append[39;88H(B[0;7m^Q(B[m Discard buffer[40d(B[0;7m^C(B[m Cancel[17G             (B[0;7mM-B(B[m Backup File[40;59H(B[0;7mM-P(B[m Prepend[40;88H(B[0;7m^T(B[m Browse[38d(B[0;7mWrite to File: state.json(B[m[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[38;53H[1K (B[0;7m[ Cancelled ](B[m[K[39;18H(B[0;7m^O(B[m Write Out     (B[0;7m^F(B[m Where Is[52G(B[0;7m^K(B[m Cut           (B[0;7m^T(B[m Execute[86G(B[0;7m^C(B[m Location      (B[0;7mM-U(B[m Undo[40;2H(B[0;7mX(B[m Exit  [40;18H

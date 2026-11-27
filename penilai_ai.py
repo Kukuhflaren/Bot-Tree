@@ -1,20 +1,4 @@
 """AI sebagai PENILAI (second opinion) atas sinyal bot. Tidak membuat order.
-
-Alur:
-  1. Ambil pilihan daftar_ai.json yang masih ada pada sisi sama di daftar_40.json.
-  2. Bot menghitung semuanya dari candle 30m asli: skor, syarat masuk, titik grid, TP/SL, rasio TP:SL.
-  3. K token dengan skor bot tertinggi dikirim ke AI sebagai ringkasan angka (bukan berita).
-  4. AI memberi verdict MASUK / TUNGGU / TOLAK + alasan + risiko, hanya dari angka yang diberikan.
-  5. Dicetak berdampingan dengan penilaian bot, dan dicatat di log_penilai.jsonl untuk dievaluasi nanti.
-
-Perubahan penting:
-  - TP bertahap di S/R lawan; 25% posisi yang terisi direalisasikan per level
-  - SL tetap fixed poin di luar HL/HH
-  - Titik valid hanya jika: tidak sl_salah_sisi, RR >= RR_MIN, risk_atr dalam [RISK_ATR_MIN, RISK_ATR_MAX]
-  - VWAP + konfirmasi tren 30m ikut dalam syarat bot
-
-AI hanya memberi pendapat (veto/second opinion). Keputusan dan angka tetap dari bot.
-Pakai:  python penilai_ai.py --jumlah 8
 """
 import json
 import sys
@@ -208,26 +192,36 @@ def rencana(a, arah, rr_min=None, risk_atr_min=None, risk_atr_max=None):
 
 
 GATE_NAMES = (
-    "trend_structure", "ema", "macd", "near_sr", "vwap", "trend_30m",
-    "extreme_candle", "minimum_score", "grid_available", "valid_risk_reward_grid",
+    "trend_or_range",
+    "adx_ok",
+    "range_ok",
+    "minimum_score",
+    "grid_available",
+    "valid_risk_reward_grid",
+    "extreme_candle",
 )
 
+SYARAT_KEYS = ("trend_or_range", "adx_ok", "range_ok", "minimum_score", "grid_available")
 
 def kegagalan_gate(a, valid_grid):
-    """Kembalikan semua gate yang gagal; hitungan antar-gate dapat saling tumpang tindih."""
-    syarat = a.get("syarat", [])
-    lolos = {
-        nama: bool(syarat[i]) if i < len(syarat) else False
-        for i, nama in enumerate(GATE_NAMES[:6])
-    }
-    lolos.update({
-        "extreme_candle": not bool(a.get("ekstrem")),
-        "minimum_score": a.get("mentah", 0) >= config.SCORE_MIN,
-        "grid_available": bool(a.get("grid")),
-        "valid_risk_reward_grid": bool(valid_grid),
-    })
-    return [nama for nama in GATE_NAMES if not lolos[nama]]
+    """Kembalikan gate yang gagal, tanpa pemetaan posisional yang rapuh."""
+    raw = a.get("syarat") or []
+    if isinstance(raw, dict):
+        syarat = {k: bool(raw.get(k)) for k in SYARAT_KEYS}
+    else:
+        syarat = {
+            k: bool(raw[i]) if i < len(raw) else False
+            for i, k in enumerate(SYARAT_KEYS)
+        }
 
+    lolos = dict(syarat)
+    # Override dengan perhitungan yang lebih tegas
+    lolos["minimum_score"] = a.get("mentah", 0) >= config.SCORE_MIN
+    lolos["grid_available"] = bool(a.get("grid"))
+    lolos["valid_risk_reward_grid"] = bool(valid_grid)
+    lolos["extreme_candle"] = not bool(a.get("ekstrem"))
+
+    return [nama for nama in GATE_NAMES if not lolos.get(nama, False)]
 
 def snapshot(t, a):
     arah = a.get("arah", t.get("arah", 0))

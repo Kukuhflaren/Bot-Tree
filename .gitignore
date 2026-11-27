@@ -6,3 +6,6 @@ __pycache__/
 
 # Runtime / output (jangan di-commit)
 
+*.bak*
+*.rusak
+*.old

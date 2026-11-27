@@ -230,55 +230,53 @@ def kegagalan_gate(a, valid_grid):
 
 
 def snapshot(t, a):
-    grid = rencana(a, t["arah"])
+    arah = a.get("arah", t.get("arah", 0))
+    grid = rencana(a, arah)
     valid_grid = [g for g in grid if g["valid"]]
-    # Nama syarat harus selaras dengan urutan di indikator.analisis()
-    nama_syarat = ["tren", "ema", "macd", "dekat_sr", "vwap", "tren_30m"]
+    nama_syarat = ["trend_or_range", "adx_ok", "range_ok", "minimum_score", "grid_available"]
     syarat_dict = {}
     for i, nama in enumerate(nama_syarat):
-        if i < len(a["syarat"]):
+        if i < len(a.get("syarat") or []):
             syarat_dict[nama] = a["syarat"][i]
 
+    if arah > 0:
+        arah_label = "BULLISH"
+    elif arah < 0:
+        arah_label = "BEARISH"
+    else:
+        arah_label = "RANGE"
+
     risk_atrs = [g["risk_atr"] for g in valid_grid if g.get("risk_atr") is not None]
+    net_rrs = [g["net_rr"] for g in valid_grid if g.get("net_rr") is not None]
     return {
         "simbol": t["nama"],
         "candle_timeframe": config.CANDLE_TIMEFRAME,
         "candle_timestamp": a.get("candle_timestamp"),
-        "arah": "BULLISH" if t["arah"] > 0 else "BEARISH",
+        "arah": arah_label,
+        "label": a.get("label"),
         "harga": r(a["harga"]),
-        "atr_persen": r(a["atr"] / a["harga"] * 100, 3),
-        "ubah_24j_persen": r(t["ubah_24j"], 3),
-        "volume_24j_juta": r(t["vol_juta"], 3),
-        "rasio_volume": r(t["rasio_vol"], 3),
+        "hl": r(a.get("HL")),
+        "hh": r(a.get("HH")),
+        "atr_persen": r(a["atr"] / a["harga"] * 100, 3) if a.get("harga") else None,
+        "adx": r(a.get("adx"), 2),
+        "range_atr": r(a.get("range_atr"), 2),
+        "ubah_24j_persen": r(t.get("ubah_24j"), 3),
+        "volume_24j_juta": r(t.get("vol_juta"), 3),
+        "rasio_volume": r(t.get("rasio_vol"), 3),
         "skor_bot": a["mentah"],
         "zona": a["zona"],
-        "lonjakan_ekstrem": a["ekstrem"],
-        "komponen_dari_20": {n: v for n, v in a["rincian"]},
-        "rsi": r(a["rsi"], 3),
-        "vwap": r(a.get("vwap")),
-        "di_atas_vwap": a.get("di_atas_vwap"),
-        "vwap_ok": a.get("vwap_ok"),
-        "tren_30m": {
-            "ok": a.get("tren_30m", {}).get("ok"),
-            "arah_30m": a.get("tren_30m", {}).get("arah_30m"),
-            "candle_sesuai": a.get("tren_30m", {}).get("candle_sesuai"),
-        },
+        "lonjakan_ekstrem": a.get("ekstrem"),
+        "komponen": {n: v for n, v in a.get("rincian") or []},
+        "rsi": r(a.get("rsi"), 3),
         "syarat": syarat_dict,
-        "jarak_ke_sr_persen": r(a["jarak_sr"], 3),
-        "jarak_ke_sr_atr": r(a["jarak_atr"], 3),
-        "tp_mode": config.TP_MODE,
-        "tp_method": getattr(config, "TP_METHOD", "sr"),
-        "tp_atr_percent": getattr(config, "TP_ATR_PERCENT", 100.0),
-        "sl_method": getattr(config, "SL_METHOD", "atr"),
-        "sl_atr_percent": getattr(config, "SL_ATR_PERCENT", 50.0),
         "tp_fraction_per_level": 0.25,
         "titik_grid": grid,
         "titik_valid": len(valid_grid),
-        "rr_terbaik": r(max((g["rr"] for g in valid_grid if g["rr"] is not None), default=None), 3),
+        "rr_terbaik": r(max((g.get("rr") for g in valid_grid if g.get("rr") is not None), default=None), 3),
+        "net_rr_terbaik": r(max(net_rrs, default=None), 3) if net_rrs else None,
         "risk_atr_min_valid": r(min(risk_atrs), 3) if risk_atrs else None,
-        # Bot hanya layak jika indikator layak DAN minimal 1 titik grid lolos semua filter
-        "layak_bot_final": bool(a["layak"] and len(valid_grid) >= 1),
-    }
+        "layak_bot_final": bool(a.get("layak") and len(valid_grid) >= 1),
+}
 
 
 def _teks_sl():

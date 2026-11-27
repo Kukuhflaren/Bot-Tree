@@ -1,4 +1,4 @@
-"""Fase C — Scanner continuous.
+"""Scanner continuous.
 
 Loop yang:
   1. (Opsional) refresh sinyal lewat penyaring + penilai
@@ -80,11 +80,15 @@ def satu_putaran(
     else:
         print("  Risk gate: OK")
 
-    tp_teks = "S/R" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
-    if getattr(config, "SL_METHOD", "atr") == "sr":
-        sl_teks = "S/R HH/HL"
-    else:
-        sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+    tp_teks = "struktur" if getattr(config, "TP_METHOD", "sr") == "sr" else f"{config.TP_ATR_PERCENT:.0f}% ATR"
+
+if getattr(config, "SL_BUFFER_ATR", 0) > 0:
+    sl_teks = f"{config.SL_BUFFER_ATR:.2f}×ATR buffer"
+elif getattr(config, "SL_METHOD", "atr") == "sr":
+    sl_teks = "S/R HH/HL"
+else:
+    sl_teks = f"{config.SL_ATR_PERCENT:.0f}% ATR"
+
     print(
         f"  TP: {tp_teks} | SL: {sl_teks} | "
         f"RISK_ATR [{config.RISK_ATR_MIN}, {config.RISK_ATR_MAX}]"

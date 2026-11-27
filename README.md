@@ -249,7 +249,7 @@ DEMO_LOOP_EXECUTION_VERIFIED=on
 2. Jalankan loop:
 
 ```bash
-python uji_demo_unified.py --days 14 --interval 300 --send-demo
+python uji_demo_unified.py --days 14 --interval 300 --send-demo --refresh
 ```
 
 Tanpa mengirim order:
